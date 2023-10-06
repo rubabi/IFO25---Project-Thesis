@@ -11,7 +11,7 @@ from pyomo.opt import SolverFactory
 import pyomo as pyo
 
 
-# address = 'C:\Users\Mousa\PycharmProjects\Pyomo\InputData.xlsx'
+# address = '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/Old/InputData p.xlsx'
 
 
 BatteryPlace=np.array([1, 1, 0, 1]);
