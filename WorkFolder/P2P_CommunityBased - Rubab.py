@@ -167,6 +167,8 @@ for key in model.G:
     print(value(model.G[key]))
     
 value(model.obj)
+print(value(model.obj))
+
 
 #%%
 '''
