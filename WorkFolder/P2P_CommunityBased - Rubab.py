@@ -43,7 +43,7 @@ def InputParam(address):
     return Dem, Pg, RES, Nh, Nt, BatteryInput
 
 
-Dem, Pg, res, Nh, Nt, BatteryInput = InputParam('C:/Naser/Python Book/P2PMarket/InputData p.xlsx')
+Dem, Pg, res, Nh, Nt, BatteryInput = InputParam('C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/Old/InputData p.xlsx')
 #Dem, Pg, res, Nh, Nt, BatteryInput = InputParam('C:/Naser/Python Book/P2PMarket/InputData25Houses.xlsx')
 
 Battery_Ub=BatteryInput[0];
