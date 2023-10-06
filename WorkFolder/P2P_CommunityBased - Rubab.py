@@ -167,6 +167,8 @@ for key in model.G:
     
 value(model.obj)
 
+
+
 #%%
 '''
 for key in model.C:
