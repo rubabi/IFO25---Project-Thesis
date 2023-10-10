@@ -10,9 +10,7 @@ import numpy as np
 from pyomo.opt import SolverFactory
 import pyomo as pyo
 
-
 # address = '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/Old/InputData p.xlsx'
-
 
 BatteryPlace=np.array([1, 1, 0, 1]);
 
@@ -75,8 +73,6 @@ if sum(BatteryPlace)>0:
    model.C = Var(model.Nt, model.Bat, domain=NonNegativeReals, bounds=(0,Battery_ChargeRate))
    model.D = Var(model.Nt, model.Bat, domain=NonNegativeReals, bounds=(0,Battery_disChargeRate))
    model.S = Var(model.Nt, model.Bat, domain=NonNegativeReals, bounds=(Battery_Lb,Battery_Ub))
-
-
 
 #%%
 # declare objective
@@ -143,9 +139,6 @@ def con_rule(model, Nh):
                 model.P2P.add(model.I_p[t, i, j] == PsiP2P * model.X_p[t, IXpind[j, i] ,b[0,0]])
 '''    
 
-
-
-
 #%%
 #results = SolverFactory("GLPK", Verbose=True).solve(model,tee=True)
 
@@ -158,7 +151,6 @@ model.pprint()
 #%%
 opt = SolverFactory('glpk')
 opt.solve(model) 
-
 
 
 #%%
