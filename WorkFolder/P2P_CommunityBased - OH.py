@@ -37,7 +37,6 @@ def InputParam(address):
     BatteryInput = Battery_DF.to_numpy()
     
     
-    
     return Dem, Pg, RES, Nh, Nt, BatteryInput
 
 
@@ -80,6 +79,7 @@ def obj_rule(model):
     return sum(Pg[t] * model.G[t, h] for h in model.Nh for t in model.Nt)
 
 model.obj = Objective(rule=obj_rule, sense=minimize)
+
 #%%
 PsiP2P = 1 - 0.076
 IXpind = np.zeros([Nh - 1, Nh],dtype=int)
@@ -102,7 +102,6 @@ for i in model.Nh:
           model.P2P.add(model.S[t,k]==model.S[t-1,k] + Battery_ChargeEff*model.C[t,k] - (1/Battery_disChargeEffb)*model.D[t,k])
           
       
-      
       for t in model.Nt:
          model.P2P.add(res[t,i]+model.G[t,i] + model.D[t,k] +sum(model.I_p[t,i,j] for j in model.Np)>=Dem[t,i]+ model.C[t,k]+sum(model.X_p[t,i,j] for j in model.Np))
          for j in model.Np:
@@ -114,8 +113,7 @@ for i in model.Nh:
            model.P2P.add(res[t,i]+model.G[t,i]+sum(model.I_p[t,i,j] for j in model.Np)>=Dem[t,i]+sum(model.X_p[t,i,j] for j in model.Np))
            for j in model.Np:
                b=np.asarray(np.where(IXpind[:,IXpind[j,i]] == i))
-               model.P2P.add(model.I_p[t, i, j] == PsiP2P * model.X_p[t, IXpind[j, i] ,b[0,0]])
-        
+               model.P2P.add(model.I_p[t, i, j] == PsiP2P * model.X_p[t, IXpind[j, i] ,b[0,0]])      
 
 #%%         
 '''
