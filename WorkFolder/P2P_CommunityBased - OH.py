@@ -1,7 +1,7 @@
 """
-Created on Sun Mar  7 17:41:17 2021
+Created on xxx
 
-@author: seyednh
+@author: olehim@stud.ntnu.no
 """
 
 from pyomo.environ import *
@@ -10,7 +10,7 @@ import numpy as np
 from pyomo.opt import SolverFactory
 import pyomo as pyo
 
-# address = '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/Old/InputData p.xlsx'
+address = '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/Old/InputData p.xlsx'
 
 BatteryPlace=np.array([1, 1, 0, 1]);
 
@@ -170,5 +170,4 @@ for key in model.I_p:
 
 for key in model.X_p:
     print(value(model.X_p[key]))
-#%%
 '''
