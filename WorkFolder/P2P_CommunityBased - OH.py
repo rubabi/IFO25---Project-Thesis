@@ -12,7 +12,7 @@ import pyomo as pyo
 
 address = '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/Old/InputData p.xlsx'
 
-BatteryPlace=np.array([1, 1, 0, 1]);
+BatteryPlace=np.array([1, 1, 0, 1])
 
 def InputParam(address):
     DemDF = pd.read_excel(address, sheet_name='Demand_houses')
@@ -43,12 +43,12 @@ def InputParam(address):
 Dem, Pg, res, Nh, Nt, BatteryInput = InputParam('/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/Old/InputData p.xlsx')
 #Dem, Pg, res, Nh, Nt, BatteryInput = InputParam('C:/Naser/Python Book/P2PMarket/InputData25Houses.xlsx')
 
-Battery_Ub=BatteryInput[0];
-Battery_Lb=BatteryInput[1];
-Battery_ChargeRate=BatteryInput[2];
-Battery_disChargeRate=BatteryInput[3];
-Battery_ChargeEff=BatteryInput[4];
-Battery_disChargeEffb=BatteryInput[5];
+Battery_Ub=BatteryInput[0]
+Battery_Lb=BatteryInput[1]
+Battery_ChargeRate=BatteryInput[2]
+Battery_disChargeRate=BatteryInput[3]
+Battery_ChargeEff=BatteryInput[4]
+Battery_disChargeEffb=BatteryInput[5]
 
 #%%
 
