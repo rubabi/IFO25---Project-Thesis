@@ -20,8 +20,7 @@ def model_p2p(data):
     model.PV = Param(model.T) # PV production at each time and household with PV panels
     model.Dem = Param(model.T, model.H) # Demand at each time and household
 
-    model.Psi = Param(initialize=1 - 0.076,
-                      doc="% of losses")  # Losses in the community lines The local trade assumes losses of 7.6% through the local network (see [40]) in luth.
+    model.Psi = Param(initialize=1 - 0.076,doc='% of losses')  # Losses in the community lines The local trade assumes losses of 7.6% through the local network (see [40]) in luth.
 
     model.Mu_c = Param(initialize=0.96)  # charging efficiency
     model.Mu_d = Param(initialize=0.96) # discharge efficiency
