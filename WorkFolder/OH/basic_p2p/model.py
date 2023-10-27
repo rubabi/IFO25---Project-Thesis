@@ -128,7 +128,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     # Get spot prices
     date_format_str = '%Y-%m-%d %H:%M:%S%z'  # '2019-12-06 14:00:00+00:00' format
     P_spot_df = pd.read_csv(file_path_data + r"dayahead_Jan_365days.csv", index_col=0,
-                            parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
+                            parse_dates=[0])  # to make sure the date is read properly
     P_spot_df.index = P_spot_df.index.to_pydatetime() # convert to a datetime format required for the model
     P_spot_df = P_spot_df[["day ahead price (p/kWh)"]]  # get only price in pences/kWh
     P_spot_df_ = P_spot_df[(P_spot_df.index >= start_date) & (P_spot_df.index < end_date)]
@@ -137,7 +137,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
 
     # Get demand
     P_demand_df = pd.read_csv(file_path_data + r"demand_Jan_365days.csv", index_col=0,
-                              parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
+                              parse_dates=[0])  # to make sure the date is read properly
     P_demand_df.index = P_demand_df.index.to_pydatetime() # convert to a datetime format required for the model
     P_demand_df = P_demand_df[list_houses]  # Filter based on the houses selected
     P_demand_df.index = P_spot_df.index  # Change index from 2013 to 2019. The weeks of the days are the rest, so no more operations are needed
@@ -148,7 +148,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
 
     # Get solar profiles, we assume the PV profile is the same for each house given that they are located close to each other
     PV_df = pd.read_csv(file_path_data + r"solar_profile_scenarios_yearly.csv", index_col=0,
-                        parse_dates=[0], date_format=date_format_str)
+                        parse_dates=[0])
     PV_df.index = PV_df.index.to_pydatetime() # convert to a datetime format required for the model
     scn = "1"
     PV_df = PV_df[[scn]]  # Select just one scenario, the data is prepared for several scenarios
@@ -198,8 +198,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     return data
 
 # Manual input data
-file_path_data = r"/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/OH/basic_p2p/data" # folder containing data
-file_path_results =  r"/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/OH/basic_p2p/results/test_case" # folder containing the results
+file_path_data = r"/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/OH/basic_p2p/data/test_case/" # folder containing data
+file_path_results =  r"/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/OH/basic_p2p/results/test_case/" # folder containing the results
 
 start_date_str = "2019-1-01"
 end_date_str = "2019-1-02"
