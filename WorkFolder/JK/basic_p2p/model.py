@@ -31,48 +31,78 @@ def model_p2p(data):
     model.Beta = Param(initialize=1.25)  # discharging rate 2.5 kW -> 2.5 kWh/hour at constant rate
     model.Smax = Param(initialize=4)  # capacity batteries [kWh]
     model.Smin = Param(initialize=4*0.2)  # [kWh] here 20% of the maximum capacity
-    model.S_init = Param(initialize=2)  # [kWh]
+    model.S_init = Param(initialize=2)  # [kWh] initial battery state
+    #FFR Related Parameters-----------------------------------------------------------------------------------------------------------------------
+    model.etha_discharge = Param(model.H_bat)
+    #---------------------------------------------------------------------------------------------------------------------------------------------
+
 
     # Variables
-    model.x_g = Var(model.T, model.H, within=NonNegativeReals)  # sold power to community c
+    model.x_g = Var(model.T, model.H, within=NonNegativeReals)  # sold power to community c, G in Luth
     model.d = Var(model.T, model.H_bat, within=NonNegativeReals)  # discharge from batteries
     model.c = Var(model.T, model.H_bat, within=NonNegativeReals)  # charging from batteries
-    model.s = Var(model.T, model.H_bat, within=NonNegativeReals)  # state of battery
+    model.s = Var(model.T, model.H_bat, within=NonNegativeReals)  # state of battery, w^{charge} in FFR-paper
+
+    #FFR related Variables----------------------------------------------------------------------------------------------------------------------
+    model.z_FFR = Var(within=NonNegativeReals) #FFR capacity
+    model.r_FFR_charge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from charging house h in time step t [kwh]
+    model.r_FFR_discharge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from discharging h in time step t [kwh]
+    model.s_FFR_discharge = Var(model.T, model.H_bat, within=NonNegativeReals) #Discharging of house h in time step t, w_discharge in paper
+    #---------------------------------------------------------------------------------------------------------------------------------------------
+
 
     model.x = Var(model.T, model.H, within=NonNegativeReals)  # total exports house h
     model.x_p = Var(model.T, model.P, within=NonNegativeReals)  # exports from house h to house p
     model.i = Var(model.T, model.H, within=NonNegativeReals)  # total imports house h
     model.i_p = Var(model.T, model.P, within=NonNegativeReals)  # imports of house h from house p
 
-    # Objective function
+    # Objective function - Added FFR
     def objective_function(model):
-        return sum(model.P_spot[t] * model.x_g[t, h] for t in model.T for h in model.H)
+        return sum(model.P_spot[t] * model.x_g[t, h] for t in model.T for h in model.H) - model.c_FFR*model.z_FFR
 
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
-    def balance_equation(model, t, h): # For each time and household
+    def balance_equation(model, t, h): # For each time and household, (1) in Luth
         return (model.x_g[t, h] + (model.PV[t] if h in model.H_pv else 0)  + (model.d[t,h] if h in model.H_bat else 0)
                 + model.i[t, h] >= model.Dem[t, h] + model.x[t, h] + (model.c[t, h] if h in model.H_bat else 0))
 
     model.balance_equation = Constraint(model.T, model.H, rule=balance_equation)
 
+    #FFR Constraints---------------------------------------------------------------------------------------------------------------------------------------------
+    def FFR_charging_capacity(model, h, t):
+        return model.s[h,t] >= model.r_FFR_charge[h,t]
+    
+    model.FFR_charging_capacity = Constraint(model.H_bat, model.T, rule=FFR_charging_capacity)
+
+    def FFR_discharging_capacity(model,h,t):
+        return model.s_FFR_discharge[h,t] + model.r_FFR_discharge[h,t] >= model.etha_discharge[h]
+    
+    model.FFR_discharging_capacity = Constraint(model.H_bat, model.T, rule=FFR_discharging_capacity)
+
+    def FFR_capacity_sum(model,h,t):
+        return sum(model.r_FFR_charge[h,t] for h in model.H) + sum(model.r_FFR_discharge[h,t] for h in model.H) >= model.z_FFR
+    
+    model.FFR_capacity_sum = Constraint(model.H_bat, model.T, rule=FFR_capacity_sum)
+
+    #---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     # P2P constraints
-    def sum_exports_household(model, h, t):
+    def sum_exports_household(model, h, t): # (2)
         return model.x[t, h] == sum(model.x_p[t, p] for p in model.P if p[0] == h)
 
     model.sum_exports_household = Constraint(model.H, model.T, rule=sum_exports_household)
 
-    def sum_imports_household(model, h, t):
+    def sum_imports_household(model, h, t): # (4)
         return model.i[t, h] == sum(model.i_p[t, p] for p in model.P if p[0] == h)
 
     model.sum_imports_household = Constraint(model.H, model.T, rule=sum_imports_household)
 
-    def balance_exports_imports(model, t):
+    def balance_exports_imports(model, t): # (5)
         return sum(model.i[t, h] for h in model.H) == model.Psi * sum(model.x[t, h] for h in model.H)
 
     model.balance_exports_imports = Constraint(model.T, rule=balance_exports_imports)
 
-    def balance_exports_imports_household(model, t, h0, h1):
+    def balance_exports_imports_household(model, t, h0, h1): #(3)
         return model.i_p[t, h0, h1] == model.Psi * model.x_p[t, h1, h0]
 
     model.balance_exports_imports_household = Constraint(model.T, model.P, rule=balance_exports_imports_household)
@@ -88,22 +118,22 @@ def model_p2p(data):
 
     model.time_constraint = Constraint(model.T, model.H_bat, rule=time_constraint)
 
-    def min_SoC(model, t, h):
+    def min_SoC(model, t, h): #(7)
         return model.s[t, h] >= model.Smin
 
     model.min_SoC = Constraint(model.T, model.H_bat, rule=min_SoC)
 
-    def charging_rate(model, t, h):
+    def charging_rate(model, t, h): #(8)
         return model.c[t, h] <= model.Alpha
 
     model.charging_rate = Constraint(model.T, model.H_bat, rule=charging_rate)
 
-    def discharge_rate(model, t, h):
+    def discharge_rate(model, t, h): #(8)
         return model.d[t, h] <= model.Beta
 
     model.discharge_rate = Constraint(model.T, model.H_bat, rule=discharge_rate)
 
-    def max_SoC(model, t, h):
+    def max_SoC(model, t, h): #(7)
         return model.s[t, h] <= model.Smax
 
     model.max_SoC = Constraint(model.T, model.H_bat, rule=max_SoC)
@@ -171,6 +201,10 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     Smax = 4  # capacity batteries [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
     Smin = Smax * 0.2  # minimum state of charge of batteries at all times
     S_init = Smax * 0.5  # initial state of charge of the battery
+    #FFR related---------------------------------------------------------------------------------------------------------------------
+    c_FFR = 0.0450 #[Pence/kWh]
+    etha_discharge = 120 #[kwh]
+
 
     # Construct data dictionary
     data = {  # always start with None and then dictionary
@@ -193,13 +227,15 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "Smax": {None: Smax},
             "Smin": {None: Smin},
             "S_init": {None: S_init},
+            "c_FFR": {None: c_FFR},
+            "etha_discharge" : etha_discharge,
         }}
 
     return data
 
 # Manual input data
-file_path_data = r"/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/OH/basic_p2p/data/test_case/" # folder containing data
-file_path_results =  r"/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/OH/basic_p2p/results/test_case/" # folder containing the results
+file_path_data = r"C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/basic_p2p_original_Raquel/data/test_case/" # folder containing data
+file_path_results =  r"C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/basic_p2p_original_Raquel/data/test_case/" # folder containing the results
 
 start_date_str = "2019-1-01"
 end_date_str = "2019-1-02"
