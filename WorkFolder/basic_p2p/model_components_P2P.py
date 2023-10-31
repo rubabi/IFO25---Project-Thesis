@@ -64,7 +64,7 @@ def model_p2p(data):
 
     # Objective function - Added FFR
     def objective_function(model):
-        return sum(model.p_spot[t] * model.x_g[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR
+        return sum(model.p_spot[t] * model.G[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
     def balance_equation(model, t, h): # For each time and household, (1) in Luth
@@ -82,7 +82,7 @@ def model_p2p(data):
     model.FFR_discharging_capacity = Constraint(model.T, model.H_bat, rule=FFR_discharging_capacity)
 
     def FFR_capacity_sum(model,t, h):
-        return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t, h] for h in model.H_bat) >= model.z_FFR    
+        return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t, h] for h in model.H_bat) >= model.Z_FFR    
     model.FFR_capacity_sum = Constraint(model.T, model.H_bat, rule=FFR_capacity_sum)
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -112,6 +112,10 @@ def model_p2p(data):
             return model.S[t, h] == model.S[t_previous, h] + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
     model.time_constraint = Constraint(model.T, model.H_bat, rule=time_constraint)
 
+    def max_SoC(model, t, h): #(7)
+        return model.S[t, h] <= model.smax
+    model.max_SoC = Constraint(model.T, model.H_bat, rule=max_SoC)
+
     def min_SoC(model, t, h): #(7)
         return model.S[t, h] >= model.smin
     model.min_SoC = Constraint(model.T, model.H_bat, rule=min_SoC)
@@ -123,10 +127,6 @@ def model_p2p(data):
     def discharge_rate(model, t, h): #(8)
         return model.D[t, h] <= model.beta
     model.discharge_rate = Constraint(model.T, model.H_bat, rule=discharge_rate)
-
-    def max_SoC(model, t, h): #(7)
-        return model.S[t, h] <= model.smax
-    model.max_SoC = Constraint(model.T, model.H_bat, rule=max_SoC)
 
     instance = model.create_instance(data)
     results = SolverFactory("glpk", Verbose=True).solve(instance, tee=True)

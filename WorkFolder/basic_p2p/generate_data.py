@@ -61,7 +61,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     smin = smax * 0.2  # minimum state of charge of batteries at all times
     s_init = smax * 0.5  # initial state of charge of the battery
     #FFR related---------------------------------------------------------------------------------------------------------------------
-    c_FFR = -450 #[Pence/kWh]
+    p_FFR = -450 #[Pence/kWh]
 
     # Construct data dictionary
     data = {  # always start with None and then dictionary
@@ -71,21 +71,21 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "H_bat": {None: list_houses_bat},  # providing data for set H_bat
             "T": {None: list_T},  # providing datetime for set T
             # Parameters
-            'P_spot': P_spot['day ahead price (p/kWh)'],
+            "Dem": P_demand,
             "PV": PV[scn],
             "PV_cap": PV_cap,
-            "Dem": P_demand,
+            'P_spot': P_spot['day ahead price (p/kWh)'],
             # Scalars
+            "alpha": {None: alpha},
+            "beta": {None: beta},
+            "eta_charge": {None: eta_charge},
+            "eta_discharge": {None: eta_discharge},
             "eta_P2P": {None: eta_P2P},
-            "Mu_c": {None: eta_charge},
-            "Mu_d": {None: eta_discharge},
-            "Alpha": {None: alpha},
-            "Beta": {None: beta},
-            "Smax": {None: smax},
-            "Smin": {None: smin},
-            "S_init": {None: s_init},
+            "smax": {None: smax},
+            "smin": {None: smin},
+            "s_init": {None: s_init},
             # Prices
-            "c_FFR": {None: c_FFR},
+            "p_FFR": {None: p_FFR},
         }}
 
     return data
