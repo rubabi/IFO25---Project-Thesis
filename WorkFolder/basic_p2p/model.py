@@ -1,6 +1,6 @@
 # Import other files
 import model_components
-from directories import *
+import directories
 import generate_data_dict
 
 # Import libraries
@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from pyomo.environ import *
 
 # Manual input data
-file_path_data = directory('data') # folder containing data
-file_path_results = directory('results') # folder containing the results
+file_path_data = directories.directory("data") # folder containing data
+file_path_results = directories.directory('results') # folder containing the results
 
 start_date_str = "2019-1-01"
 end_date_str = "2019-1-02"
