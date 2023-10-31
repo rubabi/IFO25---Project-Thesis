@@ -96,8 +96,8 @@ def model_p2p(data):
         return model.d[t, h] + model.r_FFR_discharge[t, h] >= model.Beta    
     model.FFR_discharging_capacity = Constraint(model.T, model.H_bat, rule=FFR_discharging_capacity)
 
-    def FFR_capacity_sum(model,t,h):
-        return sum(model.r_FFR_charge[t,h] + model.r_FFR_discharge[t, h] for h in model.H) >= model.z_FFR    
+    def FFR_capacity_sum(model,t, h):
+        return sum(model.r_FFR_charge[t,h] + model.r_FFR_discharge[t, h] for h in model.H_bat) >= model.z_FFR    
     model.FFR_capacity_sum = Constraint(model.T, model.H_bat, rule=FFR_capacity_sum)
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
