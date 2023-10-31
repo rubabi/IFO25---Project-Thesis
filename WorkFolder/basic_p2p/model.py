@@ -17,7 +17,7 @@ def directory(folder):
         if folder == "data":
             return "C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/WorkFolder/basic_p2p/data/test_case/"
         elif folder == "results":
-            return "C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/WorkFolder/basic_p2p//test_case/"
+            return "C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/WorkFolder/basic_p2p/results/test_case/"
         else:
             print('Invalid directory input')
     elif current_user == OH:
