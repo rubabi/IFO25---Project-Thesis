@@ -208,7 +208,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     Smin = Smax * 0.2  # minimum state of charge of batteries at all times
     S_init = Smax * 0.5  # initial state of charge of the battery
     #FFR related---------------------------------------------------------------------------------------------------------------------
-    c_FFR = 450 #[Pence/kWh]
+    c_FFR = -450 #[Pence/kWh]
 
     # Construct data dictionary
     data = {  # always start with None and then dictionary
