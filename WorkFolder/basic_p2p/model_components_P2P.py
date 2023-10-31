@@ -64,69 +64,68 @@ def model_p2p(data):
 
     # Objective function - Added FFR
     def objective_function(model):
-        return sum(model.P_spot[t] * model.x_g[t, h] for t in model.T for h in model.H) - model.c_FFR*model.z_FFR
+        return sum(model.p_spot[t] * model.x_g[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
     def balance_equation(model, t, h): # For each time and household, (1) in Luth
-        return (model.x_g[t, h] + (model.PV[t] if h in model.H_pv else 0)  + (model.d[t,h] if h in model.H_bat else 0)
-                + model.i[t, h] >= model.Dem[t, h] + model.x[t, h] + (model.c[t, h] if h in model.H_bat else 0))
+        return (model.G_import[t, h] + (model.F[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0)
+                + model.i[t, h] >= model.dem[t, h] + model.X[t, h] + (model.C[t, h] if h in model.H_bat else 0))
     model.balance_equation = Constraint(model.T, model.H, rule=balance_equation)
 
     #FFR Constraints---------------------------------------------------------------------------------------------------------------------------------------------
     def FFR_charging_capacity(model, t, h):
-        return model.c[t,h] >= model.r_FFR_charge[t,h]    
+        return model.C[t,h] >= model.R_FFR_charge[t,h]    
     model.FFR_charging_capacity = Constraint(model.T, model.H_bat, rule=FFR_charging_capacity)
 
     def FFR_discharging_capacity(model,t,h):
-        return model.d[t, h] + model.r_FFR_discharge[t, h] >= model.Beta    
+        return model.D[t, h] + model.R_FFR_discharge[t, h] >= model.eta_discharge    
     model.FFR_discharging_capacity = Constraint(model.T, model.H_bat, rule=FFR_discharging_capacity)
 
     def FFR_capacity_sum(model,t, h):
-        return sum(model.r_FFR_charge[t,h] + model.r_FFR_discharge[t, h] for h in model.H_bat) >= model.z_FFR    
+        return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t, h] for h in model.H_bat) >= model.z_FFR    
     model.FFR_capacity_sum = Constraint(model.T, model.H_bat, rule=FFR_capacity_sum)
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     # P2P constraints
     def sum_exports_household(model, h, t): # (2)
-        return model.x[t, h] == sum(model.x_p[t, p] for p in model.P if p[0] == h)
+        return model.X[t, h] == sum(model.X_p[t, p] for p in model.P if p[0] == h)
     model.sum_exports_household = Constraint(model.H, model.T, rule=sum_exports_household)
 
     def sum_imports_household(model, h, t): # (4)
-        return model.i[t, h] == sum(model.i_p[t, p] for p in model.P if p[0] == h)
+        return model.I[t, h] == sum(model.I_p[t, p] for p in model.P if p[0] == h)
     model.sum_imports_household = Constraint(model.H, model.T, rule=sum_imports_household)
 
     def balance_exports_imports(model, t): # (5)
-        return sum(model.i[t, h] for h in model.H) == model.Psi * sum(model.x[t, h] for h in model.H)
+        return sum(model.I[t, h] for h in model.H) == model.eta_P2P * sum(model.X[t, h] for h in model.H)
     model.balance_exports_imports = Constraint(model.T, rule=balance_exports_imports)
 
     def balance_exports_imports_household(model, t, h0, h1): #(3)
-        return model.i_p[t, h0, h1] == model.Psi * model.x_p[t, h1, h0]
+        return model.I_p[t, h0, h1] == model.eta_P2P * model.X_p[t, h1, h0]
     model.balance_exports_imports_household = Constraint(model.T, model.P, rule=balance_exports_imports_household)
 
     # Battery constraints
-
     def time_constraint(model, t, h):
         if t.time() == time(0,0): # when the hour is 00:00
-            return model.s[t, h] == model.S_init + model.Mu_c * model.c[t, h] - 1/model.Mu_d * model.d[t, h]
+            return model.S[t, h] == model.S_init + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
         else:
             t_previous = t - pd.Timedelta(minutes=30)  # Calculate your previous t, change depending on your delta time
-            return model.s[t, h] == model.s[t_previous, h] + model.Mu_c * model.c[t, h] - 1/model.Mu_d * model.d[t, h]
+            return model.S[t, h] == model.S[t_previous, h] + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
     model.time_constraint = Constraint(model.T, model.H_bat, rule=time_constraint)
 
     def min_SoC(model, t, h): #(7)
-        return model.s[t, h] >= model.Smin
+        return model.S[t, h] >= model.smin
     model.min_SoC = Constraint(model.T, model.H_bat, rule=min_SoC)
 
     def charging_rate(model, t, h): #(8)
-        return model.c[t, h] <= model.Alpha
+        return model.C[t, h] <= model.alpha
     model.charging_rate = Constraint(model.T, model.H_bat, rule=charging_rate)
 
     def discharge_rate(model, t, h): #(8)
-        return model.d[t, h] <= model.Beta
+        return model.D[t, h] <= model.beta
     model.discharge_rate = Constraint(model.T, model.H_bat, rule=discharge_rate)
 
     def max_SoC(model, t, h): #(7)
-        return model.s[t, h] <= model.Smax
+        return model.S[t, h] <= model.smax
     model.max_SoC = Constraint(model.T, model.H_bat, rule=max_SoC)
 
     instance = model.create_instance(data)
