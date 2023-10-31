@@ -15,9 +15,9 @@ OH = "olehermanimset"
 def directory(folder):
     if current_user == JK:
         if folder == "data":
-            1==1
+            return "C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/WorkFolder/basic_p2p/data/test_case/"
         elif folder == "results":
-            1==1
+            return "C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/WorkFolder/basic_p2p//test_case/"
         else:
             print('Invalid directory input')
     elif current_user == OH:
