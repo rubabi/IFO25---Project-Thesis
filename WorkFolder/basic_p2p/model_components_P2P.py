@@ -57,10 +57,10 @@ def model_p2p(data):
     model.R_FFR_discharge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from discharging h in time step t [kwh]
     model.Z_FFR = Var(within=NonNegativeReals) #FFR capacity
     # P2P related
-    model.i = Var(model.T, model.H, within=NonNegativeReals)  # Total imports house h
-    model.i_p = Var(model.T, model.P, within=NonNegativeReals)  # Imports of house h from house p
-    model.x = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
-    model.x_p = Var(model.T, model.P, within=NonNegativeReals)  # Exports from house h to house p
+    model.I = Var(model.T, model.H, within=NonNegativeReals)  # Total imports house h
+    model.I_p = Var(model.T, model.P, within=NonNegativeReals)  # Imports of house h from house p
+    model.X = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
+    model.X_p = Var(model.T, model.P, within=NonNegativeReals)  # Exports from house h to house p
 
     # Objective function - Added FFR
     def objective_function(model):
