@@ -6,48 +6,61 @@ def model_p2p(data):
     model = AbstractModel()
 
     # Sets
-    model.T = Set() # Time period (e.g., hour, half-an-hour)
+    model.F = Set() # Flexible asset types
+    model.F_FFR = Set() # Flexible asset types supporting FFR
     model.H = Set() # Households
-    model.H_pv = Set() # Set of Households with PV
     model.H_bat = Set() # Set of Households with Batteries
+    model.H_pv = Set() # Set of Households with PV
     model.P = model.H*model.H # Subset of network in the community (dim=2, H, H) (eg. P={(1,2), (1,3), (2,1), (2,3), (3,1), (3,2)})
-
+    model.M = Set() # Months
+    model.T = Set() # Time period (e.g., hour, half-an-hour)
+    model.T_FFR = Set() # Hours where FFR is active
+    
     # Parameters
-    model.P_spot = Param(model.T) # Spot price for electricity
-    model.PV = Param(model.T) # PV production at each time and household with PV panels
-    model.Dem = Param(model.T, model.H) # Demand at each time and household
+    model.alpha = Param()  # Charging rate 2.5 kW -> 2.5 kWh/hour at constant rate
+    model.beta = Param()  # Discharging rate 2.5 kW -> 2.5 kWh/hour at constant rate
+    model.eta_charge = Param()  # Charging efficiency
+    model.eta_discharge = Param() # Discharge efficiency
+    model.eta_diff = Param() # Diffusion efficiency
+    model.eta_P2P = Param(initialize=1 - 0.076,
+        doc="% of losses")  # Losses in the community lines The local trade assumes losses of 7.6% through the local network (see [40]) in luth.
+    model.a_available = Param() # Availability of a flexible asset
+    model.dem = Param(model.T, model.H) # Demand at each time and household
+    model.k = Param() # Energy initially available in an asset
+    model.res = Param(model.T) # PV production at each time and household with PV panels
+    model.smax = Param()  # Capacity batteries [kWh]
+    model.smin = Param()  # [kWh] here 20% of the maximum capacity
+    model.x_limit = Param() # Grid export limit
+    # Prices
+    model.p_energy = Param() # Grid energy price
+    model.p_exp = Param() # Electricity export cost (excl. surcharge)
+    model.p_FFR = Param() # FFR market price per hour
+    model.p_peak = Param() # Peak power dependent grid price
+    model.p_retail = Param() # Electricity import cost
 
-    model.PV_cap = Param(model.H_pv) # Installed capacity PV for each house with pv
-
-    model.Psi = Param(initialize=1 - 0.076,
-                      doc="% of losses")  # Losses in the community lines The local trade assumes losses of 7.6% through the local network (see [40]) in luth.
-
-    model.Mu_c = Param()  # charging efficiency
-    model.Mu_d = Param() # discharge efficiency
-    model.Alpha = Param()  # charging rate 2.5 kW -> 2.5 kWh/hour at constant rate
-    model.Beta = Param()  # discharging rate 2.5 kW -> 2.5 kWh/hour at constant rate, etha in Stai
-    model.Smax = Param()  # capacity batteries [kWh]
-    model.Smin = Param()  # [kWh] here 20% of the maximum capacity
+    # Earlier spot price, now a combo of energy and retail
+    model.p_spot = Param(model.T) # Spot price for electricity
+    
+    # Uncertain
+    model.res_cap = Param(model.H_pv) # Installed capacity PV for each house with pv
     model.S_init = Param()  # [kWh] initial battery state
-    model.c_FFR = Param()
 
     # Variables
-    model.x_g = Var(model.T, model.H, within=NonNegativeReals)  # sold power to community c, G in Luth
-    model.d = Var(model.T, model.H_bat, within=NonNegativeReals)  # discharge from batteries
-    model.c = Var(model.T, model.H_bat, within=NonNegativeReals)  # charging from batteries
-    model.s = Var(model.T, model.H_bat, within=NonNegativeReals)  # state of battery, w^{charge} in FFR-paper
-
-    #FFR related Variables----------------------------------------------------------------------------------------------------------------------
-    model.z_FFR = Var(within=NonNegativeReals) #FFR capacity
-    model.r_FFR_charge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from charging house h in time step t [kwh]
-    model.r_FFR_discharge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from discharging h in time step t [kwh]
-    #---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-    model.x = Var(model.T, model.H, within=NonNegativeReals)  # total exports house h
-    model.x_p = Var(model.T, model.P, within=NonNegativeReals)  # exports from house h to house p
-    model.i = Var(model.T, model.H, within=NonNegativeReals)  # total imports house h
-    model.i_p = Var(model.T, model.P, within=NonNegativeReals)  # imports of house h from house p
+    model.C = Var(model.T, model.H_bat, within=NonNegativeReals)  # Charging from batteries
+    model.D = Var(model.T, model.H_bat, within=NonNegativeReals)  # Discharge from batteries
+    model.S = Var(model.T, model.H_bat, within=NonNegativeReals)  # State of battery
+    model.G_import = Var(model.T, model.H, within=NonNegativeReals)  # Grid import
+    model.G_export = Var()  # Grid export
+    model.G_peak = Var()  # Peak power import
+    # FFR related
+    model.R_FFR_charge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from charging house h in time step t [kwh]
+    model.R_FFR_discharge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from discharging h in time step t [kwh]
+    model.Z_FFR = Var(within=NonNegativeReals) #FFR capacity
+    # P2P related
+    model.i = Var(model.T, model.H, within=NonNegativeReals)  # Total imports house h
+    model.i_p = Var(model.T, model.P, within=NonNegativeReals)  # Imports of house h from house p
+    model.x = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
+    model.x_p = Var(model.T, model.P, within=NonNegativeReals)  # Exports from house h to house p
 
     # Objective function - Added FFR
     def objective_function(model):

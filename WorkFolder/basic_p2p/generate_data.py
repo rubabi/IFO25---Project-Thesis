@@ -50,14 +50,16 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     PV_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
 
     # Scalars (single value parameters)
-    Psi = 1 - 0.076  # Losses (assume a loss of 7.6% through the local network, Luth)
-    Mu_c = 0.96  # Charging efficiency
-    Mu_d = 0.96  # Discharging efficiency
-    Alpha = 1.5  # charging rate 2.5 kW -> 1.25 kWh/hour at constant rate
-    Beta = 1.5  # discharging rate 2.5 kW -> 1.25 kWh/hour at constant rate
-    Smax = 4  # capacity batteries [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
-    Smin = Smax * 0.2  # minimum state of charge of batteries at all times
-    S_init = Smax * 0.5  # initial state of charge of the battery
+    alpha = 1.5  # charging rate 2.5 kW -> 1.25 kWh/hour at constant rate
+    beta = 1.5  # discharging rate 2.5 kW -> 1.25 kWh/hour at constant rate
+    eta_charge = 0.96  # Charging efficiency
+    eta_discharge = 0.96  # Discharging efficiency
+    eta_diff = 0 # Diffusion efficiency
+    eta_P2P = 1 - 0.076  # Losses (assume a loss of 7.6% through the local network, Luth)
+    k = 0 # Energy initially available in flexible asset
+    smax = 4  # capacity batteries [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
+    smin = smax * 0.2  # minimum state of charge of batteries at all times
+    s_init = smax * 0.5  # initial state of charge of the battery
     #FFR related---------------------------------------------------------------------------------------------------------------------
     c_FFR = -450 #[Pence/kWh]
 
@@ -74,14 +76,15 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "PV_cap": PV_cap,
             "Dem": P_demand,
             # Scalars
-            "Psi": {None: Psi},
-            "Mu_c": {None: Mu_c},
-            "Mu_d": {None: Mu_d},
-            "Alpha": {None: Alpha},
-            "Beta": {None: Beta},
-            "Smax": {None: Smax},
-            "Smin": {None: Smin},
-            "S_init": {None: S_init},
+            "eta_P2P": {None: eta_P2P},
+            "Mu_c": {None: eta_charge},
+            "Mu_d": {None: eta_discharge},
+            "Alpha": {None: alpha},
+            "Beta": {None: beta},
+            "Smax": {None: smax},
+            "Smin": {None: smin},
+            "S_init": {None: s_init},
+            # Prices
             "c_FFR": {None: c_FFR},
         }}
 
