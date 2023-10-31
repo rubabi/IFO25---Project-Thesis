@@ -22,9 +22,9 @@ def directory(folder):
             print('Invalid directory input')
     elif current_user == OH:
         if folder == "data":
-            return '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/basic_p2p/data/'
+            return '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/basic_p2p/data/test_case/'
         elif folder == "results":
-            return '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/basic_p2p/results/'
+            return '/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/WorkFolder/basic_p2p/results/test_case/'
         else:
             print('Invalid directory input')
     else:
@@ -280,12 +280,12 @@ fig, ax = plt.subplots(figsize=(12,7))
 
 x = x_p_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
 
-for house in x_p_df.index.get_level_values(1).unique():
+'''for house in x_p_df.index.get_level_values(1).unique():
     y = x_p_df[x_p_df.index.get_level_values(1) == house].values
     y_interval = np.empty(48)
     for time_step in range(int(len(y)/n_houses)):
         y_interval[time_step]=y[0+time_step*n_houses:3+time_step*n_houses].sum()
-    ax.plot(x, y_interval, label=f"{house}")
+    ax.plot(x, y_interval, label=f"{house}")'''
 
 ax.set_ylabel("Consumption from grid (kWh)")
 ax.legend()
