@@ -283,7 +283,6 @@ x = x_p_df.index.get_level_values(0).unique() # Get unique values for time, this
 for house in x_p_df.index.get_level_values(1).unique():
     y = x_p_df[x_p_df.index.get_level_values(1) == house].values
     y_interval = np.empty(48)
-    print(len(y))
     for time_step in range(int(len(y)/n_houses)):
         y_interval[time_step]=y[0+time_step*n_houses:3+time_step*n_houses].sum()
     ax.plot(x, y_interval, label=f"{house}")
