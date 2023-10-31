@@ -1,7 +1,7 @@
 # Import other files
 import model_components
-import directories
-import generate_data_dict
+import directories_P2P
+import generate_data
 
 # Import libraries
 import pandas as pd
@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from pyomo.environ import *
 
 # Manual input data
-file_path_data = directories.directory("data") # folder containing data
-file_path_results = directories.directory('results') # folder containing the results
+file_path_data = directories_P2P.directory("data") # folder containing data
+file_path_results = directories_P2P.directory('results') # folder containing the results
 
 start_date_str = "2019-1-01"
 end_date_str = "2019-1-02"
@@ -21,7 +21,7 @@ capacity_pv = [5, 5] # 5 kW of installed capacity for house 1 and 2 respectively
 houses_bat = [1,3] # indicate houses with batteries
 
 # Create dictionary of data with function generate_data_dict()
-data = generate_data_dict.generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
+data = generate_data.generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
 
 # Checking data dictionary (if you want to check what has been constructed)
 #data[None].keys() # Names of parameters
