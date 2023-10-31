@@ -208,7 +208,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     Smin = Smax * 0.2  # minimum state of charge of batteries at all times
     S_init = Smax * 0.5  # initial state of charge of the battery
     #FFR related---------------------------------------------------------------------------------------------------------------------
-    c_FFR = 0.0450 #[Pence/kWh]
+    c_FFR = 450 #[Pence/kWh]
 
     # Construct data dictionary
     data = {  # always start with None and then dictionary
@@ -283,6 +283,7 @@ x = x_p_df.index.get_level_values(0).unique() # Get unique values for time, this
 for house in x_p_df.index.get_level_values(1).unique():
     y = x_p_df[x_p_df.index.get_level_values(1) == house].values
     y_interval = np.empty(48)
+    print(len(y))
     for time_step in range(int(len(y)/n_houses)):
         y_interval[time_step]=y[0+time_step*n_houses:3+time_step*n_houses].sum()
     ax.plot(x, y_interval, label=f"{house}")
