@@ -1,5 +1,5 @@
 # Import other files
-import model_components
+import model_components_P2P
 import directories_P2P
 import generate_data
 
@@ -28,7 +28,7 @@ data = generate_data.generate_data_dict(file_path_data, start_date_str, end_date
 #data[None]["T"] # Substitute T if you want to check another parameter
 
 # Run the model
-instance = model_components.model_p2p(data)
+instance = model_components_P2P.model_p2p(data)
 
 # If you want to see the results, you can call the result as dictionary
 x_p_dict = instance.x_p.get_values()
