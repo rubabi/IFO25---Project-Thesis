@@ -68,7 +68,7 @@ def model_p2p(data):
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
     def balance_equation(model, t, h): # For each time and household, (1) in Luth
-        return (model.G_import[t, h] + (model.F[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0)
+        return (model.G_import[t, h] + (model.res[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0)
                 + model.i[t, h] >= model.dem[t, h] + model.X[t, h] + (model.C[t, h] if h in model.H_bat else 0))
     model.balance_equation = Constraint(model.T, model.H, rule=balance_equation)
 
