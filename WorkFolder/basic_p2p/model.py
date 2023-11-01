@@ -31,29 +31,29 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 instance = model_p2p(data)
 
 # If you want to see the results, you can call the result as dictionary
-x_p_dict = instance.x_p.get_values()
+X_p_dict = instance.X_p.get_values()
 # Then you can convert it to dataframe
-x_p_df = pd.DataFrame.from_dict(x_p_dict, orient="index")
-x_p_df.columns = ["x_p"] # set a name for the dataframe
+X_p_df = pd.DataFrame.from_dict(X_p_dict, orient="index")
+X_p_df.columns = ["X_p"] # set a name for the dataframe
 # In this case, you have a tuple as index, you need to separate them so that you can perform analysis
 # First, set the index as a column
-x_p_df = x_p_df.reset_index()
+X_p_df = X_p_df.reset_index()
 # Then, create one column for each element
-x_p_df[['Time', 'Household', "Peer"]] = pd.DataFrame(x_p_df['index'].tolist(), index=x_p_df.index)
+X_p_df[['Time', 'Household', "Peer"]] = pd.DataFrame(X_p_df['index'].tolist(), index=X_p_df.index)
 # Eliminate the index column containing the tuple
-x_p_df = x_p_df.drop(columns='index')
+X_p_df = X_p_df.drop(columns='index')
 # Set the columns as index again
-x_p_df = x_p_df.set_index(["Time", "Household", "Peer"])
+X_p_df = X_p_df.set_index(["Time", "Household", "Peer"])
 
 # Then you can plot the results or save it as excel
-x_p_df.to_csv(file_path_results + "x_p.csv")
+X_p_df.to_csv(file_path_results + "X_p.csv")
 
 fig, ax = plt.subplots(figsize=(12,7))
 
-x = x_p_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+X = X_p_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
 
-'''for house in x_p_df.index.get_level_values(1).unique():
-    y = x_p_df[x_p_df.index.get_level_values(1) == house].values
+'''for house in X_p_df.index.get_level_values(1).unique():
+    y = X_p_df[X_p_df.index.get_level_values(1) == house].values
     y_interval = np.empty(48)
     for time_step in range(int(len(y)/n_houses)):
         y_interval[time_step]=y[0+time_step*n_houses:3+time_step*n_houses].sum()
