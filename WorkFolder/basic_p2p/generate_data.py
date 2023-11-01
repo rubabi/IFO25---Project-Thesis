@@ -74,7 +74,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "Dem": p_demand,
             "PV": PV[scn],
             "PV_cap": PV_cap,
-            'P_spot': p_spot['day ahead price (p/kWh)'],
+            'p_spot': p_spot['day ahead price (p/kWh)'],
             # Scalars
             "alpha": {None: alpha},
             "beta": {None: beta},
