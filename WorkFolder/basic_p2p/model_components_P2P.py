@@ -64,7 +64,7 @@ def model_p2p(data):
 
     # Objective function - Added FFR
     def objective_function(model):
-        return sum(model.p_spot[t] * model.G[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR
+        return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
     def balance_equation(model, t, h): # For each time and household, (1) in Luth
