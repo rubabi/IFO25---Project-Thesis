@@ -43,7 +43,7 @@ def model_p2p(data):
     
     # Uncertain
     model.res_cap = Param(model.H_pv) # Installed capacity PV for each house with pv
-    model.S_init = Param()  # [kWh] initial battery state
+    model.s_init = Param()  # [kWh] initial battery state
 
     # Variables
     model.C = Var(model.T, model.H_bat, within=NonNegativeReals)  # Charging from batteries
@@ -106,7 +106,7 @@ def model_p2p(data):
     # Battery constraints
     def time_constraint(model, t, h):
         if t.time() == time(0,0): # when the hour is 00:00
-            return model.S[t, h] == model.S_init + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
+            return model.S[t, h] == model.s_init + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
         else:
             t_previous = t - pd.Timedelta(minutes=30)  # Calculate your previous t, change depending on your delta time
             return model.S[t, h] == model.S[t_previous, h] + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
