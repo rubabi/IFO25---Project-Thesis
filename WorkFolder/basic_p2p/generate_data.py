@@ -71,7 +71,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "H_bat": {None: list_houses_bat},  # providing data for set H_bat
             "T": {None: list_T},  # providing datetime for set T
             # Parameters
-            "Dem": p_demand,
+            "dem": dem,
             "res": res[scn],
             "res_cap": res_cap,
             'p_spot': p_spot['day ahead price (p/kWh)'],
