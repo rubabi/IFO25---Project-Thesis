@@ -23,15 +23,15 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     p_spot = p_spot_df_.to_dict()
 
     # Get demand
-    p_demand_df = pd.read_csv(file_path_data + r"demand_Jan_365days.csv", index_col=0,
+    dem_df = pd.read_csv(file_path_data + r"demand_Jan_365days.csv", index_col=0,
                               parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
-    p_demand_df.index = p_demand_df.index.to_pydatetime() # convert to a datetime format required for the model
-    p_demand_df = p_demand_df[list_houses]  # Filter based on the houses selected
-    p_demand_df.index = p_spot_df.index  # Change index from 2013 to 2019. The weeks of the days are the rest, so no more operations are needed
-    p_demand_df_ = p_demand_df[(p_demand_df.index >= start_date) & (p_demand_df.index < end_date)]
-    p_demand_df_ = p_demand_df_.stack()  # Set time and household as index
+    dem_df.index = dem_df.index.to_pydatetime() # convert to a datetime format required for the model
+    dem_df = dem_df[list_houses]  # Filter based on the houses selected
+    dem_df.index = p_spot_df.index  # Change index from 2013 to 2019. The weeks of the days are the rest, so no more operations are needed
+    dem_df_ = dem_df[(dem_df.index >= start_date) & (dem_df.index < end_date)]
+    dem_df_ = dem_df_.stack()  # Set time and household as index
     # Convert the dataframe to dictionary
-    p_demand = p_demand_df_.to_dict()
+    dem = dem_df_.to_dict()
 
     # Get solar profiles, we assume the PV profile is the same for each house given that they are located close to each other
     res_df = pd.read_csv(file_path_data + r"solar_profile_scenarios_yearly.csv", index_col=0,
