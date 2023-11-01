@@ -34,20 +34,20 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     p_demand = p_demand_df_.to_dict()
 
     # Get solar profiles, we assume the PV profile is the same for each house given that they are located close to each other
-    PV_df = pd.read_csv(file_path_data + r"solar_profile_scenarios_yearly.csv", index_col=0,
+    res_df = pd.read_csv(file_path_data + r"solar_profile_scenarios_yearly.csv", index_col=0,
                         parse_dates=[0], date_format=date_format_str)
-    PV_df.index = PV_df.index.to_pydatetime() # convert to a datetime format required for the model
+    res_df.index = res_df.index.to_pydatetime() # convert to a datetime format required for the model
     scn = "1"
-    PV_df = PV_df[[scn]]  # Select just one scenario, the data is prepared for several scenarios
-    PV_df_ = PV_df[(PV_df.index >= start_date) & (PV_df.index < end_date)]
+    res_df = res_df[[scn]]  # Select just one scenario, the data is prepared for several scenarios
+    res_df_ = res_df[(res_df.index >= start_date) & (res_df.index < end_date)]
     # Convert the dataframe to dictionary
-    PV = PV_df_.to_dict()
+    res = res_df_.to_dict()
 
     # Set T
     list_T = p_spot_df_.index.to_list()
 
     # Parameter PV_cap
-    PV_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
+    res_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
 
     # Scalars (single value parameters)
     alpha = 1.5  # charging rate 2.5 kW -> 1.25 kWh/hour at constant rate
@@ -72,8 +72,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "T": {None: list_T},  # providing datetime for set T
             # Parameters
             "Dem": p_demand,
-            "PV": PV[scn],
-            "PV_cap": PV_cap,
+            "res": res[scn],
+            "res_cap": res_cap,
             'p_spot': p_spot['day ahead price (p/kWh)'],
             # Scalars
             "alpha": {None: alpha},
