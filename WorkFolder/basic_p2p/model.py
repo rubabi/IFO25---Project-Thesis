@@ -4,6 +4,7 @@ from directories_P2P import directory
 from generate_data import generate_data_dict
 
 # Import libraries
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from pyomo.environ import *
@@ -52,12 +53,13 @@ fig, ax = plt.subplots(figsize=(12,7))
 
 X = X_p_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
 
-'''for house in X_p_df.index.get_level_values(1).unique():
+# Aggregate the transactions to align shapes
+for house in X_p_df.index.get_level_values(1).unique():
     y = X_p_df[X_p_df.index.get_level_values(1) == house].values
     y_interval = np.empty(48)
     for time_step in range(int(len(y)/n_houses)):
-        y_interval[time_step]=y[0+time_step*n_houses:3+time_step*n_houses].sum()
-    ax.plot(x, y_interval, label=f"{house}")'''
+        y_interval[time_step]=y[time_step*n_houses:n_houses+time_step*n_houses].sum()
+    ax.plot(x, y_interval, label=f"{house}")
 
 ax.set_ylabel("Consumption from grid (kWh)")
 ax.legend()
