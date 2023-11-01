@@ -66,3 +66,5 @@ ax.legend()
 
 fig.tight_layout()
 plt.show()
+
+print(instance.Z_FFR.get_values())

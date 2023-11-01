@@ -62,9 +62,9 @@ def model_p2p(data):
     model.X = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
     model.X_p = Var(model.T, model.P, within=NonNegativeReals)  # Exports from house h to house p
 
-    # Objective function - Added FFR
+    # Objective function - Added FFR, Z must be multiplied by hours???
     def objective_function(model):
-        return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR
+        return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR*len(model.T)/2
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
     def balance_equation(model, t, h): # For each time and household, (1) in Luth
@@ -78,12 +78,13 @@ def model_p2p(data):
     model.FFR_charging_capacity = Constraint(model.T, model.H_bat, rule=FFR_charging_capacity)
 
     def FFR_discharging_capacity(model,t,h):
-        return model.D[t, h] + model.R_FFR_discharge[t, h] >= model.eta_discharge    
+        return model.D[t, h] + model.R_FFR_discharge[t, h] <= model.eta_discharge    
     model.FFR_discharging_capacity = Constraint(model.T, model.H_bat, rule=FFR_discharging_capacity)
 
     def FFR_capacity_sum(model,t, h):
         return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t, h] for h in model.H_bat) >= model.Z_FFR    
     model.FFR_capacity_sum = Constraint(model.T, model.H_bat, rule=FFR_capacity_sum)
+    
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     # P2P constraints
