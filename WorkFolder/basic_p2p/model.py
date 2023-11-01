@@ -58,10 +58,10 @@ for house in X_p_df.index.get_level_values(1).unique():
     y = X_p_df[X_p_df.index.get_level_values(1) == house].values
     y_interval = np.empty(48)
     for time_step in range(int(len(y)/n_houses)):
-        y_interval[time_step]=y[time_step*n_houses:n_houses+time_step*n_houses].sum()
-    ax.plot(x, y_interval, label=f"{house}")
+        y_interval[time_step]=y[time_step*n_houses:n_houses-1+time_step*n_houses].sum()
+    ax.plot(X, y_interval, label=f"{house}")
 
-ax.set_ylabel("Consumption from grid (kWh)")
+ax.set_ylabel("P2P export (kWh)")
 ax.legend()
 
 fig.tight_layout()
