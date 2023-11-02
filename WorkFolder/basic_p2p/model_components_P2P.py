@@ -5,6 +5,9 @@ from pyomo.environ import *
 def model_p2p(data):
     model = AbstractModel()
 
+    #Activate duals / shadow prices
+    model.dual = Suffix(direction=Suffix.IMPORT)
+
     # Sets
     model.F = Set() # Flexible asset types
     model.F_FFR = Set() # Flexible asset types supporting FFR
@@ -136,5 +139,22 @@ def model_p2p(data):
     results = SolverFactory("glpk", Verbose=True).solve(instance, tee=True)
     results.write()
     instance.solutions.load_from(results)
+
+
+    #Try to add shadow prices
+    """
+    if (results.solver.status == SolverStatus.ok) and (results.solver.termination_condition == TerminationCondition.optimal):
+        print("Solver found an optimal solution!")
+    else:
+        print("Solver was not successful!")
+
+    constraint = getattr(instance, 'FFR_capacity_sum', None)
+    if constraint:
+        print(instance.dual[constraint])
+    else:
+        print("FFR_capacity_sum not found in the model.")
+        
+    #print(instance.dual[sum_exports_household])
+    """
 
     return instance

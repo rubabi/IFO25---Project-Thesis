@@ -67,4 +67,4 @@ ax.legend()
 fig.tight_layout()
 plt.show()
 
-print(instance.Z_FFR.get_values())
+print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
