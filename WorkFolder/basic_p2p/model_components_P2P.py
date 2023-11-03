@@ -83,10 +83,6 @@ def model_p2p(data):
     def FFR_discharging_capacity(model,t,h):
         return model.D[t, h] + model.R_FFR_discharge[t, h] <= model.eta_discharge    
     model.FFR_discharging_capacity = Constraint(model.T, model.H_bat, rule=FFR_discharging_capacity)
-
-    #def FFR_capacity_sum(model,t,h):
-    #    return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t, h] for h in model.H_bat) >= model.Z_FFR    
-    #model.FFR_capacity_sum = Constraint(model.T, model.H_bat, rule=FFR_capacity_sum)
     
     def FFR_capacity_sum(model,t):
         return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t, h] for h in model.H_bat) >= model.Z_FFR    
@@ -139,9 +135,6 @@ def model_p2p(data):
     results = SolverFactory("glpk", Verbose=True).solve(instance, tee=True)
     results.write()
     instance.solutions.load_from(results)
-
-    #print value of p_FFR
-    print("p_FFR", instance.p_FFR.value)
 
     # Print shadow prices
     from tools import print_non_zero_shadow_prices, print_non_binding_constraints, print_binding_constraints

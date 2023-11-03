@@ -64,8 +64,19 @@ for house in X_p_df.index.get_level_values(1).unique():
 ax.set_ylabel("P2P export (kWh)")
 ax.legend()
 
+
 fig.tight_layout()
 plt.show()
 
-print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
 
+print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
+#print the average of R_FF_charge and R_FFR_discharge over time
+import statistics as stat
+print("Average R_FFR_charge:", stat.mean(instance.R_FFR_charge.get_values().values()))
+print("Average R_FFR_discharge:", stat.mean(instance.R_FFR_discharge.get_values().values()))
+
+# Note 03/11 - Jakob
+# Introduced the tools.py with simple functions for finding which constraints are binding and which are not. Thouse are called in the model_components_P2P.py. Also added simple printing for Z_FFR & R_FFR
+# When setting p_FFR=0, I would assume the model to return the same results as the base case without FFR. This seems not to be the case.
+# It seems like the constraint FFR_discharging_capacity is influencing the result in that case (at least commenting away the constraint gives the same result as the base case).'
+# Need to look further into this. Could be a a problem with the model or a bug.
