@@ -64,7 +64,7 @@ def model_p2p(data):
     model.I_p = Var(model.T, model.P, within=NonNegativeReals)  # Imports of house h from house p
     model.X = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
     model.X_p = Var(model.T, model.P, within=NonNegativeReals)  # Exports from house h to house p
-
+    
     # Objective function - Added FFR, Z must be multiplied by hours???
     def objective_function(model):
         return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR*len(model.T)/2
@@ -140,21 +140,14 @@ def model_p2p(data):
     results.write()
     instance.solutions.load_from(results)
 
+    #print value of p_FFR
+    print("p_FFR", instance.p_FFR.value)
 
-    #Try to add shadow prices
-    """
-    if (results.solver.status == SolverStatus.ok) and (results.solver.termination_condition == TerminationCondition.optimal):
-        print("Solver found an optimal solution!")
-    else:
-        print("Solver was not successful!")
+    # Print shadow prices
+    from tools import print_non_zero_shadow_prices, print_non_binding_constraints, print_binding_constraints
+    #print_non_zero_shadow_prices(instance, Constraint)
+    print_non_binding_constraints(instance, Constraint)
+    print_binding_constraints(instance, Constraint)
 
-    constraint = getattr(instance, 'FFR_capacity_sum', None)
-    if constraint:
-        print(instance.dual[constraint])
-    else:
-        print("FFR_capacity_sum not found in the model.")
-        
-    #print(instance.dual[sum_exports_household])
-    """
 
     return instance

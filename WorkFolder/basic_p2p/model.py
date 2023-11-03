@@ -68,3 +68,4 @@ fig.tight_layout()
 plt.show()
 
 print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
+
