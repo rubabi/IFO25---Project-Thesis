@@ -4,6 +4,7 @@ import getpass
 current_user = getpass.getuser()
 JK = "jakob"
 OH = "olehermanimset"
+RI = "rubabishmam"
 
 def directory(folder):
     
