@@ -31,7 +31,7 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 # Run the model
 instance = model_p2p(data)
 
-def print_exports():
+def print_exports(): # Printing function template sort of
     # If you want to see the results, you can call the result as dictionary
     X_p_dict = instance.X_p.get_values()
     # Then you can convert it to dataframe
