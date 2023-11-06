@@ -29,7 +29,7 @@ def print_binding_constraints(instance, Constraint):
             print ("   ",c)
     print ("")
 
-def print_exports(instance, file_path_results, n_houses): # Printing function template sort of
+def print_P2P_exports(instance, file_path_results, n_houses): # Printing function template sort of
     # If you want to see the results, you can call the result as dictionary
     X_p_dict = instance.X_p.get_values()
     # Then you can convert it to dataframe
@@ -55,9 +55,9 @@ def print_exports(instance, file_path_results, n_houses): # Printing function te
     # Aggregate the transactions to align shapes
     for house in X_p_df.index.get_level_values(1).unique():
         y = X_p_df[X_p_df.index.get_level_values(1) == house].values
-        y_interval = np.empty(48)
+        y_interval = np.empty(len(X))
         for time_step in range(int(len(y)/n_houses)):
-            y_interval[time_step]=y[time_step*n_houses:n_houses-1+time_step*n_houses].sum()
+            y_interval[time_step]=y[time_step*n_houses:n_houses+time_step*n_houses].sum()
         ax.plot(X, y_interval, label=f"{house}")
 
     ax.set_ylabel("P2P export (kWh)")

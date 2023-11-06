@@ -2,7 +2,7 @@
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
-from tools import print_exports, calculating_savings
+from tools import print_P2P_exports, calculating_savings
 
 # Import libraries
 import numpy as np
@@ -38,7 +38,8 @@ print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
 print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
 print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
 
-#print_exports(instance, file_path_results, n_houses)
+# Printing P2P exports
+print_P2P_exports(instance, file_path_results, n_houses)
 
 # Printing savings
 savings = calculating_savings(instance)
