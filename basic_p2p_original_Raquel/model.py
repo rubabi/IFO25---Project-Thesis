@@ -198,8 +198,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     return data
 
 # Manual input data
-file_path_data = r"C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/basic_p2p_original_Raquel/data/test_case/" # folder containing data
-file_path_results =  r"C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/basic_p2p_original_Raquel/data/test_case/" # folder containing the results
+file_path_data = r"/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/basic_p2p_original_Raquel/data/test_case/" # folder containing data
+file_path_results =  r"/Users/olehermanimset/Library/CloudStorage/OneDrive-NTNU/9. Semester/Project Thesis/IFO25---Project-Thesis/basic_p2p_original_Raquel/results/test_case/" # folder containing the results
 
 start_date_str = "2019-1-01"
 end_date_str = "2019-1-02"

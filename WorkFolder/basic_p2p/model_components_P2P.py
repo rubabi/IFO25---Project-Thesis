@@ -81,7 +81,7 @@ def model_p2p(data):
     model.FFR_charging_capacity = Constraint(model.T, model.H_bat, rule=FFR_charging_capacity)
 
     def FFR_discharging_capacity(model,t,h):
-        return model.D[t, h] + model.R_FFR_discharge[t, h] <= model.eta_discharge    
+        return model.D[t, h] + model.R_FFR_discharge[t, h] <= model.beta   
     model.FFR_discharging_capacity = Constraint(model.T, model.H_bat, rule=FFR_discharging_capacity)
     
     def FFR_capacity_sum(model,t):

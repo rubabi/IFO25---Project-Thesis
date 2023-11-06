@@ -87,5 +87,5 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             # Prices
             "p_FFR": {None: p_FFR},
         }}
-
+    
     return data
