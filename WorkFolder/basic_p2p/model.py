@@ -32,12 +32,13 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 instance = model_p2p(data)
 
 print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
-#print the average of R_FF_charge and R_FFR_discharge over time
+#print the average of R_FFR_charge and R_FFR_discharge over time
 import statistics as stat
-print("Average R_FFR_charge:", stat.mean(instance.R_FFR_charge.get_values().values()))
-print("Average R_FFR_discharge:", stat.mean(instance.R_FFR_discharge.get_values().values()))
+print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
+print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
 from tools import print_exports
-print_exports(instance, file_path_results, n_houses)
+#print_exports(instance, file_path_results, n_houses)
+
 
 # Note 03/11 - Jakob
 # Introduced the tools.py with simple functions for finding which constraints are binding and which are not. Those are called in the model_components_P2P.py. Also added simple printing for Z_FFR & R_FFR

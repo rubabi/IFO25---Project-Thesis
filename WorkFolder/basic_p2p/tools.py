@@ -29,7 +29,6 @@ def print_binding_constraints(instance, Constraint):
             print ("   ",c)
     print ("")
 
-
 def print_exports(instance, file_path_results, n_houses): # Printing function template sort of
     # If you want to see the results, you can call the result as dictionary
     X_p_dict = instance.X_p.get_values()

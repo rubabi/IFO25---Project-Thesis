@@ -50,8 +50,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     res_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
 
     # Scalars (single value parameters)
-    alpha = 1.5  # charging rate 2.5 kW -> 1.25 kWh/hour at constant rate
-    beta = 1.5  # discharging rate 2.5 kW -> 1.25 kWh/hour at constant rate
+    alpha = 2.5  # charging rate 2.5 kW -> 1.25 kWh/ half hour at constant rate
+    beta = 2.5 # discharging rate 2.5 kW -> 1.25 kWh/ half hour at constant rate
     eta_charge = 0.96  # Charging efficiency
     eta_discharge = 0.96  # Discharging efficiency
     eta_diff = 0 # Diffusion efficiency
