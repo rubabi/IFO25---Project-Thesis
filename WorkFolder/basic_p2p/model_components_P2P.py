@@ -55,11 +55,11 @@ def model_p2p(data):
     model.G_import = Var(model.T, model.H, within=NonNegativeReals)  # Grid import
     model.G_export = Var()  # Grid export
     model.G_peak = Var()  # Peak power import
-    # FFR related
+        # FFR related
     model.R_FFR_charge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from charging house h in time step t [kwh]
     model.R_FFR_discharge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from discharging h in time step t [kwh]
     model.Z_FFR = Var(within=NonNegativeReals) #FFR capacity
-    # P2P related
+        # P2P related
     model.I = Var(model.T, model.H, within=NonNegativeReals)  # Total imports house h
     model.I_p = Var(model.T, model.P, within=NonNegativeReals)  # Imports of house h from house p
     model.X = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
@@ -67,7 +67,7 @@ def model_p2p(data):
     
     # Objective function - Added FFR, Z must be multiplied by hours???
     def objective_function(model):
-        return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR*len(model.T)/2
+        return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR*len(model.T)
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
     def balance_equation(model, t, h): # For each time and household, (1) in Luth
@@ -85,7 +85,7 @@ def model_p2p(data):
     model.FFR_discharging_capacity = Constraint(model.T, model.H_bat, rule=FFR_discharging_capacity)
     
     def FFR_capacity_sum(model,t):
-        return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t,h] for h in model.H_bat) >= model.Z_FFR    
+        return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t,h] for h in model.H_bat) >= model.Z_FFR #Problem related to half hour time steps   
     model.FFR_capacity_sum = Constraint(model.T, rule=FFR_capacity_sum)
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
