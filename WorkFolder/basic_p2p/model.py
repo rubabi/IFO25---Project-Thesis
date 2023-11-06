@@ -37,7 +37,7 @@ import statistics as stat
 print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
 print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
 from tools import print_exports
-#print_exports(instance, file_path_results, n_houses)
+print_exports(instance, file_path_results, n_houses)
 
 
 # Note 03/11 - Jakob
