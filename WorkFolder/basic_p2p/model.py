@@ -31,50 +31,13 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 # Run the model
 instance = model_p2p(data)
 
-def print_exports(): # Printing function template sort of
-    # If you want to see the results, you can call the result as dictionary
-    X_p_dict = instance.X_p.get_values()
-    # Then you can convert it to dataframe
-    X_p_df = pd.DataFrame.from_dict(X_p_dict, orient="index")
-    X_p_df.columns = ["X_p"] # set a name for the dataframe
-    # In this case, you have a tuple as index, you need to separate them so that you can perform analysis
-    # First, set the index as a column
-    X_p_df = X_p_df.reset_index()
-    # Then, create one column for each element
-    X_p_df[['Time', 'Household', "Peer"]] = pd.DataFrame(X_p_df['index'].tolist(), index=X_p_df.index)
-    # Eliminate the index column containing the tuple
-    X_p_df = X_p_df.drop(columns='index')
-    # Set the columns as index again
-    X_p_df = X_p_df.set_index(["Time", "Household", "Peer"])
-
-    # Then you can plot the results or save it as excel
-    X_p_df.to_csv(file_path_results + "X_p.csv")
-
-    fig, ax = plt.subplots(figsize=(12,7))
-
-    X = X_p_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
-
-    # Aggregate the transactions to align shapes
-    for house in X_p_df.index.get_level_values(1).unique():
-        y = X_p_df[X_p_df.index.get_level_values(1) == house].values
-        y_interval = np.empty(48)
-        for time_step in range(int(len(y)/n_houses)):
-            y_interval[time_step]=y[time_step*n_houses:n_houses-1+time_step*n_houses].sum()
-        ax.plot(X, y_interval, label=f"{house}")
-
-    ax.set_ylabel("P2P export (kWh)")
-    ax.legend()
-
-    fig.tight_layout()
-    plt.show()
-    
-print_exports()
-
 print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
 #print the average of R_FF_charge and R_FFR_discharge over time
 import statistics as stat
 print("Average R_FFR_charge:", stat.mean(instance.R_FFR_charge.get_values().values()))
 print("Average R_FFR_discharge:", stat.mean(instance.R_FFR_discharge.get_values().values()))
+from tools import print_exports
+print_exports(instance, file_path_results, n_houses)
 
 # Note 03/11 - Jakob
 # Introduced the tools.py with simple functions for finding which constraints are binding and which are not. Those are called in the model_components_P2P.py. Also added simple printing for Z_FFR & R_FFR
