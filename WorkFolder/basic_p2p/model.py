@@ -67,6 +67,8 @@ def print_exports(): # Printing function template sort of
 
     fig.tight_layout()
     plt.show()
+    
+print_exports()
 
 print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
 #print the average of R_FF_charge and R_FFR_discharge over time
