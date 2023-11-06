@@ -54,11 +54,11 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
 
     # Aggregate the transactions to align shapes
     for house in X_p_df.index.get_level_values(1).unique():
-        y = X_p_df[X_p_df.index.get_level_values(1) == house].values
-        y_interval = np.empty(len(X))
-        for time_step in range(int(len(y)/n_houses)):
-            y_interval[time_step]=y[time_step*n_houses:n_houses+time_step*n_houses].sum()
-        ax.plot(X, y_interval, label=f"{house}")
+        Y = X_p_df[X_p_df.index.get_level_values(1) == house].values
+        Y_aggregated = np.empty(len(X))
+        for time_step in range(int(len(Y)/n_houses)):
+            Y_aggregated[time_step]=Y[time_step*n_houses:n_houses+time_step*n_houses].sum()
+        ax.plot(X, Y_aggregated, label=f"{house}")
 
     ax.set_ylabel("P2P export (kWh)")
     ax.legend()
