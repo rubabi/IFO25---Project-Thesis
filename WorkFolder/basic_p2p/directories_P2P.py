@@ -24,9 +24,9 @@ def directory(folder):
             print('Invalid directory input')
     elif current_user == RI:
         if folder == "data":
-            return 'C:\Users\rubab\Desktop\NTNU\Semester\11Semester\TIO4550\KodingIFO25\IFO25---Project-Thesis\WorkFolder\basic_p2p\data\test_case'
+            return 'C:/Users/rubab/Desktop/NTNU/Semester/11Semester/TIO4550/KodingIFO25/IFO25---Project-Thesis/WorkFolder/basic_p2p/data/test_case/'
         elif folder == "results":
-            return 'C:\Users\rubab\Desktop\NTNU\Semester\11Semester\TIO4550\KodingIFO25\IFO25---Project-Thesis\WorkFolder\basic_p2p\results\test_case'
+            return 'C:/Users/rubab/Desktop/NTNU/Semester/11Semester/TIO4550/KodingIFO25/IFO25---Project-Thesis/WorkFolder/basic_p2p/results/test_case/'
         else:
             print('Invalid directory input')
     else:
