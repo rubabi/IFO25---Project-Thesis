@@ -65,3 +65,20 @@ def print_exports(instance, file_path_results, n_houses): # Printing function te
 
     fig.tight_layout()
     plt.show()
+
+def calculating_savings(instance):
+    # Creating the denominator - the case of no savings
+    no_savings = 1
+
+    # Finding savings from P2P
+    X_p_dict = instance.X_p.get_values() # Collecting P2P transaction data
+    X_p_df = pd.DataFrame.from_dict(X_p_dict, orient="index") # Converting to DF
+    X_p_df.columns = ["X_p"] # Naming the dataframe
+    X_p_df = X_p_df.reset_index()
+    X_p_df[['Time', 'Household', "Peer"]] = pd.DataFrame(X_p_df['index'].tolist(), index=X_p_df.index) # Create a colun for each element
+    X_p_df = X_p_df.drop(columns='index') # Eliminate the index column containing the tuple
+    P2P_savings = X_p_df['X_p'].sum() # Summing the savings from P2P transactions
+
+    bill_reduction = P2P_savings/no_savings
+
+    return bill_reduction, P2P_savings, no_savings

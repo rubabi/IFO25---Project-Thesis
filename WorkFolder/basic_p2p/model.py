@@ -2,12 +2,14 @@
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
+from tools import print_exports, calculating_savings
 
 # Import libraries
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from pyomo.environ import *
+import statistics as stat
 
 # Manual input data
 file_path_data = directory("data") # folder containing data
@@ -18,7 +20,7 @@ end_date_str = "2019-1-02"
 
 n_houses = 4
 houses_pv = [1,2] # indicate houses with pv
-capacity_pv = [5, 5] # 5 kW of installed capacity for house 1 and 2 respectively
+capacity_pv = [5,5] # 5 kW of installed capacity for house 1 and 2 respectively
 houses_bat = [1,3] # indicate houses with batteries
 
 # Create dictionary of data with function generate_data_dict()
@@ -31,14 +33,17 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 # Run the model
 instance = model_p2p(data)
 
+# Print interesting values
 print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
-#print the average of R_FFR_charge and R_FFR_discharge over time
-import statistics as stat
 print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
 print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
-from tools import print_exports
-print_exports(instance, file_path_results, n_houses)
 
+#print_exports(instance, file_path_results, n_houses)
+
+# Printing savings
+savings = calculating_savings(instance)
+bill_reduction = savings[0]
+print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
 
 # Note 03/11 - Jakob
 # Introduced the tools.py with simple functions for finding which constraints are binding and which are not. Those are called in the model_components_P2P.py. Also added simple printing for Z_FFR & R_FFR
