@@ -1,4 +1,10 @@
-# Import other files
+# Import files 
+import model_components_P2P
+import directories_P2P
+import generate_data
+import tools
+
+# Import flie functons
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
@@ -34,7 +40,7 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 instance = model_p2p(data)
 
 # Print interesting values
-print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
+print(f'Reserved FFR Capacity: {round(instance.Z_FFR.get_values()[None],2)}')
 '''print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
 print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))'''
 
@@ -43,8 +49,13 @@ print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))'''
 
 # Printing savings
 savings = calculating_savings(instance,n_houses)
-bill_reduction = savings[0]
+no_savings = savings[0]
+bill_reduction = savings[1]
+P2P_savings = savings[2]
+FFR_savings = savings[3]
+
 print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
+print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
 
 # Note 03/11 - Jakob
 # Introduced the tools.py with simple functions for finding which constraints are binding and which are not. Those are called in the model_components_P2P.py. Also added simple printing for Z_FFR & R_FFR

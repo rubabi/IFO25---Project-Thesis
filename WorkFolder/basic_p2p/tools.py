@@ -70,19 +70,26 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
 def calculating_savings(instance, n_houses):
     # Creating the denominator - the case of no savings
     demand_df = pd.read_csv(directory('data')+'demand_Jan_365days.csv')
-    demand_df_scope = demand_df.iloc[:, :n_houses + 1]
-    demand_df_scope['Community demand'] = demand_df_scope.iloc[:, 1:].sum(axis=1)
+    demand_df = demand_df.iloc[:, :n_houses + 1]
+    demand_df['Community demand'] = demand_df.iloc[:, 1:].sum(axis=1)
 
     prices_df = pd.read_csv(directory('data')+'dayahead_Jan_365days.csv')
-
+    
     from_grid_df = pd.DataFrame()
     from_grid_df['time'] = demand_df['time'][:48]
-    from_grid_df['Community grid expenditure'] = demand_df_scope['Community demand'][:48] * prices_df['day ahead price (p/kWh)'][:48]
+    from_grid_df['Community grid expenditure'] = (demand_df['Community demand']) * prices_df['day ahead price (p/kWh)'][:48]
     
     no_savings = from_grid_df['Community grid expenditure'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    # Finding savings from P2P
+    # PV savings
+    pv_prod_df = pd.read_csv(directory('data')+'solar_profile_scenarios_yearly.csv')
+    pv_prod_df = pv_prod_df.iloc[:48, :3]
+    pv_prod_df = pv_prod_df.rename(columns={pv_prod_df.columns[0]: 'time'})
+    pv_prod_df['Community PV production'] = pv_prod_df.iloc[:, 1:].sum(axis=1)
+    #------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # P2P savings
     X_p_dict = instance.X_p.get_values() # Collecting P2P transaction data
     X_p_df = pd.DataFrame.from_dict(X_p_dict, orient="index") # Converting to DF
     X_p_df.columns = ["X_p"] # Naming the dataframe
@@ -94,7 +101,6 @@ def calculating_savings(instance, n_houses):
     aggregated_df = pd.DataFrame()
     aggregated_df['time'] = X_p_df['Time'].unique()  
 
-    # Something wrong with this loop
     for house in range(n_houses): # Get unique houses
         Y = X_p_df[X_p_df['Household'] == f'H{house + 1}']['X_p'].values # Transactions per house
         Y_aggregated = np.empty(len(X)) # Create an empty array to aggregate transactions per house per time step
@@ -113,9 +119,12 @@ def calculating_savings(instance, n_houses):
     P2P_savings = P2P_savings_df['Community savings'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    # Savings from FFR
+    # FFR savings
+    Z_FFR = instance.Z_FFR.get_values()[None]
+    FFR_price = 2.25 #[Pence/0.5kWh] (half hour)
+    FFR_savings = Z_FFR*FFR_price*len(X)
+    #------------------------------------------------------------------------------------------------------------------------------------------------
 
+    bill_reduction = (P2P_savings+FFR_savings)/no_savings
 
-    bill_reduction = P2P_savings/no_savings
-
-    return bill_reduction, P2P_savings, no_savings
+    return no_savings,bill_reduction,P2P_savings,FFR_savings
