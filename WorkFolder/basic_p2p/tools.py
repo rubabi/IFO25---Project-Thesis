@@ -100,7 +100,7 @@ def calculating_savings(instance, n_houses):
         for time_step in range(int(len(Y)/n_houses)):
             Y_aggregated[time_step] = Y[time_step*n_houses:n_houses+time_step*n_houses].sum() # Aggregating 
         
-        aggregated_df[f'H{house+1}'] = Y_aggregated # Adding the aggregation to a new column in the dataframe
+        aggregated_df[f'H{house+1}'] = Y_aggregated[house] # Adding the aggregation to a new column in the dataframe
 
     P2P_savings_df = pd.DataFrame()
     P2P_savings_df['time'] = X_p_df['Time'].unique()  
