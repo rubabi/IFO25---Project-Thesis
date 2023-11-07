@@ -93,17 +93,18 @@ def calculating_savings(instance, n_houses):
     aggregated_df = pd.DataFrame()
     aggregated_df['time'] = X_p_df['Time'].unique()  
 
-    for house in X_p_df.index.get_level_values(1).unique(): # Get unique houses
-        Y = X_p_df[X_p_df.index.get_level_values(1) == house].values # Find transactions per house
+    for house in range(n_houses): # Get unique houses
+        Y = X_p_df[X_p_df['Household'] == f'H{house + 1}']['X_p'].values # Transactions per house
         Y_aggregated = np.empty(len(X)) # Create an empty array to aggregate transactions per house per time step
         for time_step in range(int(len(Y)/n_houses)):
-            Y_aggregated[time_step]=Y[time_step*n_houses:n_houses+time_step*n_houses].sum() # Aggregating
-        aggregated_df[f'H{house+1}']=Y_aggregated # Adding the aggreagation to a new column in the dataframe
+            Y_aggregated[time_step] = Y[time_step*n_houses:n_houses+time_step*n_houses].sum() # Aggregating 
+        
+        aggregated_df[f'H{house+1}'] = Y_aggregated # Adding the aggregation to a new column in the dataframe
 
     P2P_savings_df = pd.DataFrame()
     P2P_savings_df['time'] = X_p_df['Time'].unique()  
 
-    for house in n_houses:  # Summing the savings from P2P transactions
+    for house in range(n_houses):  # Summing the savings from P2P transactions
         P2P_savings_df[f'H{house+1}'] = aggregated_df[f'H{house+1}'][:48] * prices_df['day ahead price (p/kWh)'][:48]
 
     P2P_savings_df['Community savings'] = P2P_savings_df.iloc[:, 1:].sum(axis=1)
