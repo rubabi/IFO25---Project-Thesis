@@ -93,6 +93,7 @@ def calculating_savings(instance, n_houses):
     aggregated_df = pd.DataFrame()
     aggregated_df['time'] = X_p_df['Time'].unique()  
 
+    # Something wrong with this loop
     for house in range(n_houses): # Get unique houses
         Y = X_p_df[X_p_df['Household'] == f'H{house + 1}']['X_p'].values # Transactions per house
         Y_aggregated = np.empty(len(X)) # Create an empty array to aggregate transactions per house per time step
