@@ -34,8 +34,8 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 instance = model_p2p(data)
 
 # Print interesting values
-'''print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
-print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
+print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
+'''print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
 print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))'''
 
 # Printing P2P exports

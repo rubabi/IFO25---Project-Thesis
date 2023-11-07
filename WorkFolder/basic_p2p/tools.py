@@ -80,6 +80,7 @@ def calculating_savings(instance, n_houses):
     from_grid_df['Community grid expenditure'] = demand_df_scope['Community demand'][:48] * prices_df['day ahead price (p/kWh)'][:48]
     
     no_savings = from_grid_df['Community grid expenditure'].sum()
+    #------------------------------------------------------------------------------------------------------------------------------------------------
 
     # Finding savings from P2P
     X_p_dict = instance.X_p.get_values() # Collecting P2P transaction data
@@ -110,6 +111,10 @@ def calculating_savings(instance, n_houses):
 
     P2P_savings_df['Community savings'] = P2P_savings_df.iloc[:, 1:].sum(axis=1)
     P2P_savings = P2P_savings_df['Community savings'].sum()
+    #------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Savings from FFR
+
 
     bill_reduction = P2P_savings/no_savings
 
