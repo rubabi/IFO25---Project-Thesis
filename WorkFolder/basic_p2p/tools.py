@@ -71,11 +71,15 @@ def calculating_savings(instance, n_houses):
     # Creating the denominator - the case of no savings
     demand_df = pd.read_csv(directory('data')+'demand_Jan_365days.csv')
     demand_df_scope = demand_df.iloc[:, :n_houses + 1]
+    demand_df_scope['Community demand'] = demand_df_scope.iloc[:, 1:].sum(axis=1)
 
-    for house in range(n_houses):
-        a=1
+    prices_df = pd.read_csv(directory('data')+'dayahead_Jan_365days.csv')
+
+    from_grid_df = pd.DataFrame()
+    from_grid_df['time'] = demand_df['time'][:48]
+    from_grid_df['Community grid expenditure'] = demand_df_scope['Community demand'][:48] * prices_df['day ahead price (p/kWh)'][:48]
     
-    no_savings = 1
+    no_savings = from_grid_df['Community grid expenditure'].sum()
 
     # Finding savings from P2P
     X_p_dict = instance.X_p.get_values() # Collecting P2P transaction data

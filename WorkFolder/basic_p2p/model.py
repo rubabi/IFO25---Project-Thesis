@@ -34,15 +34,15 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 instance = model_p2p(data)
 
 # Print interesting values
-print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
+'''print("Reserved FFR Capacity:", instance.Z_FFR.get_values()[None])
 print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
-print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
+print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))'''
 
 # Printing P2P exports
-print_P2P_exports(instance, file_path_results, n_houses)
+#print_P2P_exports(instance, file_path_results, n_houses)
 
 # Printing savings
-savings = calculating_savings(instance)
+savings = calculating_savings(instance,n_houses)
 bill_reduction = savings[0]
 print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
 
