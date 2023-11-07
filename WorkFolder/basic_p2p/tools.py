@@ -89,7 +89,7 @@ def calculating_savings(instance, n_houses):
     X_p_df[['Time', 'Household', "Peer"]] = pd.DataFrame(X_p_df['index'].tolist(), index=X_p_df.index) # Create a colun for each element
     X_p_df = X_p_df.drop(columns='index') # Eliminate the index column containing the tuple
 
-    X = X_p_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    X = X_p_df['Time'].unique() # Get unique values for time, this will be the x-axis
     aggregated_df = pd.DataFrame()
     aggregated_df['time'] = X_p_df['Time'].unique()  
 
@@ -100,8 +100,8 @@ def calculating_savings(instance, n_houses):
         for time_step in range(int(len(Y)/n_houses)):
             Y_aggregated[time_step] = Y[time_step*n_houses:n_houses+time_step*n_houses].sum() # Aggregating 
         
-        aggregated_df[f'H{house+1}'] = Y_aggregated[house] # Adding the aggregation to a new column in the dataframe
-
+        aggregated_df[f'H{house+1}'] = Y_aggregated # Adding the aggregation to a new column in the dataframe 
+    
     P2P_savings_df = pd.DataFrame()
     P2P_savings_df['time'] = X_p_df['Time'].unique()  
 
