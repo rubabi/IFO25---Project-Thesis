@@ -67,9 +67,14 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     fig.tight_layout()
     plt.show()
 
-def calculating_savings(instance):
+def calculating_savings(instance, n_houses):
     # Creating the denominator - the case of no savings
     demand_df = pd.read_csv(directory('data')+'demand_Jan_365days.csv')
+    demand_df_scope = demand_df.iloc[:, :n_houses + 1]
+
+    for house in range(n_houses):
+        a=1
+    
     no_savings = 1
 
     # Finding savings from P2P
