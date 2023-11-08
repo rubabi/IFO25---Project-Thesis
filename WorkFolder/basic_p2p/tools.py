@@ -2,6 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from directories_P2P import directory
+from generate_data import generate_data_dict
+
+
 
 def print_non_zero_shadow_prices(instance, Constraint):
         #Show shadow prices
@@ -68,7 +71,7 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     plt.show()
 
 def calculating_savings(instance, n_houses):
-    
+
     # Creating the denominator - the case of no savings
     demand_df = pd.read_csv(directory('data')+'demand_Jan_365days.csv')
     demand_df = demand_df.iloc[:, :n_houses + 1]

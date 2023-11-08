@@ -41,8 +41,8 @@ instance = model_p2p(data)
 
 # Print interesting values
 print(f'Reserved FFR Capacity: {round(instance.Z_FFR.get_values()[None],2)}')
-'''print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
-print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))'''
+print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
+print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
 
 # Printing P2P exports
 #print_P2P_exports(instance, file_path_results, n_houses)
@@ -55,6 +55,8 @@ P2P_savings = savings[2]
 FFR_savings = savings[3]
 
 print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
+print(f'No savings: {round(no_savings,2)}')
+print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
 print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
 
 # Note 03/11 - Jakob

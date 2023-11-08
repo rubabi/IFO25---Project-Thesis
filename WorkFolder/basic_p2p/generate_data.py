@@ -50,8 +50,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     res_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
 
     # Scalars (single value parameters)
-    alpha = 2.5  # charging rate 2.5 kW -> 1.25 kWh/ half hour at constant rate
-    beta = 2.5 # discharging rate 2.5 kW -> 1.25 kWh/ half hour at constant rate
+    alpha = 2.5  # Charging capacuty 2.5 kW -> 1.25 kWh/ half hour at constant rate
+    beta = 2.5 # Discharging capacity 2.5 kW -> 1.25 kWh/ half hour at constant rate
     eta_charge = 0.96  # Charging efficiency
     eta_discharge = 0.96  # Discharging efficiency
     eta_diff = 0 # Diffusion efficiency
@@ -61,7 +61,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     smin = smax * 0.2  # minimum state of charge of batteries at all times
     s_init = smax * 0.5  # initial state of charge of the battery
     #FFR related---------------------------------------------------------------------------------------------------------------------
-    p_FFR = 2.25 #[Pence/0.5kWh] (half hour)
+    p_FFR = 0 #[Pence/0.5kWh] (half hour)
 
     # Construct data dictionary
     data = {  # always start with None and then dictionary
