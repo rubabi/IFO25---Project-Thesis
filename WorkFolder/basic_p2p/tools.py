@@ -70,14 +70,14 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     fig.tight_layout()
     plt.show()
 
-def calculating_savings(instance, n_houses):
+def calculating_savings(instance, n_houses, start_date, end_date):
 
     # Creating the denominator - the case of no savings
     demand_df = pd.read_csv(directory('data')+'demand_Jan_365days.csv')
     demand_df = demand_df.iloc[:, :n_houses + 1]
     demand_df['Community demand'] = demand_df.iloc[:, 1:].sum(axis=1)
 
-    prices_df = pd.read_csv(directory('data')+'FlatRatePrice.csv')
+    prices_df = pd.read_csv(directory('data')+'dayahead_Jan_365days.csv')
     
     from_grid_df = pd.DataFrame()
     from_grid_df['time'] = demand_df['time'][:48]

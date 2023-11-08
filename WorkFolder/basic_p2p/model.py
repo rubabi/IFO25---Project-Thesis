@@ -22,7 +22,7 @@ file_path_data = directory("data") # folder containing data
 file_path_results = directory('results') # folder containing the results
 
 start_date_str = "2019-1-01"
-end_date_str = "2019-1-02"
+end_date_str = "2019-1-2"
 
 n_houses = 4
 houses_pv = [1,2] # indicate houses with pv
@@ -40,6 +40,7 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 instance = model_p2p(data)
 
 # Print interesting values
+print(f'The FFR price set: {instance.p_FFR.value}')
 print(f'Reserved FFR Capacity: {round(instance.Z_FFR.get_values()[None],2)}')
 print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
 print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
@@ -48,14 +49,14 @@ print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
 #print_P2P_exports(instance, file_path_results, n_houses)
 
 # Printing savings
-savings = calculating_savings(instance,n_houses)
+savings = calculating_savings(instance,n_houses, start_date_str, end_date_str)
 no_savings = savings[0]
 bill_reduction = savings[1]
 P2P_savings = savings[2]
 FFR_savings = savings[3]
 
 print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
-print(f'No savings: {round(no_savings,2)}')
+print(f'No savings: {round(no_savings,2)} pence')
 print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
 print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
 
