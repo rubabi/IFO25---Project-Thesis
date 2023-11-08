@@ -77,7 +77,7 @@ def calculating_savings(instance, n_houses):
     demand_df = demand_df.iloc[:, :n_houses + 1]
     demand_df['Community demand'] = demand_df.iloc[:, 1:].sum(axis=1)
 
-    prices_df = pd.read_csv(directory('data')+'dayahead_Jan_365days.csv')
+    prices_df = pd.read_csv(directory('data')+'FlatRatePrice.csv')
     
     from_grid_df = pd.DataFrame()
     from_grid_df['time'] = demand_df['time'][:48]
@@ -125,7 +125,7 @@ def calculating_savings(instance, n_houses):
 
     # FFR savings
     Z_FFR = instance.Z_FFR.get_values()[None]
-    FFR_price = 2.25 #[Pence/0.5kWh] (half hour)
+    FFR_price = 2.25 #[Pence/0.5kW] (half hour)
     FFR_savings = Z_FFR*FFR_price*len(X)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
