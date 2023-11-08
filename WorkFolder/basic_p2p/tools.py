@@ -68,6 +68,7 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     plt.show()
 
 def calculating_savings(instance, n_houses):
+    
     # Creating the denominator - the case of no savings
     demand_df = pd.read_csv(directory('data')+'demand_Jan_365days.csv')
     demand_df = demand_df.iloc[:, :n_houses + 1]
