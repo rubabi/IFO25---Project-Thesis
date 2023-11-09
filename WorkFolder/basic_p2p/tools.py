@@ -4,8 +4,6 @@ import numpy as np
 from directories_P2P import directory
 from generate_data import generate_data_dict
 
-
-
 def print_non_zero_shadow_prices(instance, Constraint):
         #Show shadow prices
     print("Shadow prices:")
