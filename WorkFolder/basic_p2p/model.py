@@ -43,6 +43,25 @@ instance = model_p2p(data)
 print(f'The FFR price set: {instance.p_FFR.value}')
 print(f'Reserved FFR Capacity: {round(instance.Z_FFR.get_values()[None],2)}')
 
+# Printing the R_FFR_charge/discharge values
+'''from collections import defaultdict
+
+total_reserved_per_timestamp = defaultdict(float)
+
+for (timestamp, house), reserved in instance.R_FFR_charge.get_values().items():
+    total_reserved_per_timestamp[timestamp] += reserved
+
+for timestamp, total_reserved in total_reserved_per_timestamp.items():
+    print(f'Timestamp: {timestamp}, Total Reserved in R: {round(total_reserved,2)}')
+
+total_discharged_per_timestamp = defaultdict(float)
+
+for (timestamp, house), discharged in instance.R_FFR_discharge.get_values().items():
+    total_discharged_per_timestamp[timestamp] += discharged
+
+for timestamp, total_discharged in total_discharged_per_timestamp.items():
+    print(f'Timestamp: {timestamp}, Total Discharged in R: {round(total_discharged,2)}')'''
+
 # Printing P2P exports
 #print_P2P_exports(instance, file_path_results, n_houses)
 
@@ -57,9 +76,3 @@ print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
 print(f'No savings: {round(no_savings,2)} pence')
 print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
 print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
-
-# Note 03/11 - Jakob
-# Introduced the tools.py with simple functions for finding which constraints are binding and which are not. Those are called in the model_components_P2P.py. Also added simple printing for Z_FFR & R_FFR
-# When setting p_FFR=0, I would assume the model to return the same results as the base case without FFR. This seems not to be the case.
-# It seems like the constraint FFR_discharging_capacity is influencing the result in that case (at least commenting away the constraint gives the same result as the base case).'
-# Need to look further into this. Could be a a problem with the model or a bug.
