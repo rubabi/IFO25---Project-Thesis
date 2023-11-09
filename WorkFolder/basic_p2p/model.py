@@ -44,23 +44,25 @@ print(f'The FFR price set: {instance.p_FFR.value}')
 print(f'Reserved FFR Capacity: {round(instance.Z_FFR.get_values()[None],2)}')
 
 # Printing the R_FFR_charge/discharge values
-'''from collections import defaultdict
+print_Rs = 0
+if print_Rs == 1:
+    from collections import defaultdict
 
-total_reserved_per_timestamp = defaultdict(float)
+    total_reserved_per_timestamp = defaultdict(float)
 
-for (timestamp, house), reserved in instance.R_FFR_charge.get_values().items():
-    total_reserved_per_timestamp[timestamp] += reserved
+    for (timestamp, house), reserved in instance.R_FFR_charge.get_values().items():
+        total_reserved_per_timestamp[timestamp] += reserved
 
-for timestamp, total_reserved in total_reserved_per_timestamp.items():
-    print(f'Timestamp: {timestamp}, Total Reserved in R: {round(total_reserved,2)}')
+    for timestamp, total_reserved in total_reserved_per_timestamp.items():
+        print(f'Timestamp: {timestamp}, Total Reserved in R: {round(total_reserved,2)}')
 
-total_discharged_per_timestamp = defaultdict(float)
+    total_discharged_per_timestamp = defaultdict(float)
 
-for (timestamp, house), discharged in instance.R_FFR_discharge.get_values().items():
-    total_discharged_per_timestamp[timestamp] += discharged
+    for (timestamp, house), discharged in instance.R_FFR_discharge.get_values().items():
+        total_discharged_per_timestamp[timestamp] += discharged
 
-for timestamp, total_discharged in total_discharged_per_timestamp.items():
-    print(f'Timestamp: {timestamp}, Total Discharged in R: {round(total_discharged,2)}')'''
+    for timestamp, total_discharged in total_discharged_per_timestamp.items():
+        print(f'Timestamp: {timestamp}, Total Discharged in R: {round(total_discharged,2)}')
 
 # Printing P2P exports
 #print_P2P_exports(instance, file_path_results, n_houses)
