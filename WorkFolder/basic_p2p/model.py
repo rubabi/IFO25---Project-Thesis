@@ -42,8 +42,6 @@ instance = model_p2p(data)
 # Print interesting values
 print(f'The FFR price set: {instance.p_FFR.value}')
 print(f'Reserved FFR Capacity: {round(instance.Z_FFR.get_values()[None],2)}')
-print("R_FFR_charge:", (instance.R_FFR_charge.get_values().values()))
-print("R_FFR_discharge:", (instance.R_FFR_discharge.get_values().values()))
 
 # Printing P2P exports
 #print_P2P_exports(instance, file_path_results, n_houses)
