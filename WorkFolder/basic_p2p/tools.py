@@ -126,7 +126,7 @@ def calculating_savings(instance, n_houses, start_date, end_date):
     # FFR savings
     Z_FFR = instance.Z_FFR.get_values()[None]
     FFR_price = 2.25 #[Pence/0.5kW] (half hour)
-    FFR_savings = Z_FFR*FFR_price*len(X)*(9/24)
+    FFR_savings = Z_FFR*FFR_price*len(X)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     bill_reduction = (P2P_savings+FFR_savings)/no_savings
