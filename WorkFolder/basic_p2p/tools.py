@@ -132,3 +132,40 @@ def calculating_savings(instance, n_houses, start_date, end_date):
     bill_reduction = (P2P_savings+FFR_savings)/no_savings
 
     return no_savings,bill_reduction,P2P_savings,FFR_savings
+
+
+# function for plotting the state of charge of the batteries
+def plot_state_of_charge(instance):
+    # If you want to see the results, you can call the result as dictionary
+    S_dict = instance.S.get_values()
+    # Then you can convert it to dataframe
+    S_df = pd.DataFrame.from_dict(S_dict, orient="index")
+    S_df.columns = ["S"] # set a name for the dataframe
+    # In this case, you have a tuple as index, you need to separate them so that you can perform analysis
+    # First, set the index as a column
+    S_df = S_df.reset_index()
+    # Then, create one column for each element
+    S_df[['Time', 'Household']] = pd.DataFrame(S_df['index'].tolist(), index=S_df.index)
+    # Eliminate the index column containing the tuple
+    S_df = S_df.drop(columns='index')
+    # Set the columns as index again
+    S_df = S_df.set_index(["Time", "Household"])
+
+    # Then you can plot the results or save it as excel
+    S_df.to_csv(directory('results') + "S.csv")
+
+    fig, ax = plt.subplots(figsize=(12,7))
+
+    X = S_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+
+    # Aggregate the transactions to align shapes
+    for house in S_df.index.get_level_values(1).unique():
+        Y = S_df[S_df.index.get_level_values(1) == house].values
+        ax.plot(X, Y, label=f"{house}")
+
+    ax.set_ylabel("State of charge (kWh)")
+    ax.legend()
+
+    fig.tight_layout()
+    plt.show()
+

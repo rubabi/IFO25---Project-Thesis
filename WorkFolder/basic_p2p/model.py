@@ -8,7 +8,7 @@ import tools
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
-from tools import print_P2P_exports, calculating_savings
+from tools import print_P2P_exports, calculating_savings, plot_state_of_charge
 
 # Import libraries
 import numpy as np
