@@ -169,3 +169,98 @@ def plot_state_of_charge(instance):
     fig.tight_layout()
     plt.show()
 
+# function for plotting spot price, demand, production, import, export, battery charge, discharge and state of charge
+def overview_plot(instance):
+    # If you want to see the results, you can call the result as dictionary
+    G_import_dict = instance.G_import.get_values()
+    C_dict = instance.C.get_values()
+    D_dict = instance.D.get_values()
+    S_dict = instance.S.get_values()
+    p_spot_dict = instance.p_spot
+    dem_dict = instance.dem
+    res_dict = instance.res
+
+    # Then you can convert it to dataframe
+    G_import_df = pd.DataFrame.from_dict(G_import_dict, orient="index")
+    C_df = pd.DataFrame.from_dict(C_dict, orient="index")
+    D_df = pd.DataFrame.from_dict(D_dict, orient="index")
+    S_df = pd.DataFrame.from_dict(S_dict, orient="index")
+    p_spot_df = pd.DataFrame.from_dict(p_spot_dict, orient="index")
+    dem_df = pd.DataFrame.from_dict(dem_dict, orient="index")
+    res_df = pd.DataFrame.from_dict(res_dict, orient="index")
+
+    # Then you can plot the results or save it as excel
+    G_import_df.to_csv(directory('results') + "G_import.csv")
+    C_df.to_csv(directory('results') + "C.csv")
+    D_df.to_csv(directory('results') + "D.csv")
+    S_df.to_csv(directory('results') + "S.csv")
+    p_spot_df.to_csv(directory('results') + "p_spot.csv")
+    dem_df.to_csv(directory('results') + "dem.csv")
+    res_df.to_csv(directory('results') + "res.csv")
+
+    #Placing the plots in the plane
+    plot_spot = plt.subplot2grid((7,1), (0,0))
+    plot_demand = plt.subplot2grid((7,1), (1,0), sharex=plot_spot)
+    plot_res = plt.subplot2grid((7,1), (2,0), sharex=plot_spot)
+    plot_import = plt.subplot2grid((7,1), (3,0), sharex=plot_spot)
+    plot_charge = plt.subplot2grid((7,1), (4,0), sharex=plot_spot)
+    plot_discharge = plt.subplot2grid((7,1), (5,0), sharex=plot_spot)
+    plot_state_of_charge = plt.subplot2grid((7,1), (6,0), sharex=plot_spot)
+
+    #Plotting the spot price
+    X = p_spot_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    Y = p_spot_df.index
+    plot_spot.plot(X, Y, label="Spot price")
+    plot_spot.set_title("Spot Price")
+
+
+
+
+    #Plotting the demand
+    dem_df.index = pd.MultiIndex.from_tuples(dem_df.index)
+    X = dem_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    for house in dem_df.index.get_level_values(1).unique(): # Get unique house identifiers
+        Y = dem_df.xs(house, level=1).values # Get values for the current house
+        plot_demand.plot(X, Y, label=f"{house}")
+    plot_demand.set_title("Demand")
+    plt.legend()
+
+    """
+    #Plotting the demand
+    X = dem_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    for house in dem_df.index.get_level_values(1).unique(): # Get unique house identifiers
+        Y = dem_df.xs(house, level=1).values # Get values for the current house
+        plot_demand.plot(X, Y, label=f"{house}")
+    plot_demand.set_title("Demand")
+    plt.legend()
+
+    #Plotting the production
+    X = res_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    Y = res_df.values
+    plot_res.plot(X, Y, label="Production")
+
+    #Plotting the import
+    X = G_import_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    Y = G_import_df.values
+    plot_import.plot(X, Y, label="Import")
+
+    #Plotting the charge
+    X = C_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    Y = C_df.values
+    plot_charge.plot(X, Y, label="Charge")
+
+    #Plotting the discharge
+    X = D_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    Y = D_df.values
+    plot_discharge.plot(X, Y, label="Discharge")
+
+    #Plotting the state of charge
+    X = S_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    Y = S_df.values
+    plot_state_of_charge.plot(X, Y, label="State of charge")
+    """
+
+    plt.tight_layout()
+    plt.show()
+
+

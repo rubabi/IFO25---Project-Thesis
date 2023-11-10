@@ -58,7 +58,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     eta_discharge = 0.96  # Discharging efficiency
     eta_diff = 0 # Diffusion efficiency
     eta_P2P = 1 - 0.076  # Losses (assume a loss of 7.6% through the local network, Luth)
-    k = 0 # Energy initially available in flexible asset
+    #k = 0 # Energy initially available in flexible asset
     smax = 4  # capacity batteries [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
     smin = smax * 0.2  # minimum state of charge of batteries at all times
     s_init = smax * 0.5  # initial state of charge of the battery
