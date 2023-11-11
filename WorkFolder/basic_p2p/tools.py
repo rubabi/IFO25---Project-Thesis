@@ -169,8 +169,13 @@ def plot_state_of_charge(instance):
     fig.tight_layout()
     plt.show()
 
-# function for plotting spot price, demand, production, import, export, battery charge, discharge and state of charge
+# function for plotting
 def overview_plot(instance):
+    #Set up subplot 
+    plt.subplots_adjust(hspace=0)
+    plt.rcParams['font.size'] = 10
+    plt.rcParams['axes.grid'] = True
+
     # If you want to see the results, you can call the result as dictionary
     G_import_dict = instance.G_import.get_values()
     C_dict = instance.C.get_values()
@@ -179,6 +184,8 @@ def overview_plot(instance):
     p_spot_dict = instance.p_spot
     dem_dict = instance.dem
     res_dict = instance.res
+    R_charge_dict = instance.R_FFR_charge.get_values()
+    R_discharge_dict = instance.R_FFR_discharge.get_values()
 
     # Then you can convert it to dataframe
     G_import_df = pd.DataFrame.from_dict(G_import_dict, orient="index")
@@ -188,33 +195,27 @@ def overview_plot(instance):
     p_spot_df = pd.DataFrame.from_dict(p_spot_dict, orient="index")
     dem_df = pd.DataFrame.from_dict(dem_dict, orient="index")
     res_df = pd.DataFrame.from_dict(res_dict, orient="index")
+    R_charge_df = pd.DataFrame.from_dict(R_charge_dict, orient="index")
+    R_discharge_df = pd.DataFrame.from_dict(R_discharge_dict, orient="index")
 
-    # Then you can plot the results or save it as excel
-    G_import_df.to_csv(directory('results') + "G_import.csv")
-    C_df.to_csv(directory('results') + "C.csv")
-    D_df.to_csv(directory('results') + "D.csv")
-    S_df.to_csv(directory('results') + "S.csv")
-    p_spot_df.to_csv(directory('results') + "p_spot.csv")
-    dem_df.to_csv(directory('results') + "dem.csv")
-    res_df.to_csv(directory('results') + "res.csv")
 
     #Placing the plots in the plane
-    plot_spot = plt.subplot2grid((7,1), (0,0))
-    plot_demand = plt.subplot2grid((7,1), (1,0), sharex=plot_spot)
-    plot_res = plt.subplot2grid((7,1), (2,0), sharex=plot_spot)
-    plot_import = plt.subplot2grid((7,1), (3,0), sharex=plot_spot)
-    plot_charge = plt.subplot2grid((7,1), (4,0), sharex=plot_spot)
-    plot_discharge = plt.subplot2grid((7,1), (5,0), sharex=plot_spot)
-    plot_state_of_charge = plt.subplot2grid((7,1), (6,0), sharex=plot_spot)
+    n = 9 #number of subplots
+    plot_spot = plt.subplot2grid((n,1), (0,0))
+    plot_demand = plt.subplot2grid((n,1), (1,0), sharex=plot_spot)
+    plot_res = plt.subplot2grid((n,1), (2,0), sharex=plot_spot)
+    plot_import = plt.subplot2grid((n,1), (3,0), sharex=plot_spot)
+    plot_charge = plt.subplot2grid((n,1), (4,0), sharex=plot_spot)
+    plot_discharge = plt.subplot2grid((n,1), (5,0), sharex=plot_spot)
+    plot_state_of_charge = plt.subplot2grid((n,1), (6,0), sharex=plot_spot)
+    plot_R_charge = plt.subplot2grid((n,1), (7,0), sharex=plot_spot)
+    plot_R_discharge = plt.subplot2grid((n,1), (8,0), sharex=plot_spot)
 
     #Plotting the spot price
     X = p_spot_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
-    Y = p_spot_df.index
+    Y = p_spot_df.values
     plot_spot.plot(X, Y, label="Spot price")
-    plot_spot.set_title("Spot Price")
-
-
-
+    plot_spot.set_ylabel("Spot Price [p/kWh]")
 
     #Plotting the demand
     dem_df.index = pd.MultiIndex.from_tuples(dem_df.index)
@@ -222,45 +223,71 @@ def overview_plot(instance):
     for house in dem_df.index.get_level_values(1).unique(): # Get unique house identifiers
         Y = dem_df.xs(house, level=1).values # Get values for the current house
         plot_demand.plot(X, Y, label=f"{house}")
-    plot_demand.set_title("Demand")
-    plt.legend()
-
-    """
-    #Plotting the demand
-    X = dem_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
-    for house in dem_df.index.get_level_values(1).unique(): # Get unique house identifiers
-        Y = dem_df.xs(house, level=1).values # Get values for the current house
-        plot_demand.plot(X, Y, label=f"{house}")
-    plot_demand.set_title("Demand")
-    plt.legend()
+    plot_demand.set_ylabel("Dem [kWh]")
+    plot_demand.legend(loc='upper right')
 
     #Plotting the production
-    X = res_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
-    Y = res_df.values
+    X = res_df.index # Time will be the x-axis
+    Y = res_df.values # Total production values
     plot_res.plot(X, Y, label="Production")
+    plot_res.set_ylabel("Res [kWh]")
+
 
     #Plotting the import
+    G_import_df.index = pd.MultiIndex.from_tuples(G_import_df.index)
     X = G_import_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
-    Y = G_import_df.values
-    plot_import.plot(X, Y, label="Import")
+    for house in G_import_df.index.get_level_values(1).unique(): # Get unique house identifiers
+        Y = G_import_df.xs(house, level=1).values # Get values for the current house
+        plot_import.plot(X, Y, label=f"{house}")
+    plot_import.set_ylabel("$G^{import}$ [kWh]")
+    plot_import.legend(loc='upper right')
 
     #Plotting the charge
+    C_df.index = pd.MultiIndex.from_tuples(C_df.index)
     X = C_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
-    Y = C_df.values
-    plot_charge.plot(X, Y, label="Charge")
+    for house in C_df.index.get_level_values(1).unique(): # Get unique house identifiers
+        Y = C_df.xs(house, level=1).values
+        plot_charge.plot(X, Y, label=f"{house}")
+    plot_charge.set_ylabel("C [kWh]]")
+    plot_charge.legend(loc='upper right')
 
     #Plotting the discharge
+    D_df.index = pd.MultiIndex.from_tuples(D_df.index)
     X = D_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
-    Y = D_df.values
-    plot_discharge.plot(X, Y, label="Discharge")
+    for house in D_df.index.get_level_values(1).unique(): # Get unique house identifiers
+        Y = D_df.xs(house, level=1).values
+        plot_discharge.plot(X, Y, label=f"{house}")
+    plot_discharge.set_ylabel("D [kWh]")
+    plot_discharge.legend(loc='upper right')
 
     #Plotting the state of charge
+    S_df.index = pd.MultiIndex.from_tuples(S_df.index)
     X = S_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
-    Y = S_df.values
-    plot_state_of_charge.plot(X, Y, label="State of charge")
-    """
+    for house in S_df.index.get_level_values(1).unique(): # Get unique house identifiers
+        Y = S_df.xs(house, level=1).values
+        plot_state_of_charge.plot(X, Y, label=f"{house}")
+    plot_state_of_charge.set_ylabel("S [kWh]")
+    plot_state_of_charge.legend(loc='upper right')
 
-    plt.tight_layout()
+    #Plotting the FFR charge
+    R_charge_df.index = pd.MultiIndex.from_tuples(R_charge_df.index)
+    X = R_charge_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    for house in R_charge_df.index.get_level_values(1).unique(): # Get unique house identifiers
+        Y = R_charge_df.xs(house, level=1).values
+        plot_R_charge.plot(X, Y, label=f"{house}")
+    plot_R_charge.set_ylabel("$R^{+}$ [kWh]")
+    plot_R_charge.legend(loc='upper right')
+
+    #Plotting the FFR discharge
+    R_discharge_df.index = pd.MultiIndex.from_tuples(R_discharge_df.index)
+    X = R_discharge_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    for house in R_discharge_df.index.get_level_values(1).unique(): # Get unique house identifiers
+        Y = R_discharge_df.xs(house, level=1).values
+        plot_R_discharge.plot(X, Y, label=f"{house}")
+    plot_R_discharge.set_ylabel("$R^{-}$ [kWh]")
+    plot_R_discharge.legend(loc='upper right')
+
+    #plt.tight_layout()
     plt.show()
 
 
