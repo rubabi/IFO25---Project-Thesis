@@ -173,7 +173,7 @@ def plot_state_of_charge(instance):
 def overview_plot(instance):
     #Set up subplot 
     plt.subplots_adjust(hspace=0)
-    plt.rcParams['font.size'] = 10
+    plt.rcParams['font.size'] = 7
     plt.rcParams['axes.grid'] = True
 
     # If you want to see the results, you can call the result as dictionary
