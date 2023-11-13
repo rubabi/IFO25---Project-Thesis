@@ -56,11 +56,13 @@ def model_p2p(data):
     model.G_import = Var(model.T, model.H, within=NonNegativeReals)  # Grid import
     model.G_export = Var()  # Grid export
     model.G_peak = Var()  # Peak power import
-        # FFR related
+
+    # FFR related
     model.R_FFR_charge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from charging house h in time step t [kwh]
     model.R_FFR_discharge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from discharging h in time step t [kwh]
     model.Z_FFR = Var(within=NonNegativeReals) #FFR capacity
-        # P2P related
+
+    # P2P related
     model.I = Var(model.T, model.H, within=NonNegativeReals)  # Total imports house h
     model.I_p = Var(model.T, model.P, within=NonNegativeReals)  # Imports of house h from house p
     model.X = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
@@ -176,6 +178,5 @@ def model_p2p(data):
     #print_non_zero_shadow_prices(instance, Constraint)
     print_non_binding_constraints(instance, Constraint)
     print_binding_constraints(instance, Constraint)
-
 
     return instance
