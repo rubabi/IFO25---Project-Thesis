@@ -86,6 +86,7 @@ if discrete_switch:
     bill_reduction_discrete = 0
     P2P_savings_discrete = 0
     FFR_savings_discrete = 0
+    reserved_FFR_capacity = []
 
     for week in week_list:
         start_date_str = week[0]
@@ -97,11 +98,12 @@ if discrete_switch:
         savings = calculating_savings(instance, n_houses, start_date_str, end_date_str)
         no_savings_discrete += savings[0]
         bill_reduction_discrete += savings[1]/len(week_list)
-        P2P_savings_discrete += savings[2]/len(week_list)
-        FFR_savings_discrete += savings[3]/len(week_list)
+        P2P_savings_discrete += savings[2]
+        FFR_savings_discrete += savings[3]
+        reserved_FFR_capacity.append(round(instance.Z_FFR.get_values()[None],2))
 
     print(f'The FFR price per [pence/kW]: {instance.p_FFR.value*2}')
-    print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
+    print(f'Reserved FFR Capacity [kW]: {reserved_FFR_capacity}')
     print(f'No P2P, batteries or PV production (base case): {round(no_savings_discrete,2)} pence')
     print(f'P2P savings: {round(P2P_savings_discrete/no_savings_discrete*100,2)}%')
     print(f'FFR savings: {round(FFR_savings_discrete/no_savings_discrete*100,2)}%')
