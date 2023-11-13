@@ -56,7 +56,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     beta = 2.5 # Discharging capacity 2.5 kW -> 1.25 kWh/ half hour at constant rate
     eta_charge = 0.96  # Charging efficiency
     eta_discharge = 0.96  # Discharging efficiency
-    eta_diff = 0 # Diffusion efficiency
+    eta_diff = 0.99 # Diffusion efficiency
     eta_P2P = 1 - 0.076  # Losses (assume a loss of 7.6% through the local network, Luth)
     #k = 0 # Energy initially available in flexible asset
     smax = 4  # capacity batteries [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
@@ -85,6 +85,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "beta": {None: beta},
             "eta_charge": {None: eta_charge},
             "eta_discharge": {None: eta_discharge},
+            "eta_diff": {None: eta_diff},
             "eta_P2P": {None: eta_P2P},
             "smax": {None: smax},
             "smin": {None: smin},
