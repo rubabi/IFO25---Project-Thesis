@@ -62,7 +62,9 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     smax = 4  # capacity batteries [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
     smin = smax * 0.2  # minimum state of charge of batteries at all times
     s_init = smax * 0.5  # initial state of charge of the battery
-    #FFR related---------------------------------------------------------------------------------------------------------------------
+    x_limit = 0  # Grid export limit [kW]
+
+    # Prices
     p_FFR = 2.25 #[Pence/0.5kWh] (half hour)
 
     # Construct data dictionary
@@ -87,6 +89,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "smax": {None: smax},
             "smin": {None: smin},
             "s_init": {None: s_init},
+            "x_limit": {None: x_limit},
             # Prices
             "p_FFR": {None: p_FFR},
         }}
