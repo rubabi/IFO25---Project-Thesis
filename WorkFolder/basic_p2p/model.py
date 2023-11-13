@@ -62,7 +62,7 @@ if overview_plot_switch:
     overview_plot(instance, file_path_results, n_houses)
 
 # Printing savings
-savings = calculating_savings(instance,n_houses, start_date_str, end_date_str)
+savings = calculating_savings(instance, n_houses, start_date_str, end_date_str)
 no_savings = savings[0]
 bill_reduction = savings[1]
 P2P_savings = savings[2]
@@ -72,13 +72,31 @@ print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
 print(f'No P2P, batteries or PV production (base case): {round(no_savings,2)} pence')
 print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
 print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
+#--------------------------------------------------------------------------------------------------------------------------------------
 
+# Run the model for multiple, discrete weeks
 week_list = [["2019-1-01","2019-1-08"],["2019-4-01","2019-4-08"],["2019-7-01","2019-7-08"],["2019-10-01","2019-10-08"]]
+no_savings_discrete = 0
+bill_reduction_discrete = 0
+P2P_savings_discrete = 0
+FFR_savings_discrete = 0
+
 for week in week_list:
     start_date_str = week[0]
     end_date_str = week[1]
     data_week = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
 
     # Run an instance of the model for a week
-    instance = model_p2p(data_week)  # Replace with actual function
+    instance = model_p2p(data_week)
+    savings = calculating_savings(instance, n_houses, start_date_str, end_date_str)
+    no_savings_discrete += savings[0]
+    bill_reduction_discrete += savings[1]/len(week_list)
+    P2P_savings_discrete += savings[2]/len(week_list)
+    FFR_savings_discrete += savings[3]/len(week_list)
 
+print(f'The FFR price per [pence/kW]: {instance.p_FFR.value*2}')
+print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
+print(f'No P2P, batteries or PV production (base case): {round(no_savings_discrete,2)} pence')
+print(f'P2P savings: {round(P2P_savings_discrete/no_savings_discrete*100,2)}%')
+print(f'FFR savings: {round(FFR_savings_discrete/no_savings_discrete*100,2)}%')
+print(f'The total bill reduction is: {round(bill_reduction_discrete*100,2)}%')
