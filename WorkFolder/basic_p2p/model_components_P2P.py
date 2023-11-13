@@ -34,6 +34,7 @@ def model_p2p(data):
     model.smax = Param()  # Capacity batteries [kWh]
     model.smin = Param()  # [kWh] here 20% of the maximum capacity
     model.x_limit = Param() # Grid export limit
+
     # Prices
     model.p_energy = Param() # Grid energy price
     model.p_exp = Param() # Electricity export cost (excl. surcharge)
@@ -41,7 +42,7 @@ def model_p2p(data):
     model.p_peak = Param() # Peak power dependent grid price
     model.p_retail = Param() # Electricity import cost
 
-    # Earlier spot price, now a combo of energy and retail
+    # Old spot price, should be removed
     model.p_spot = Param(model.T) # Spot price for electricity
     
     # Uncertain
@@ -130,7 +131,6 @@ def model_p2p(data):
         return model.I_p[t, h0, h1] == model.eta_P2P * model.X_p[t, h1, h0]
     model.balance_exports_imports_household = Constraint(model.T, model.P, rule=balance_exports_imports_household)
 
-
     # Non-negativity constraints
     def non_negativity_G_import(model, t, h):
         return model.G_import[t, h] >= 0
@@ -164,6 +164,8 @@ def model_p2p(data):
         return model.R_FFR_discharge[t, h] >= 0
     model.non_negativity_R_FFR_discharge = Constraint(model.T_FFR, model.H_bat, rule=non_negativity_R_FFR_discharge)
 
+    #---------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Solve the model
     instance = model.create_instance(data)
     results = SolverFactory("glpk", Verbose=True).solve(instance, tee=True)
     results.write()
