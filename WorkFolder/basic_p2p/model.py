@@ -19,10 +19,6 @@ houses_bat = [1,3] # indicate houses with batteries
 # Create dictionary of data with function generate_data_dict()
 data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
 
-# Checking data dictionary (if you want to check what has been constructed)
-#data[None].keys() # Names of parameters
-#data[None]["T"] # Substitute T if you want to check another parameter
-
 # Run the model
 instance = model_p2p(data)
 
@@ -76,3 +72,13 @@ print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
 print(f'No P2P, batteries or PV production (base case): {round(no_savings,2)} pence')
 print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
 print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
+
+week_list = [["2019-1-01","2019-1-08"],["2019-4-01","2019-4-08"],["2019-7-01","2019-7-08"],["2019-10-01","2019-10-08"]]
+for week in week_list:
+    start_date_str = week[0]
+    end_date_str = week[1]
+    data_week = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
+
+    # Run an instance of the model for a week
+    instance = model_p2p(data_week)  # Replace with actual function
+
