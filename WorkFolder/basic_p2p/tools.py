@@ -91,13 +91,6 @@ def calculating_savings(instance, n_houses, start_date, end_date):
     no_savings = from_grid_df['Community grid expenditure'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    # PV savings
-    pv_prod_df = pd.read_csv(directory('data')+'solar_profile_scenarios_yearly.csv')
-    pv_prod_df = pv_prod_df.iloc[:time_steps_per_day*days, :n_houses-1]
-    pv_prod_df = pv_prod_df.rename(columns={pv_prod_df.columns[0]: 'time'})
-    pv_prod_df['Community PV production'] = pv_prod_df.iloc[:, 1:].sum(axis=1)
-    #------------------------------------------------------------------------------------------------------------------------------------------------
-
     # P2P savings
     X_p_dict = instance.X_p.get_values() # Collecting P2P transaction data
     X_p_df = pd.DataFrame.from_dict(X_p_dict, orient="index") # Converting to DF
