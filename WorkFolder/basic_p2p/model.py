@@ -5,7 +5,7 @@ from generate_data import generate_data_dict
 from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot
 
 # Manual input data
-file_path_data = directory("data") # folder containing data
+file_path_data = directory("Test case") # folder containing data
 file_path_results = directory('results') # folder containing the results
 
 n_houses = 4
