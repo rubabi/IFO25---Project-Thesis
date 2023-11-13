@@ -1,21 +1,8 @@
-# Import files 
-import model_components_P2P
-import directories_P2P
-import generate_data
-import tools
-
 # Import flie functons
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
 from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot
-
-# Import libraries
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from pyomo.environ import *
-import statistics as stat
 
 # Manual input data
 file_path_data = directory("data") # folder containing data
@@ -43,9 +30,14 @@ instance = model_p2p(data)
 print(f'The FFR price set: {instance.p_FFR.value}')
 print(f'Reserved FFR Capacity: {round(instance.Z_FFR.get_values()[None],2)}')
 
-# Printing the R_FFR_charge/discharge values
-print_Rs = 0
-if print_Rs == 1:
+# Switches for what to print
+print_Rs = False
+print_P2P_exports_switch = False
+plot_state_of_charge_switch = False
+overview_plot_switch = False
+
+# Printing functions
+if print_Rs:
     from collections import defaultdict
 
     total_reserved_per_timestamp = defaultdict(float)
@@ -64,8 +56,14 @@ if print_Rs == 1:
     for timestamp, total_discharged in total_discharged_per_timestamp.items():
         print(f'Timestamp: {timestamp}, Total Discharged in R: {round(total_discharged,2)}')
 
-# Printing P2P exports
-#print_P2P_exports(instance, file_path_results, n_houses)
+if print_P2P_exports_switch:
+    print_P2P_exports(instance, file_path_results, n_houses)
+
+if plot_state_of_charge_switch:
+    plot_state_of_charge(instance, file_path_results, n_houses)
+
+if overview_plot_switch:
+    overview_plot(instance, file_path_results, n_houses)
 
 # Printing savings
 savings = calculating_savings(instance,n_houses, start_date_str, end_date_str)
