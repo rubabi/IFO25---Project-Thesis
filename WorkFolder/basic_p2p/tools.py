@@ -70,6 +70,13 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
 
 def calculating_savings(instance, n_houses, start_date, end_date):
 
+    # Days in the period
+    start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
+    end_date = pd.to_datetime(end_date, format='%Y-%m-%d')
+    days = (end_date - start_date).days
+
+    time_steps_per_day = int(len(list(instance.T.data()))/days)
+
     # Creating the denominator - the case of no savings
     demand_df = pd.read_csv(directory('data')+'demand_Jan_365days.csv')
     demand_df = demand_df.iloc[:, :n_houses + 1]
@@ -78,15 +85,15 @@ def calculating_savings(instance, n_houses, start_date, end_date):
     prices_df = pd.read_csv(directory('data')+'dayahead_Jan_365days.csv')
     
     from_grid_df = pd.DataFrame()
-    from_grid_df['time'] = demand_df['time'][:48]
-    from_grid_df['Community grid expenditure'] = (demand_df['Community demand']) * prices_df['day ahead price (p/kWh)'][:48]
+    from_grid_df['time'] = demand_df['time'][:time_steps_per_day*days]
+    from_grid_df['Community grid expenditure'] = (demand_df['Community demand']) * prices_df['day ahead price (p/kWh)'][:time_steps_per_day*days]
     
     no_savings = from_grid_df['Community grid expenditure'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     # PV savings
     pv_prod_df = pd.read_csv(directory('data')+'solar_profile_scenarios_yearly.csv')
-    pv_prod_df = pv_prod_df.iloc[:48, :3]
+    pv_prod_df = pv_prod_df.iloc[:time_steps_per_day*days, :n_houses-1]
     pv_prod_df = pv_prod_df.rename(columns={pv_prod_df.columns[0]: 'time'})
     pv_prod_df['Community PV production'] = pv_prod_df.iloc[:, 1:].sum(axis=1)
     #------------------------------------------------------------------------------------------------------------------------------------------------
@@ -114,8 +121,8 @@ def calculating_savings(instance, n_houses, start_date, end_date):
     P2P_savings_df = pd.DataFrame()
     P2P_savings_df['time'] = X_p_df['Time'].unique()  
 
-    for house in range(n_houses):  # Summing the savings from P2P transactions
-        P2P_savings_df[f'H{house+1}'] = aggregated_df[f'H{house+1}'][:48] * prices_df['day ahead price (p/kWh)'][:48]
+    for house in range(n_houses):  # Summing the savings from P2P transactions multiplied by days
+        P2P_savings_df[f'H{house+1}'] = aggregated_df[f'H{house+1}'][:time_steps_per_day*days] * prices_df['day ahead price (p/kWh)'][:time_steps_per_day*days]
 
     P2P_savings_df['Community savings'] = P2P_savings_df.iloc[:, 1:].sum(axis=1)
     P2P_savings = P2P_savings_df['Community savings'].sum()
@@ -289,5 +296,3 @@ def overview_plot(instance):
 
     #plt.tight_layout()
     plt.show()
-
-

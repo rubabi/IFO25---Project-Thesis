@@ -22,7 +22,7 @@ file_path_data = directory("data") # folder containing data
 file_path_results = directory('results') # folder containing the results
 
 start_date_str = "2019-1-01"
-end_date_str = "2019-1-2"
+end_date_str = "2019-1-08"
 
 n_houses = 4
 houses_pv = [1,2] # indicate houses with pv
