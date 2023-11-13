@@ -27,8 +27,8 @@ data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses
 instance = model_p2p(data)
 
 # Print interesting values
-print(f'The FFR price set: {instance.p_FFR.value}')
-print(f'Reserved FFR Capacity: {round(instance.Z_FFR.get_values()[None],2)}')
+print(f'The FFR price per [pence/kW]: {instance.p_FFR.value*2}')
+print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
 
 # Switches for what to print
 print_Rs = False
@@ -73,6 +73,6 @@ P2P_savings = savings[2]
 FFR_savings = savings[3]
 
 print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
-print(f'No savings: {round(no_savings,2)} pence')
+print(f'No P2P, batteries or PV production (base case): {round(no_savings,2)} pence')
 print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
 print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
