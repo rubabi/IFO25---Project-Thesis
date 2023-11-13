@@ -27,6 +27,7 @@ if continuous_switch:
     instance = model_p2p(data)
 
     # Print interesting values
+    print(f'The export limit: {instance.x_limit.value} kW')
     print(f'The FFR price per [pence/kW]: {instance.p_FFR.value*2}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
 
@@ -102,6 +103,7 @@ if discrete_switch:
         FFR_savings_discrete += savings[3]
         reserved_FFR_capacity.append(round(instance.Z_FFR.get_values()[None],2))
 
+    print(f'The export limit: {instance.x_limit.value} kW')
     print(f'The FFR price per [pence/kW]: {instance.p_FFR.value*2}')
     print(f'Reserved FFR Capacity [kW]: {reserved_FFR_capacity}')
     print(f'No P2P, batteries or PV production (base case): {round(no_savings_discrete,2)} pence')

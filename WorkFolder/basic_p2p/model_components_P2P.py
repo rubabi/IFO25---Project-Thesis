@@ -82,6 +82,10 @@ def model_p2p(data):
         return model.G_import[t, h] <= model.G_peak[t, h]
     model.peak_power = Constraint(model.T, model.H, rule=peak_power)'''
     
+    def export_limit(model, h):
+        return sum(model.G_export[t, h] for t in model.T) <= model.x_limit
+    model.export_limit = Constraint(model.H, rule=export_limit)
+
     # Battery constraints
     def time_constraint(model, t, h): # Constraint (4&5)
         if t.time() == time(0,0): # when the hour is 00:00
