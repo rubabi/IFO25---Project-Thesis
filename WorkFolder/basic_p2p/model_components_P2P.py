@@ -69,9 +69,11 @@ def model_p2p(data):
     model.X_p = Var(model.T, model.P, within=NonNegativeReals)  # Exports from house h to house p
     
     # Objective function 
-    def objective_function(model):
-        return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) - model.p_FFR*model.Z_FFR*len(model.T_FFR)
+    def objective_function(model): 
+        return (sum(model.p_spot[t] * model.G_import[t, h] - model.p_spot[t] * model.G_export[t, h] for t in model.T for h in model.H) 
+                 - model.p_FFR*model.Z_FFR*len(model.T_FFR))
     model.objective_function = Objective(rule=objective_function, sense=minimize)
+    '''+ sum(model.p_peak[m, h] * model.G_peak[m ,h] for h in model.H for m in model.M)'''
 
     def balance_equation(model, t, h): # Constraint (2)
         return (model.G_import[t, h] + (model.res[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0)

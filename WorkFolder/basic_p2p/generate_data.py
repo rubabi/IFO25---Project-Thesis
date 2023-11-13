@@ -46,6 +46,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     # Set T
     list_T = p_spot_df_.index.to_list()
     list_T_FFR = [t for t in list_T if t.hour >= 22 or t.hour < 7]
+    list_M = [t.month for t in list_T]
 
 
     # Parameter PV_cap
