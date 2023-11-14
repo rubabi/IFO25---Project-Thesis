@@ -147,39 +147,6 @@ def model_p2p(data):
         return model.I_p[t, h0, h1] == model.eta_P2P * model.X_p[t, h1, h0]
     model.balance_exports_imports_household = Constraint(model.T, model.P, rule=balance_exports_imports_household)
 
-    # Non-negativity constraints
-    def non_negativity_G_import(model, t, h):
-        return model.G_import[t, h] >= 0
-    model.non_negativity_G_import = Constraint(model.T, model.H, rule=non_negativity_G_import)
-
-    def non_negativity_G_export(model, t, h):
-        return model.G_export[t, h] >= 0
-    model.non_negativity_G_export = Constraint(model.T, model.H, rule=non_negativity_G_export)
-
-    def non_negativity_G_peak(model, m, h):
-        return model.G_peak[m, h] >= 0
-    model.non_negativity_G_peak = Constraint(model.M, model.H, rule=non_negativity_G_peak)
-
-    def non_negativity_C(model, t, h):
-        return model.C[t, h] >= 0
-    model.non_negativity_C = Constraint(model.T, model.H_bat, rule=non_negativity_C)
-
-    def non_negativity_D(model, t, h):
-        return model.D[t, h] >= 0
-    model.non_negativity_D = Constraint(model.T, model.H_bat, rule=non_negativity_D)
-
-    def non_negativity_S(model, t, h):
-        return model.S[t, h] >= 0
-    model.non_negativity_S = Constraint(model.T, model.H_bat, rule=non_negativity_S)
-
-    def non_negativity_R_FFR_charge(model, t, h):
-        return model.R_FFR_charge[t, h] >= 0
-    model.non_negativity_R_FFR_charge = Constraint(model.T_FFR, model.H_bat, rule=non_negativity_R_FFR_charge)
-
-    def non_negativity_R_FFR_discharge(model, t, h):
-        return model.R_FFR_discharge[t, h] >= 0
-    model.non_negativity_R_FFR_discharge = Constraint(model.T_FFR, model.H_bat, rule=non_negativity_R_FFR_discharge)
-
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Solve the model
     instance = model.create_instance(data)
