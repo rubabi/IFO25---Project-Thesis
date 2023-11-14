@@ -95,3 +95,30 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
         }}
     
     return data
+
+
+#Need to fix file paths in directory before implementing further
+def generate_data_dict_svartlamoen(file_path_data, start_date_str, end_date_str):
+    n_houses = 7
+    houses_pv = [3,4,5,6,7]
+    houses_bat = [1,2,3,4,5,6,7]
+    list_houses = [f"H{i}" for i in range(1, n_houses + 1)]
+    list_houses_pv = [f"H{i}" for i in houses_pv]
+    list_houses_bat = [f"H{i}" for i in houses_bat]
+
+    # transforming dates to align with data
+    utc_tz = pytz.UTC  # just used to ensure matching the dates with the index
+    start_date = pd.to_datetime(start_date_str, format='%Y-%m-%d').tz_localize(utc_tz)
+    end_date = pd.to_datetime(end_date_str, format='%Y-%m-%d').tz_localize(utc_tz)
+
+    # Get spot prices
+    date_format_str = '%Y-%m-%d %H:%M:%S%z'  # '2019-12-06 14:00:00+00:00' format
+    p_spot_df = pd.read_excel(file_path_data + r"dayahead_Jan_365days.csv", index_col=0,
+                            parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
+    p_spot_df.index = p_spot_df.index.to_pydatetime() # convert to a datetime format required for the model
+    p_spot_df = p_spot_df[["day ahead price (p/kWh)"]]  # get only price in pences/kWh
+    p_spot_df_ = p_spot_df[(p_spot_df.index >= start_date) & (p_spot_df.index < end_date)]
+    # Convert the dataframe P_spot_df_ to dictionary for data input for the function model_p2p()
+    p_spot = p_spot_df_.to_dict()
+    
+
