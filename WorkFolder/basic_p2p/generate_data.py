@@ -46,7 +46,6 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     # Set T
     list_T = p_spot_df_.index.to_list()
     list_T_FFR = [t for t in list_T if t.hour >= 22 or t.hour < 7]
-    '''list_M = [t.month for t in list_T]'''
 
     # Parameter PV_cap
     res_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
@@ -75,7 +74,6 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "H_bat": {None: list_houses_bat},  # providing data for set H_bat
             "T": {None: list_T},  # providing datetime for set T
             "T_FFR": {None: list_T_FFR},  # providing datetime for set T_FFR
-            '''"M": {None: list_M},  # providing month for set M'''
             # Parameters
             "dem": dem,
             "res": res[scn],
