@@ -47,7 +47,6 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     list_T = p_spot_df_.index.to_list()
     list_T_FFR = [t for t in list_T if t.hour >= 22 or t.hour < 7]
 
-
     # Parameter PV_cap
     res_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
 
@@ -65,7 +64,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     x_limit = 0  # Grid export limit [kW]
 
     # Prices
-    p_FFR = 0.75 #[Pence/0.5kWh] (half hour)
+    p_FFR = 0.75 #[Pence/0.5kWh] (half hour) FFR Profil
 
     # Construct data dictionary
     data = {  # always start with None and then dictionary
