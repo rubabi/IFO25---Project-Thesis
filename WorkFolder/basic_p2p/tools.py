@@ -177,7 +177,6 @@ def overview_plot(instance):
     plt.rcParams['font.size'] = 7
     plt.rcParams['axes.grid'] = True
 
-    # If you want to see the results, you can call the result as dictionary
     G_import_dict = instance.G_import.get_values()
     C_dict = instance.C.get_values()
     D_dict = instance.D.get_values()
@@ -188,7 +187,6 @@ def overview_plot(instance):
     R_charge_dict = instance.R_FFR_charge.get_values()
     R_discharge_dict = instance.R_FFR_discharge.get_values()
 
-    # Then you can convert it to dataframe
     G_import_df = pd.DataFrame.from_dict(G_import_dict, orient="index")
     C_df = pd.DataFrame.from_dict(C_dict, orient="index")
     D_df = pd.DataFrame.from_dict(D_dict, orient="index")
