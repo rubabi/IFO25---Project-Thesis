@@ -10,8 +10,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
 
     # transforming dates to align with data
     utc_tz = pytz.UTC  # just used to ensure matching the dates with the index
-    start_date = pd.to_datetime(start_date_str, format='%Y-%m-%d').tz_localize(utc_tz)
-    end_date = pd.to_datetime(end_date_str, format='%Y-%m-%d').tz_localize(utc_tz)
+    start_date = pd.to_datetime(start_date_str, format=r'%Y-%m-%d').tz_localize(utc_tz)
+    end_date = pd.to_datetime(end_date_str, format=r'%Y-%m-%d').tz_localize(utc_tz)
 
     # Get spot prices
     date_format_str = '%Y-%m-%d %H:%M:%S%z'  # '2019-12-06 14:00:00+00:00' format
@@ -47,7 +47,9 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     res = res_df_.to_dict()
 
     # Set T
-    list_T = p_spot_df_.index.to_list()
+    index_date = dem_df_.index.get_level_values(0)
+    list_T = index_date.to_list()
+    #list_T = p_spot_df_.index.to_list()
     list_T_FFR = [t for t in list_T if t.hour >= 22 or t.hour < 7]
 
     # Parameter PV_cap

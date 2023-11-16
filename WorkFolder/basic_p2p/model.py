@@ -15,7 +15,7 @@ houses_bat = [1,3] # indicate houses with batteries
 #--------------------------------------------------------------------------------------------------------------------------------------
 
 # Run the model for a continuous time period
-continuous_switch = False
+continuous_switch = True
 if continuous_switch:
     start_date_str = "2019-1-01"
     end_date_str = "2019-1-08"
@@ -34,7 +34,7 @@ if continuous_switch:
     print_Rs = False
     print_P2P_exports_switch = False
     plot_state_of_charge_switch = False
-    overview_plot_switch = False
+    overview_plot_switch = True
 
     # Printing functions
     if print_Rs:
@@ -79,7 +79,7 @@ if continuous_switch:
 #--------------------------------------------------------------------------------------------------------------------------------------
 
 # Run the model for multiple, discrete weeks
-discrete_switch = True
+discrete_switch = False
 if discrete_switch:
     week_list = [["2019-1-01","2019-1-08"],["2019-4-01","2019-4-08"],["2019-7-01","2019-7-08"],["2019-10-01","2019-10-08"]]
     no_savings_discrete = 0
