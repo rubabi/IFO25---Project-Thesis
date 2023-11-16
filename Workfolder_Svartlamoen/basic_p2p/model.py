@@ -81,7 +81,7 @@ if continuous_switch:
 # Run the model for multiple, discrete weeks
 discrete_switch = False
 if discrete_switch:
-    week_list = [["2019-1-01","2019-1-07"],["2019-4-01","2019-4-07"],["2019-7-01","2019-7-07"],["2019-10-01","2019-10-07"]] # Last day is not included in the model
+    week_list = [["2019-1-01","2019-1-08"],["2019-4-01","2019-4-08"],["2019-7-01","2019-7-08"],["2019-10-01","2019-10-08"]] # Last day is not included in the model
     no_savings_discrete = 0
     bill_reduction_discrete = 0
     P2P_savings_discrete = 0
