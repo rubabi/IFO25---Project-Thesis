@@ -1,4 +1,4 @@
-# Import flie functons
+# Import file functons
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
