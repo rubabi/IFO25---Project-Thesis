@@ -15,7 +15,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
 
     # Get spot prices
     date_format_str = '%Y-%m-%d %H:%M:%S%z'  # '2019-12-06 14:00:00+00:00' format
-    p_spot_df = pd.read_csv(file_path_data + r"Prices.csv", index_col=0,
+    p_spot_df = pd.read_csv(file_path_data + r"Prices_updated.csv", index_col=0,
                             parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
     p_spot_df.index = p_spot_df.index.to_pydatetime() # convert to a datetime format required for the model
     p_spot_df = p_spot_df[["NOK/kWh"]]  # get only price in NOK/kWh
@@ -47,9 +47,9 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     res = res_df_.to_dict()
 
     # Set T
-    index_date = dem_df_.index.get_level_values(0)
-    list_T = index_date.to_list()
-    #list_T = p_spot_df_.index.to_list()
+    #index_date = dem_df_.index.get_level_values(0)
+    #list_T = index_date.to_list()
+    list_T = p_spot_df_.index.to_list()
     list_T_FFR = [t for t in list_T if t.hour >= 22 or t.hour < 7]
 
     # Parameter PV_cap

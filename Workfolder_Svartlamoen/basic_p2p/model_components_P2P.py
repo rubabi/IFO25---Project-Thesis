@@ -82,14 +82,14 @@ def model_p2p(data):
     def peak_power(model, t, m): # Constraint (3)
         return sum(model.G_import[t, h] for h in model.H) <= model.G_peak[m]
     
-    model.peak_power = Constraint(model.T, model.M, rule=peak_power)
+    #model.peak_power = Constraint(model.T, model.M, rule=peak_power)
     
     # Battery constraints
     def time_constraint(model, t, h): # Constraint (4&5)
         if t.time() == time(0,0): # when the hour is 00:00
             return model.S[t, h] == model.s_init + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
         else:
-            t_previous = t - pd.Timedelta(minutes=30)  # Calculate your previous t, change depending on your delta time
+            t_previous = t - pd.Timedelta(minutes=60)  # Calculate your previous t, change depending on your delta time
             return model.S[t, h] == model.eta_diff * model.S[t_previous, h] + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
     model.time_constraint = Constraint(model.T, model.H_bat, rule=time_constraint)
 
