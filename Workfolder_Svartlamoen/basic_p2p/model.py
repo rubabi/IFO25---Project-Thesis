@@ -10,7 +10,7 @@ file_path_results = directory('results') # folder containing the results
 
 n_houses = 7
 houses_pv = [2,3,4,5,6,7] # indicate houses with pv
-capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 2 and 2,3,4,5,6,7 respectively
+capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 1 and 2,3,4,5,6,7 respectively
 houses_bat = [1,3,5,7] # indicate houses with batteries
 #--------------------------------------------------------------------------------------------------------------------------------------
 
