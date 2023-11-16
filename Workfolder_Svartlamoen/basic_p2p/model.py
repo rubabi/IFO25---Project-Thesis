@@ -18,7 +18,7 @@ houses_bat = [1,3,5,7] # indicate houses with batteries
 continuous_switch = True
 if continuous_switch:
     start_date_str = "2021-4-01"
-    end_date_str = "2021-4-30" # Last day is includede in the model
+    end_date_str = "2021-4-30" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
     data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
@@ -34,7 +34,7 @@ if continuous_switch:
     print_Rs = False
     print_P2P_exports_switch = False
     plot_state_of_charge_switch = False
-    overview_plot_switch = True
+    overview_plot_switch = False
 
     # Printing functions
     if print_Rs:
@@ -65,7 +65,7 @@ if continuous_switch:
     if overview_plot_switch:
         overview_plot(instance, file_path_results, n_houses)
 
-    # Printing savings
+    '''# Printing savings
     savings = calculating_savings(instance, n_houses, start_date_str, end_date_str)
     no_savings = savings[0]
     bill_reduction = savings[1]
@@ -75,13 +75,13 @@ if continuous_switch:
     print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
     print(f'No P2P, batteries or PV production (base case): {round(no_savings,2)} pence')
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
-    print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
+    print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')'''
 #--------------------------------------------------------------------------------------------------------------------------------------
 
 # Run the model for multiple, discrete weeks
 discrete_switch = False
 if discrete_switch:
-    week_list = [["2019-1-01","2019-1-07"],["2019-4-01","2019-4-07"],["2019-7-01","2019-7-07"],["2019-10-01","2019-10-07"]] # Last day is includede in the model
+    week_list = [["2019-1-01","2019-1-07"],["2019-4-01","2019-4-07"],["2019-7-01","2019-7-07"],["2019-10-01","2019-10-07"]] # Last day is not included in the model
     no_savings_discrete = 0
     bill_reduction_discrete = 0
     P2P_savings_discrete = 0

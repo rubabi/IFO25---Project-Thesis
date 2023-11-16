@@ -40,7 +40,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     res_df = pd.read_excel(file_path_data + r"DemandProfiles/aprTaug2021.xlsx", sheet_name = "RESprofiles", index_col=0,
                         parse_dates=[0], date_format=date_format_str)
     res_df.index = pd.to_datetime(res_df.index, utc=True) # convert to a datetime format required for the model
-    res_df_ = res_df[(res_df.index >= start_date) & (res_df.index <= end_date)]
+    res_df_ = res_df[(res_df.index >= start_date) & (res_df.index < end_date)]
     scn = "5kw" # Select one scenario, the data is prepared for several scenarios. Needs to be changed to be more general
     res_df_ = res_df_[[scn]]  # Select just one scenario, the data is prepared for several scenarios
     # Convert the dataframe to dictionary
