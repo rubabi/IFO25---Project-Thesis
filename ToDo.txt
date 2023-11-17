@@ -1,4 +1,3 @@
-Ingen P2P transaksjoner; må fikses
 Switch logikk for å kunne lage ulike caser
 Printe savings fra G_export
 Legge til retail kost på p_spot for import

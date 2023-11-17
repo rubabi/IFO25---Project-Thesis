@@ -39,8 +39,9 @@ def model_p2p(data):
     # Prices
     model.p_FFR = Param() # FFR market price per hour
     model.p_peak = Param(model.M) # Peak power dependent grid price
-    model.p_retail = Param() # Electricity import cost
+    model.p_retail = Param(initialize = 0.45) # [NOK/kWh] Electricity import price. Weighted average between day and night price for nettleie
     model.p_spot = Param(model.T) # Spot price for electricity
+
     
     # Uncertain
     model.res_cap = Param(model.H_pv) # Installed capacity PV for each house with pv
@@ -69,7 +70,7 @@ def model_p2p(data):
     
     #$ Objective function 
     def objective_function(model): # Objective function (1)
-        return (sum(model.p_spot[t] * model.G_import[t, h] - model.p_spot[t] * (1-model.psi) * model.G_export[t,h] for t in model.T for h in model.H) 
+        return (sum((model.p_spot[t] + model.p_retail) * model.G_import[t, h] - model.p_spot[t] * (1-model.psi) * model.G_export[t,h] for t in model.T for h in model.H) 
                 + sum(model.p_peak[m] for m in model.M) + - model.p_FFR * model.Z_FFR * len(model.T_FFR))
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
