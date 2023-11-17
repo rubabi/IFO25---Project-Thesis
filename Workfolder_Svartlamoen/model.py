@@ -5,7 +5,7 @@ from generate_data import generate_data_dict
 from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot
 
 # Manual input data
-file_path_data = directory("Test case") # folder containing data
+file_path_data = directory("data") # folder containing data
 file_path_results = directory('results') # folder containing the results
 
 n_houses = 7
@@ -81,7 +81,7 @@ if continuous_switch:
 # Run the model for multiple, discrete weeks
 discrete_switch = False
 if discrete_switch:
-    week_list = [["2019-1-01","2019-1-08"],["2019-4-01","2019-4-08"],["2019-7-01","2019-7-08"],["2019-10-01","2019-10-08"]] # Last day is not included in the model
+    week_list = [["2021-4-01","2021-4-08"],["2021-5-01","2021-5-08"],["2021-6-01","2021-6-08"],["2021-7-01","2021-7-08"],["2021-8-01","2021-8-08"]] # Last day is not included in the model
     no_savings_discrete = 0
     bill_reduction_discrete = 0
     P2P_savings_discrete = 0
