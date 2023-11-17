@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
-from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot
+from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
 
 #! Manual input data
 file_path_data = directory("data") # folder containing data
@@ -26,7 +26,7 @@ FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
 continuous_switch = True
 if continuous_switch:
     start_date = "2021-4-01"
-    end_date = "2021-4-03" # Last day is not included in the model
+    end_date = "2021-7-01" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
     data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
@@ -36,9 +36,11 @@ if continuous_switch:
 
     # Switches for what to print
     print_Rs = False
-    print_P2P_exports_switch = True
+    print_P2P_exports_switch = False
     plot_state_of_charge_switch = False
     overview_plot_switch = False
+    cost_table_switch = True
+    costs_to_latex_switch = True
 
     # Printing functions
     if print_Rs:
@@ -68,6 +70,12 @@ if continuous_switch:
 
     if overview_plot_switch:
         overview_plot(instance)
+    
+    if cost_table_switch:
+        print_costs(instance)
+    
+    if costs_to_latex_switch:
+        costs_to_latex(instance)
 
     # Printing savings
     savings = calculating_savings(instance, start_date, end_date)
