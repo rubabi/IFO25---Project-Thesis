@@ -88,7 +88,9 @@ def calculating_savings(instance, start_date, end_date):
     from_grid_df['Day ahead price (NOK/kWh)'] = prices_df['Day ahead price (NOK/kWh)']
     from_grid_df['Community grid expenditure'] = from_grid_df['Demand'] * (from_grid_df['Day ahead price (NOK/kWh)']+instance.p_retail.value)
 
-    no_savings = from_grid_df['Community grid expenditure'].sum()
+    peak_power = from_grid_df['Demand'].resample('M').max()
+
+    no_savings = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*60
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ P2P savings
