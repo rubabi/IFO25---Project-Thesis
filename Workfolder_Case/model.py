@@ -1,3 +1,8 @@
+# Import libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
 # Import file functons
 from model_components_P2P import model_p2p
 from directories_P2P import directory
@@ -17,11 +22,11 @@ houses_bat = [1,3,5,7] # indicate houses with batteries
 # Run the model for a continuous time period
 continuous_switch = True
 if continuous_switch:
-    start_date_str = "2021-4-01"
-    end_date_str = "2021-5-01" # Last day is not included in the model
+    start_date = "2021-4-01"
+    end_date = "2021-5-01" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
-    data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
+    data = generate_data_dict(file_path_data, start_date, end_date, n_houses, houses_pv, houses_bat, capacity_pv)
 
     # Run the model
     instance = model_p2p(data)
@@ -66,7 +71,7 @@ if continuous_switch:
         overview_plot(instance, file_path_results, n_houses)
 
     # Printing savings
-    savings = calculating_savings(instance, start_date_str, end_date_str)
+    savings = calculating_savings(instance, start_date, end_date)
     no_savings = savings[0]
     bill_reduction = savings[1]
     P2P_savings = savings[2]
@@ -89,13 +94,13 @@ if discrete_switch:
     reserved_FFR_capacity = []
 
     for week in week_list:
-        start_date_str = week[0]
-        end_date_str = week[1]
-        data_week = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
+        start_date = week[0]
+        end_date = week[1]
+        data_week = generate_data_dict(file_path_data, start_date, end_date, n_houses, houses_pv, houses_bat, capacity_pv)
 
         # Run an instance of the model for a week
         instance = model_p2p(data_week)
-        savings = calculating_savings(instance, start_date_str, end_date_str)
+        savings = calculating_savings(instance, start_date, end_date)
         no_savings_discrete += savings[0]
         bill_reduction_discrete += savings[1]/len(week_list)
         P2P_savings_discrete += savings[2]
