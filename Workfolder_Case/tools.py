@@ -72,10 +72,6 @@ def calculating_savings(instance, start_date, end_date):
     
     start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
     end_date = pd.to_datetime(end_date, format='%Y-%m-%d')
-    days = (end_date - start_date).days
-
-    n_houses = len(instance.H)
-    time_steps_per_day = int(len(list(instance.T.data()))/days)
 
     #$ Base case (no savings)
     demand_df = pd.DataFrame(list(instance.dem.items()), columns=['index', 'Demand'])
@@ -105,6 +101,7 @@ def calculating_savings(instance, start_date, end_date):
 
     X_p_df_aggregated = pd.DataFrame()
     X_p_df_aggregated['X_p_aggregated'] = X_p_df.groupby(['Time', 'Peer']).sum()['X_p']
+    X_p_df_aggregated = X_p_df_aggregated.join(prices_df)
     X_p_df_aggregated['P2P savings'] = X_p_df_aggregated['X_p_aggregated'] * prices_df['Day ahead price (NOK/kWh)']
 
     P2P_savings = X_p_df_aggregated['P2P savings'].sum()
