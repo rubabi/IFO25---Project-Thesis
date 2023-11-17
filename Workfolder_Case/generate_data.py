@@ -13,7 +13,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     start_date = pd.to_datetime(start_date_str, format=r'%Y-%m-%d').tz_localize(utc_tz)
     end_date = pd.to_datetime(end_date_str, format=r'%Y-%m-%d').tz_localize(utc_tz)
 
-    # Get spot prices
+    #$ Get spot prices
     date_format_str = '%Y-%m-%d %H:%M:%S%z'  # '2019-12-06 14:00:00+00:00' format
     p_spot_df = pd.read_csv(file_path_data + r"Prices_updated.csv", index_col=0,
                             parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
@@ -23,7 +23,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     # Convert the dataframe P_spot_df_ to dictionary for data input for the function model_p2p()
     p_spot = p_spot_df_.to_dict()
 
-    # Get demand
+    #$ Get demand
     dem_df = pd.read_excel(file_path_data + r"DemandProfiles/aprTaug2021.xlsx", index_col=0, parse_dates=[0])
     #dem_df.index = dem_df.index.to_pydatetime() # convert to a datetime format required for the model
     dem_df = dem_df[list_houses]  # Filter based on the houses selected
@@ -36,7 +36,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     dem = dem_df_.to_dict()
 
 
-    # Get solar profiles, we assume the PV profile is the same for each house given that they are located close to each other
+    #$ Get solar profiles, we assume the PV profile is the same for each house given that they are located close to each other
     res_df = pd.read_excel(file_path_data + r"DemandProfiles/aprTaug2021.xlsx", sheet_name = "RESprofiles", index_col=0,
                         parse_dates=[0], date_format=date_format_str)
     res_df.index = pd.to_datetime(res_df.index, utc=True) # convert to a datetime format required for the model

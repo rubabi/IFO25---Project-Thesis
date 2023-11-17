@@ -9,7 +9,7 @@ from directories_P2P import directory
 from generate_data import generate_data_dict
 from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot
 
-# Manual input data
+#! Manual input data
 file_path_data = directory("data") # folder containing data
 file_path_results = directory('results') # folder containing the results
 
@@ -19,7 +19,7 @@ capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 1 an
 houses_bat = [1,3,5,7] # indicate houses with batteries
 #--------------------------------------------------------------------------------------------------------------------------------------
 
-# Run the model for a continuous time period
+#$ Run the model for a continuous time period
 continuous_switch = True
 if continuous_switch:
     start_date = "2021-4-01"
@@ -83,7 +83,7 @@ if continuous_switch:
     print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
 #--------------------------------------------------------------------------------------------------------------------------------------
 
-# Run the model for multiple, discrete weeks
+#$ Run the model for multiple, discrete weeks
 discrete_switch = False
 if discrete_switch:
     week_list = [["2021-4-01","2021-4-08"],["2021-5-01","2021-5-08"],["2021-6-01","2021-6-08"],["2021-7-01","2021-7-08"],["2021-8-01","2021-8-08"]] # Last day is not included in the model
