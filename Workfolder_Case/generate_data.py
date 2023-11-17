@@ -50,6 +50,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     res_df_ = res_df_[[scn]]  # Select just one scenario, the data is prepared for several scenarios
     # Convert the dataframe to dictionary
     res = res_df_.to_dict()
+    # Parameter PV_cap
+    res_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
 
     # Set T
     #index_date = dem_df_.index.get_level_values(0)
@@ -61,18 +63,15 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     list_M = list(np.unique([t.month for t in index_date])) # Retrieves the month from each element in the index and filters unique values
     list_T_M = [(t, t.month) for t in index_date] # list creating tuple of the T set and the M set
 
-    # Create Grid Tariff Param #!CHANGE
+    # Create Grid Tariff Param #! CHANGE?
     p_peak = {m: 10 for m in list_M}
-
-    # Parameter PV_cap
-    res_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
 
     # Scalars (single value parameters)
     alpha = 2.5  # Charging capacuty 2.5 kW -> 1.25 kWh/ half hour at constant rate
     beta = 2.5 # Discharging capacity 2.5 kW -> 1.25 kWh/ half hour at constant rate
     eta_charge = 0.96  # Charging efficiency
     eta_discharge = 0.96  # Discharging efficiency
-    eta_diff = 0.99 # Diffusion efficiency #! Change
+    eta_diff = 0.99 # Diffusion efficiency #! Change?
     eta_P2P = 1 - 0.076  # Losses (assume a loss of 7.6% through the local network, Luth)
     #k = 0 # Energy initially available in flexible asset
     smax = 13.5  # Tesla powerwall capacity [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery

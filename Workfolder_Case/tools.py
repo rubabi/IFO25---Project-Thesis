@@ -103,10 +103,11 @@ def calculating_savings(instance, start_date, end_date):
     X_p_df.set_index('Time', inplace=True)
     X_p_df = X_p_df[['Household', 'Peer', 'X_p']]
 
-    X_p_df['X_p_aggregated'] = X_p_df.groupby(['Time', 'Peer']).sum()['X_p']
-    X_p_df['P2P savings'] = X_p_df['X_p_aggregated'] * prices_df['Day ahead price (NOK/kWh)']
+    X_p_df_aggregated = pd.DataFrame()
+    X_p_df_aggregated['X_p_aggregated'] = X_p_df.groupby(['Time', 'Peer']).sum()['X_p']
+    X_p_df_aggregated['P2P savings'] = X_p_df_aggregated['X_p_aggregated'] * prices_df['Day ahead price (NOK/kWh)']
 
-    P2P_savings = X_p_df['P2P savings'].sum()
+    P2P_savings = X_p_df_aggregated['P2P savings'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ FFR savings
