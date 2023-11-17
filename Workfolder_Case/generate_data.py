@@ -76,6 +76,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     s_init = smax * 0.5  # initial state of charge of the battery
     x_limit = 100  # Grid export limit [kW]
 
+    p_peak = {m: 60 for m in list_M}
+
     # FFR type
     if FFR_type == "Flex":
         p_FFR = 0.45 
@@ -117,6 +119,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
             "x_limit": {None: x_limit},
             # Prices
             "p_FFR": {None: p_FFR},
+            "p_peak": p_peak,
         }}
     
     return data

@@ -54,7 +54,6 @@ def model_p2p(data):
     model.G_import = Var(model.T, model.H, within=NonNegativeReals)  # Grid import
     model.G_export = Var(model.T, model.H, within=NonNegativeReals)  # Grid export
     model.G_peak = Var(model.M, within=NonNegativeReals)  # Peak power import 
-    model.p_peak = Var(model.M, within=NonNegativeReals)  # Peak power import
 
     # FFR related
     model.R_FFR_charge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from charging house h in time step t [kwh]
@@ -71,7 +70,7 @@ def model_p2p(data):
     #$ Objective function 
     def objective_function(model): # Objective function (1)
         return (sum((model.p_spot[t] + model.p_retail) * model.G_import[t, h] - model.p_spot[t] * (1-model.psi) * model.G_export[t,h] for t in model.T for h in model.H) 
-                + sum(model.p_peak[m] for m in model.M) + - model.p_FFR * model.Z_FFR * len(model.T_FFR))
+                + sum(model.p_peak[m] * model.G_peak[m] for m in model.M) - model.p_FFR * model.Z_FFR * len(model.T_FFR))
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
     #$ Grid Constraints
@@ -91,14 +90,6 @@ def model_p2p(data):
     def net_importer(model,h): # Constraint (5) #! Per month???
         return sum(model.G_import[t, h] for t in model.T) >= sum(model.G_export[t, h] for t in model.T)
     model.net_importer = Constraint(model.H, rule=net_importer)
-
-    breakpoints = [0, 2, 5, 10, 15, 20, 25, 50, 75, 100, float('inf')]
-    values = [120, 190, 305, 420, 535, 650, 1225, 1800, 2375, 4750]
-
-    def peak_cost(model, m):
-        return model.p_peak[m] == Piecewise(breakpoints, values, w=model.G_peak[m])
-
-    model.peak_cost = Constraint(model.M, rule=peak_cost)
 
     #$ Battery constraints
     def time_constraint(model, t, h): # Constraint (6&7)
