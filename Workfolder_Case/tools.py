@@ -86,7 +86,7 @@ def calculating_savings(instance, start_date, end_date):
     from_grid_df = from_grid_df[~from_grid_df.index.duplicated(keep='first')]
     from_grid_df['Demand'] = demand_df.groupby(demand_df.index).sum()['Demand']
     from_grid_df['Day ahead price (NOK/kWh)'] = prices_df['Day ahead price (NOK/kWh)']
-    from_grid_df['Community grid expenditure'] = from_grid_df['Demand'] * from_grid_df['Day ahead price (NOK/kWh)']
+    from_grid_df['Community grid expenditure'] = from_grid_df['Demand'] * (from_grid_df['Day ahead price (NOK/kWh)']+instance.p_retail.value)
 
     no_savings = from_grid_df['Community grid expenditure'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ def calculating_savings(instance, start_date, end_date):
     X_p_df_aggregated = pd.DataFrame()
     X_p_df_aggregated['X_p_aggregated'] = X_p_df.groupby(['Time', 'Peer']).sum()['X_p']
     X_p_df_aggregated = X_p_df_aggregated.join(prices_df)
-    X_p_df_aggregated['P2P savings'] = X_p_df_aggregated['X_p_aggregated'] * prices_df['Day ahead price (NOK/kWh)']
+    X_p_df_aggregated['P2P savings'] = X_p_df_aggregated['X_p_aggregated'] * (from_grid_df['Day ahead price (NOK/kWh)']+instance.p_retail.value)
 
     P2P_savings = X_p_df_aggregated['P2P savings'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
