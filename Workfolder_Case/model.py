@@ -14,11 +14,11 @@ file_path_data = directory("data") # folder containing data
 file_path_results = directory('results') # folder containing the results
 
 n_houses = 7
-houses_pv = [2,3,4,5,6,7] # indicate houses with pv
+houses_pv = [19,50,98,26,49,68] # indicate houses with pv
+houses_bat = [97,50,26,68] # indicate houses with batterie
 capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 1 and 2,3,4,5,6,7 respectively
-houses_bat = [1,3,5,7] # indicate houses with batteries
 
-FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
