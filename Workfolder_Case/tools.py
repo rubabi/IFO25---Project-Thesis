@@ -70,14 +70,11 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
 
 def calculating_savings(instance, start_date, end_date):
     
-    # Number of houses
-    n_houses = len(instance.H)
-
-    # Days in the period
     start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
     end_date = pd.to_datetime(end_date, format='%Y-%m-%d')
     days = (end_date - start_date).days
 
+    n_houses = len(instance.H)
     time_steps_per_day = int(len(list(instance.T.data()))/days)
 
     # Creating the denominator - the case of no savings
@@ -98,7 +95,7 @@ def calculating_savings(instance, start_date, end_date):
     no_savings = from_grid_df['Community grid expenditure'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    # P2P savings
+    #title: P2P savings
     X_p_df = pd.DataFrame.from_dict(instance.X_p.get_values(), orient='index', columns=['X_p'])
     X_p_df.reset_index(inplace=True)
     X_p_df[['Time', 'Household', 'Peer']] = pd.DataFrame(X_p_df['index'].tolist(), index=X_p_df.index)
@@ -107,7 +104,6 @@ def calculating_savings(instance, start_date, end_date):
     X_p_df = X_p_df[['Household', 'Peer', 'X_p']]
 
     P2P_savings = 0
-
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     # FFR savings
