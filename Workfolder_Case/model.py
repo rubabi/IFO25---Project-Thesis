@@ -18,7 +18,7 @@ houses_pv = [19,50,98,26,49,68] # indicate houses with pv
 houses_bat = [97,50,26,68] # indicate houses with batterie
 capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 1 and 2,3,4,5,6,7 respectively
 
-FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
 continuous_switch = True
 if continuous_switch:
     start_date = "2021-4-01"
-    end_date = "2021-5-08" # Last day is not included in the model
+    end_date = "2021-7-01" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
     data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
@@ -78,7 +78,7 @@ if continuous_switch:
     
     # Print interesting values
     print(f'FFR type: {FFR_type}')
-    print(f'The FFR price per [NOK/mW/hour]: {instance.p_FFR.value*1000}')
+    print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
     print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings,2)} NOK\n')
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
