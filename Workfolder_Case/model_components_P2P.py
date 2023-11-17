@@ -69,12 +69,13 @@ def model_p2p(data):
     model.X = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
     model.X_p = Var(model.T, model.P, within=NonNegativeReals)  # Exports from house h to house p
     
-    # Objective function 
+    #$ Objective function 
     def objective_function(model):
         return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) + sum(model.p_peak[m] * model.G_peak[m] for m in model.M) - model.p_FFR * model.Z_FFR * len(
             model.T_FFR)
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
+    #$ Grid Constraints
     def balance_equation(model, t, h): # Constraint (2)
         return (model.G_import[t, h] + (model.res[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0)
                 + model.I[t, h] >= model.dem[t, h] + model.X[t, h] + (model.C[t, h] if h in model.H_bat else 0))
@@ -84,9 +85,7 @@ def model_p2p(data):
         return sum(model.G_import[t, h] for h in model.H) <= model.G_peak[m]
     model.peak_power = Constraint(model.T_M, rule=peak_power)
     
-    #model.peak_power = Constraint(model.T, model.M, rule=peak_power)
-    
-    # Battery constraints
+    #$ Battery constraints
     def time_constraint(model, t, h): # Constraint (4&5)
         if t.time() == time(0,0): # when the hour is 00:00
             return model.S[t, h] == model.s_init + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
@@ -111,7 +110,7 @@ def model_p2p(data):
         return model.S[t, h] >= model.smin
     model.min_SoC = Constraint(model.T, model.H_bat, rule=min_SoC)
 
-    #FFR Constraints
+    #$ FFR Constraints
     def FFR_charging_capacity(model, t, h): # Constraint (9)
         return model.C[t,h] >= model.R_FFR_charge[t,h]    
     model.FFR_charging_capacity = Constraint(model.T, model.H_bat, rule=FFR_charging_capacity)
@@ -124,7 +123,7 @@ def model_p2p(data):
         return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t,h] for h in model.H_bat) >= model.Z_FFR 
     model.FFR_capacity_sum = Constraint(model.T_FFR, rule=FFR_capacity_sum)
 
-    # P2P constraints
+    #$ P2P constraints
     def sum_exports_household(model, h, t): # Constraint (12)
         return model.X[t, h] == sum(model.X_p[t, p] for p in model.P if p[0] == h)
     model.sum_exports_household = Constraint(model.H, model.T, rule=sum_exports_household)
