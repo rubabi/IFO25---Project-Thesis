@@ -119,8 +119,6 @@ def calculating_savings(instance, start_date, end_date):
 
     return no_savings,bill_reduction,P2P_savings,FFR_savings
 
-
-# function for plotting the state of charge of the batteries
 def plot_state_of_charge(instance):
     # If you want to see the results, you can call the result as dictionary
     S_dict = instance.S.get_values()
@@ -155,7 +153,6 @@ def plot_state_of_charge(instance):
     fig.tight_layout()
     plt.show()
 
-# function for plotting
 def overview_plot(instance):
     #$ Set up subplot 
     plt.subplots_adjust(hspace=0)
