@@ -72,7 +72,7 @@ def model_p2p(data):
     
     #$ Objective function 
     def objective_function(model): # Objective function (1)
-        return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) + sum(model.p_peak[m] * model.G_peak[m] for m in model.M) - model.p_FFR * model.Z_FFR * len(
+        return sum(model.p_peak[m] * model.G_peak[m] for m in model.M) + sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) - model.p_FFR * model.Z_FFR * len(
             model.T_FFR)
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
