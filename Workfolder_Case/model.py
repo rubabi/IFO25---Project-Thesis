@@ -67,7 +67,7 @@ if continuous_switch:
         plot_state_of_charge(instance, file_path_results, n_houses)
 
     if overview_plot_switch:
-        overview_plot(instance, file_path_results, n_houses)
+        overview_plot(instance)
 
     # Printing savings
     savings = calculating_savings(instance, start_date, end_date)
