@@ -106,7 +106,18 @@ def calculating_savings(instance, start_date, end_date):
     X_p_df_aggregated = X_p_df_aggregated.join(prices_df)
     X_p_df_aggregated['P2P savings'] = X_p_df_aggregated['X_p_aggregated'] * (from_grid_df['Day ahead price (NOK/kWh)']+instance.p_retail.value)
 
-    P2P_savings = X_p_df_aggregated['P2P savings'].sum()
+    G_import_df = pd.DataFrame.from_dict(instance.G_import.get_values(), orient='index', columns=['G_import'])
+    G_import_df.reset_index(inplace=True)
+    G_import_df[['Time', 'Household']] = pd.DataFrame(G_import_df['index'].tolist(), index=G_import_df.index)
+    G_import_df.drop(columns='index', inplace=True)
+    G_import_df.set_index('Time', inplace=True)
+    G_import_df = G_import_df[['Household', 'G_import']]
+
+    G_import_df_aggregated = pd.DataFrame()
+    G_import_df_aggregated['G_import_aggregated'] = G_import_df.groupby(['Time']).sum()['G_import']
+    peak_power_P2P = G_import_df_aggregated['G_import_aggregated'].resample('M').max()
+
+    P2P_savings = X_p_df_aggregated['P2P savings'].sum() + (peak_power.sum()-peak_power_P2P.sum())*60
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ FFR savings
