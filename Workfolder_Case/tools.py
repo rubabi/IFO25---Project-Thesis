@@ -307,7 +307,7 @@ def print_costs(instance):
 
     # Create a DataFrame from the dictionary
     costs_df = pd.DataFrame(list(costs.items()), columns=['Cost Type', 'Value'])
-    costs_df['Value'] = costs_df['Value'].apply(lambda x: f"{x:.2f},- NOK")
+    costs_df['Value'] = costs_df['Value'].apply(lambda x: f"{x:.2f} NOK")
     # Print the DataFrame without the index
     print(costs_df.to_string(index=False))
 
@@ -332,5 +332,5 @@ def costs_to_latex(instance):
 
     # Create a DataFrame from the dictionary
     costs_df = pd.DataFrame(list(costs.items()), columns=['Cost Type', 'Value'])
-    costs_df['Value'] = costs_df['Value'].apply(lambda x: f"{x:.2f},- NOK")
+    costs_df['Value'] = costs_df['Value'].apply(lambda x: f"{x:.2f} NOK")
     print(costs_df.to_latex(index=False, label="tab:costs", caption="[Caption here]"))
