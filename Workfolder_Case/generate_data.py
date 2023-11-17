@@ -20,7 +20,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     date_format_str = '%Y-%m-%d %H:%M:%S%z'  # '2019-12-06 14:00:00+00:00' format
     #p_spot_df = pd.read_csv(file_path_data + r"Prices_updated.csv", index_col=0,
                             #parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
-    p_spot_df = pd.read_csv(os.path.join(file_path_data, r"Prices_updated.csv"), index_col=0,
+    p_spot_df = pd.read_csv(os.path.join(file_path_data, r"Prices_updated_17.11.csv"), index_col=0,
                             parse_dates=[0], date_format=date_format_str)
     p_spot_df.index = p_spot_df.index.to_pydatetime() # convert to a datetime format required for the model
     p_spot_df = p_spot_df[["NOK/kWh"]]  # get only price in NOK/kWh
