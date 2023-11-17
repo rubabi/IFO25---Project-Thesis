@@ -71,7 +71,7 @@ def model_p2p(data):
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
     
     #$ Objective function 
-    def objective_function(model):
+    def objective_function(model): # Objective function (1)
         return sum(model.p_spot[t] * model.G_import[t, h] for t in model.T for h in model.H) + sum(model.p_peak[m] * model.G_peak[m] for m in model.M) - model.p_FFR * model.Z_FFR * len(
             model.T_FFR)
     model.objective_function = Objective(rule=objective_function, sense=minimize)
@@ -85,9 +85,17 @@ def model_p2p(data):
     def peak_power(model, t, m): # Constraint (3)
         return sum(model.G_import[t, h] for h in model.H) <= model.G_peak[m]
     model.peak_power = Constraint(model.T_M, rule=peak_power)
+
+    def export_limit(model,h): # Constraint (4)
+        return sum(model.G_export[t, h] for t in model.T) <= model.x_limit
+    model.export_limit = Constraint(model.H, rule=export_limit)
+
+    def net_importer(model,h): # Constraint (5)
+        return sum(model.G_import[t, h] for t in model.T) >= sum(model.G_export[t, h] for t in model.T)
+    model.net_importer = Constraint(model.H, rule=net_importer)
     
     #$ Battery constraints
-    def time_constraint(model, t, h): # Constraint (4&5)
+    def time_constraint(model, t, h): # Constraint (6&7)
         if t.time() == time(0,0): # when the hour is 00:00
             return model.S[t, h] == model.s_init + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
         else:
@@ -95,49 +103,49 @@ def model_p2p(data):
             return model.S[t, h] == model.eta_diff * model.S[t_previous, h] + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
     model.time_constraint = Constraint(model.T, model.H_bat, rule=time_constraint)
 
-    def charging_rate(model, t, h): # Constraint (6)
+    def charging_rate(model, t, h): # Constraint (8)
         return model.C[t, h] <= model.alpha
     model.charging_rate = Constraint(model.T, model.H_bat, rule=charging_rate)
 
-    def discharge_rate(model, t, h): # Constraint (7)
+    def discharge_rate(model, t, h): # Constraint (9)
         return model.D[t, h] <= model.beta
     model.discharge_rate = Constraint(model.T, model.H_bat, rule=discharge_rate)
 
-    def max_SoC(model, t, h): # Constraint (8)
+    def max_SoC(model, t, h): # Constraint (10)
         return model.S[t, h] <= model.smax
     model.max_SoC = Constraint(model.T, model.H_bat, rule=max_SoC)
 
-    def min_SoC(model, t, h): # Constraint (8)
+    def min_SoC(model, t, h): # Constraint (10)
         return model.S[t, h] >= model.smin
     model.min_SoC = Constraint(model.T, model.H_bat, rule=min_SoC)
 
     #$ FFR Constraints
-    def FFR_charging_capacity(model, t, h): # Constraint (9)
+    def FFR_charging_capacity(model, t, h): # Constraint (11)
         return model.C[t,h] >= model.R_FFR_charge[t,h]    
     model.FFR_charging_capacity = Constraint(model.T, model.H_bat, rule=FFR_charging_capacity)
 
-    def FFR_discharging_capacity(model,t,h): # Constraint (10)
+    def FFR_discharging_capacity(model,t,h): # Constraint (12)
         return model.D[t, h] + model.R_FFR_discharge[t, h] <= model.beta   
     model.FFR_discharging_capacity = Constraint(model.T, model.H_bat, rule=FFR_discharging_capacity)
     
-    def FFR_capacity_sum(model,t): # Constraint (11)
+    def FFR_capacity_sum(model,t): # Constraint (13)
         return sum(model.R_FFR_charge[t,h] + model.R_FFR_discharge[t,h] for h in model.H_bat) >= model.Z_FFR 
     model.FFR_capacity_sum = Constraint(model.T_FFR, rule=FFR_capacity_sum)
 
     #$ P2P constraints
-    def sum_exports_household(model, h, t): # Constraint (12)
+    def sum_exports_household(model, h, t): # Constraint (14)
         return model.X[t, h] == sum(model.X_p[t, p] for p in model.P if p[0] == h)
     model.sum_exports_household = Constraint(model.H, model.T, rule=sum_exports_household)
 
-    def sum_imports_household(model, h, t): # Constraint (13)
+    def sum_imports_household(model, h, t): # Constraint (15)
         return model.I[t, h] == sum(model.I_p[t, p] for p in model.P if p[0] == h)
     model.sum_imports_household = Constraint(model.H, model.T, rule=sum_imports_household)
 
-    def balance_exports_imports(model, t): # Constraint (13)
+    def balance_exports_imports(model, t): # Constraint (16)
         return sum(model.I[t, h] for h in model.H) == model.eta_P2P * sum(model.X[t, h] for h in model.H)
     model.balance_exports_imports = Constraint(model.T, rule=balance_exports_imports)
 
-    def balance_exports_imports_household(model, t, h0, h1): # Constraint (14)
+    def balance_exports_imports_household(model, t, h0, h1): # Constraint (17)
         return model.I_p[t, h0, h1] == model.eta_P2P * model.X_p[t, h1, h0]
     model.balance_exports_imports_household = Constraint(model.T, model.P, rule=balance_exports_imports_household)
 

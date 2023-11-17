@@ -33,7 +33,7 @@ if continuous_switch:
 
     # Switches for what to print
     print_Rs = False
-    print_P2P_exports_switch = False
+    print_P2P_exports_switch = True
     plot_state_of_charge_switch = False
     overview_plot_switch = False
 
