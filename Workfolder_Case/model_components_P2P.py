@@ -18,7 +18,7 @@ def model_p2p(data):
     model.M = Set() # Months
     model.T = Set() # Time period (e.g., hour, half-an-hour)
     model.T_FFR = Set() # Hours where FFR is active
-    model.T_M = Set() #dim=2
+    model.T_M = Set()
     
     # Parameters
     model.alpha = Param()  # Charging rate 2.5 kW -> 2.5 kWh/hour at constant rate
@@ -40,7 +40,7 @@ def model_p2p(data):
     model.p_energy = Param() # Grid energy price
     model.p_exp = Param() # Electricity export cost (excl. surcharge)
     model.p_FFR = Param() # FFR market price per hour
-    model.p_peak = Param() # Peak power dependent grid price
+    model.p_peak = Param(model.M) # Peak power dependent grid price
     model.p_retail = Param() # Electricity import cost
 
     # Old spot price, should be removed
@@ -56,7 +56,7 @@ def model_p2p(data):
     model.S = Var(model.T, model.H_bat, within=NonNegativeReals)  # State of battery
     model.G_import = Var(model.T, model.H, within=NonNegativeReals)  # Grid import
     model.G_export = Var(model.T, model.H, within=NonNegativeReals)  # Grid export
-    model.G_peak = Var(model.M, within=NonNegativeReals)  # Peak power import
+    model.G_peak = Var(model.M, within=NonNegativeReals)  # Peak power import 
 
     # FFR related
     model.R_FFR_charge = Var(model.T, model.H_bat, within=NonNegativeReals) #FFR capacity from charging house h in time step t [kwh]
@@ -81,6 +81,7 @@ def model_p2p(data):
 
     def peak_power(model, t, m): # Constraint (3)
         return sum(model.G_import[t, h] for h in model.H) <= model.G_peak[m]
+    model.peak_power = Constraint(model.T_M, rule=peak_power)
     
     #model.peak_power = Constraint(model.T, model.M, rule=peak_power)
     

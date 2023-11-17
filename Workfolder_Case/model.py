@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # Import file functons
 from model_components_P2P import model_p2p
 from directories_P2P import directory
@@ -76,9 +77,9 @@ if continuous_switch:
     bill_reduction = savings[1]
     P2P_savings = savings[2]
     FFR_savings = savings[3]
-
-    print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')
+    
     print(f'No P2P, batteries or PV production (base case): {round(no_savings,2)} NOK')
+    print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
     print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
 #--------------------------------------------------------------------------------------------------------------------------------------

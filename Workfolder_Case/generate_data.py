@@ -1,6 +1,8 @@
 import pandas as pd
 from pyomo.environ import *
 import pytz
+import os
+import numpy as np
 
 def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv):
     #list_houses = [f"H{i}" for i in range(1, n_houses + 1)]
@@ -15,8 +17,10 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
 
     #$ Get spot prices
     date_format_str = '%Y-%m-%d %H:%M:%S%z'  # '2019-12-06 14:00:00+00:00' format
-    p_spot_df = pd.read_csv(file_path_data + r"Prices_updated.csv", index_col=0,
-                            parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
+    #p_spot_df = pd.read_csv(file_path_data + r"Prices_updated.csv", index_col=0,
+                            #parse_dates=[0], date_format=date_format_str)  # to make sure the date is read properly
+    p_spot_df = pd.read_csv(os.path.join(file_path_data, r"Prices_updated.csv"), index_col=0,
+                            parse_dates=[0], date_format=date_format_str)
     p_spot_df.index = p_spot_df.index.to_pydatetime() # convert to a datetime format required for the model
     p_spot_df = p_spot_df[["NOK/kWh"]]  # get only price in NOK/kWh
     p_spot_df_ = p_spot_df[(p_spot_df.index >= start_date) & (p_spot_df.index < end_date)]
@@ -24,7 +28,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     p_spot = p_spot_df_.to_dict()
 
     #$ Get demand
-    dem_df = pd.read_excel(file_path_data + r"DemandProfiles/aprTaug2021.xlsx", index_col=0, parse_dates=[0])
+    dem_df = pd.read_excel(os.path.join(file_path_data,r"DemandProfiles/aprTaug2021.xlsx"), index_col=0, parse_dates=[0])
     #dem_df.index = dem_df.index.to_pydatetime() # convert to a datetime format required for the model
     dem_df = dem_df[list_houses]  # Filter based on the houses selected
     # Now apply the conversion to datetime without the timezone information
@@ -37,7 +41,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
 
 
     #$ Get solar profiles, we assume the PV profile is the same for each house given that they are located close to each other
-    res_df = pd.read_excel(file_path_data + r"DemandProfiles/aprTaug2021.xlsx", sheet_name = "RESprofiles", index_col=0,
+    res_df = pd.read_excel(os.path.join(file_path_data, r"DemandProfiles/aprTaug2021.xlsx"), sheet_name = "RESprofiles", index_col=0,
                         parse_dates=[0], date_format=date_format_str)
     res_df.index = pd.to_datetime(res_df.index, utc=True) # convert to a datetime format required for the model
     res_df_ = res_df[(res_df.index >= start_date) & (res_df.index < end_date)]
@@ -51,6 +55,14 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     #list_T = index_date.to_list()
     list_T = p_spot_df_.index.to_list()
     list_T_FFR = [t for t in list_T if t.hour >= 22 or t.hour < 7]
+
+    # Set M
+    index_date = p_spot_df_.index
+    list_M = list(np.unique([t.month for t in index_date])) # Retrieves the month from each element in the index and filters unique values
+    list_T_M = [(t, t.month) for t in index_date] # list creating tuple of the T set and the M set
+
+    # Create Grid Tariff Param #!CHANGE
+    p_peak = {m: 10 for m in list_M}
 
     # Parameter PV_cap
     res_cap = {f"H{key}":capacity_pv[i] for i, key in enumerate(houses_pv)}
@@ -79,6 +91,10 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
             "H_bat": {None: list_houses_bat},  # providing data for set H_bat
             "T": {None: list_T},  # providing datetime for set T
             "T_FFR": {None: list_T_FFR},  # providing datetime for set T_FFR
+            # Months and Grid RAQUEL
+            "M": {None: list_M},
+            "T_M": {None: list_T_M},
+            "p_peak": p_peak,
             # Parameters
             "dem": dem,
             "res": res[scn],
