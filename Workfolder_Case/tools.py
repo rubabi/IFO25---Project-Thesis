@@ -285,3 +285,52 @@ def overview_plot(instance):
 
     #plt.tight_layout()
     plt.show()
+
+#Function to print the costs from the object function
+def print_costs(instance):
+    from pyomo.environ import value
+    spot_cost = sum(value(instance.G_import[t, h]) * instance.p_spot[t] for t in instance.T for h in instance.H)
+    retail_cost = sum(value(instance.G_import[t, h]) * instance.p_retail for t in instance.T for h in instance.H)
+    peak_cost = sum(value(instance.G_peak[m]) * instance.p_peak[m] for m in instance.M)
+    export_cost = -sum(value(instance.G_export[t, h]) * instance.p_spot[t] * (1 - instance.psi) for t in instance.T for h in instance.H)
+    FFR_cost = -value(instance.Z_FFR) * instance.p_FFR * len(instance.T_FFR)
+
+    # Create a dictionary with the costs
+    costs = {
+        'Spot Cost': spot_cost,
+        'Retail Cost': retail_cost,
+        'Peak Cost': peak_cost,
+        'Export Cost': export_cost,
+        'FFR Cost': FFR_cost,
+        'Total Cost': spot_cost + retail_cost + peak_cost + export_cost + FFR_cost
+    }
+
+    # Create a DataFrame from the dictionary
+    costs_df = pd.DataFrame(list(costs.items()), columns=['Cost Type', 'Value'])
+    costs_df['Value'] = costs_df['Value'].apply(lambda x: f"{x:.2f},- NOK")
+    # Print the DataFrame without the index
+    print(costs_df.to_string(index=False))
+
+#Function to print the costs from the object function to a latex table
+def costs_to_latex(instance):
+    from pyomo.environ import value
+    spot_cost = sum(value(instance.G_import[t, h]) * instance.p_spot[t] for t in instance.T for h in instance.H)
+    retail_cost = sum(value(instance.G_import[t, h]) * instance.p_retail for t in instance.T for h in instance.H)
+    peak_cost = sum(value(instance.G_peak[m]) * instance.p_peak[m] for m in instance.M)
+    export_cost = -sum(value(instance.G_export[t, h]) * instance.p_spot[t] * (1 - instance.psi) for t in instance.T for h in instance.H)
+    FFR_cost = -value(instance.Z_FFR) * instance.p_FFR * len(instance.T_FFR)
+
+    # Create a dictionary with the costs
+    costs = {
+        'Spot Cost': spot_cost,
+        'Retail Cost': retail_cost,
+        'Peak Cost': peak_cost,
+        'Export Cost': export_cost,
+        'FFR Cost': FFR_cost,
+        'Total Cost': spot_cost + retail_cost + peak_cost + export_cost + FFR_cost
+    }
+
+    # Create a DataFrame from the dictionary
+    costs_df = pd.DataFrame(list(costs.items()), columns=['Cost Type', 'Value'])
+    costs_df['Value'] = costs_df['Value'].apply(lambda x: f"{x:.2f},- NOK")
+    print(costs_df.to_latex(index=False, label="tab:costs", caption="[Caption here]"))
