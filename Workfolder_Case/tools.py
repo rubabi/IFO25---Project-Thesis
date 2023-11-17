@@ -68,7 +68,7 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     fig.tight_layout()
     plt.show()
 
-def calculating_savings(instance, n_houses, start_date, end_date):
+def calculating_savings(instance, start_date, end_date):
 
     # Days in the period
     start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
@@ -96,37 +96,24 @@ def calculating_savings(instance, n_houses, start_date, end_date):
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     # P2P savings
-    X_p_dict = instance.X_p.get_values() # Collecting P2P transaction data
-    X_p_df = pd.DataFrame.from_dict(X_p_dict, orient="index") # Converting to DF
-    X_p_df.columns = ["X_p"] # Naming the dataframe
-    X_p_df = X_p_df.reset_index()
-    X_p_df[['Time', 'Household', "Peer"]] = pd.DataFrame(X_p_df['index'].tolist(), index=X_p_df.index) # Create a colun for each element
-    X_p_df = X_p_df.drop(columns='index') # Eliminate the index column containing the tuple
+    # Step 1: Convert instance.X_p to a DataFrame and split the index
+    X_p_df = pd.DataFrame(list(instance.X_p.items()), columns=['index', 'X_p'])
+    X_p_df[['Time', 'Household', 'Peer']] = pd.DataFrame(X_p_df['index'].tolist(), index=X_p_df.index)
+    X_p_df.drop(columns='index', inplace=True)
 
-    X = X_p_df['Time'].unique() # Get unique values for time, this will be the x-axis
-    aggregated_df = pd.DataFrame()
-    aggregated_df['time'] = X_p_df['Time'].unique()  
+    # Step 2: Create aggregated_df
+    aggregated_df = X_p_df.groupby(['Time', 'Household'])['X_p'].sum().unstack()
 
-    for house in range(n_houses): # Get unique houses
-        Y = X_p_df[X_p_df['Household'] == f'H{house + 1}']['X_p'].values # Transactions per house
-        Y_aggregated = np.empty(len(X)) # Create an empty array to aggregate transactions per house per time step
-        for time_step in range(int(len(Y)/n_houses)):
-            Y_aggregated[time_step] = Y[time_step*n_houses:n_houses+time_step*n_houses].sum() # Aggregating 
-        
-        aggregated_df[f'H{house+1}'] = Y_aggregated # Adding the aggregation to a new column in the dataframe 
-    
-    P2P_savings_df = pd.DataFrame()
-    P2P_savings_df['time'] = X_p_df['Time'].unique()  
+    # Step 3: Create P2P_savings_df
+    P2P_savings_df = aggregated_df[:time_steps_per_day*days] * prices_df['Day ahead price (NOK/kWh)'][:time_steps_per_day*days]
 
-    for house in range(n_houses):  # Summing the savings from P2P transactions multiplied by days
-        P2P_savings_df[f'H{house+1}'] = aggregated_df[f'H{house+1}'][:time_steps_per_day*days] * prices_df['day ahead price (p/kWh)'][:time_steps_per_day*days]
-
-    P2P_savings_df['Community savings'] = P2P_savings_df.iloc[:, 1:].sum(axis=1)
+    # Step 4: Calculate 'Community savings'
+    P2P_savings_df['Community savings'] = P2P_savings_df.sum(axis=1)
     P2P_savings = P2P_savings_df['Community savings'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     # FFR savings
-    T_FFR = [t for t in X if t.hour >= 22 or t.hour < 7]   
+    T_FFR = [t for t in instance.T if t.hour >= 22 or t.hour < 7]   
 
     Z_FFR = instance.Z_FFR.get_values()[None]
     # obtain p_FFR from instance

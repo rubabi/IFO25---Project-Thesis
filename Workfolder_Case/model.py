@@ -18,7 +18,7 @@ houses_bat = [1,3,5,7] # indicate houses with batteries
 continuous_switch = True
 if continuous_switch:
     start_date_str = "2021-4-01"
-    end_date_str = "2021-4-08" # Last day is not included in the model
+    end_date_str = "2021-5-01" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
     data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
@@ -65,17 +65,17 @@ if continuous_switch:
     if overview_plot_switch:
         overview_plot(instance, file_path_results, n_houses)
 
-    '''# Printing savings
-    savings = calculating_savings(instance, n_houses, start_date_str, end_date_str)
+    # Printing savings
+    savings = calculating_savings(instance, start_date_str, end_date_str)
     no_savings = savings[0]
     bill_reduction = savings[1]
     P2P_savings = savings[2]
     FFR_savings = savings[3]
 
     print(f'The total bill reduction is: {round(bill_reduction*100,2)}%')
-    print(f'No P2P, batteries or PV production (base case): {round(no_savings,2)} pence')
+    print(f'No P2P, batteries or PV production (base case): {round(no_savings,2)} NOK')
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
-    print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')'''
+    print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
 #--------------------------------------------------------------------------------------------------------------------------------------
 
 # Run the model for multiple, discrete weeks
@@ -95,7 +95,7 @@ if discrete_switch:
 
         # Run an instance of the model for a week
         instance = model_p2p(data_week)
-        savings = calculating_savings(instance, n_houses, start_date_str, end_date_str)
+        savings = calculating_savings(instance, start_date_str, end_date_str)
         no_savings_discrete += savings[0]
         bill_reduction_discrete += savings[1]/len(week_list)
         P2P_savings_discrete += savings[2]
