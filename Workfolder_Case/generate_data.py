@@ -77,6 +77,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     x_limit = 100  # Grid export limit [kW]
 
     p_peak = {m: 60 for m in list_M}
+    p_retail = 0.45 # Retail price of electricity, nettleie [NOK/kWh]
 
     # FFR type
     if FFR_type == "Flex":
@@ -120,6 +121,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
             # Prices
             "p_FFR": {None: p_FFR},
             "p_peak": p_peak,
+            "p_retail": {None: p_retail},
         }}
     
     return data

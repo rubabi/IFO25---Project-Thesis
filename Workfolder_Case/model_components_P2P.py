@@ -39,7 +39,7 @@ def model_p2p(data):
     # Prices
     model.p_FFR = Param() # FFR market price per hour
     model.p_peak = Param(model.M) # Peak power dependent grid price
-    model.p_retail = Param(initialize = 0.45) # [NOK/kWh] Electricity import price. Weighted average between day and night price for nettleie
+    model.p_retail = Param() # [NOK/kWh] Electricity import price. Weighted average between day and night price for nettleie
     model.p_spot = Param(model.T) # Spot price for electricity
 
     
