@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 # Import file functons
 from model_components_P2P import model_p2p
 from directories_P2P import directory
@@ -31,8 +30,6 @@ if continuous_switch:
 
     # Run the model
     instance = model_p2p(data)
-
- 
 
     # Switches for what to print
     print_Rs = False
