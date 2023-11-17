@@ -63,9 +63,6 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     list_M = list(np.unique([t.month for t in index_date])) # Retrieves the month from each element in the index and filters unique values
     list_T_M = [(t, t.month) for t in index_date] # list creating tuple of the T set and the M set
 
-    # Create Grid Tariff Param #! CHANGE?
-    p_peak = {m: 10 for m in list_M}
-
     # Scalars (single value parameters)
     alpha = 2.5  # Charging capacuty 2.5 kW -> 1.25 kWh/ half hour at constant rate
     beta = 2.5 # Discharging capacity 2.5 kW -> 1.25 kWh/ half hour at constant rate
@@ -73,7 +70,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     eta_discharge = 0.96  # Discharging efficiency
     eta_diff = 0.99 # Diffusion efficiency #! Change?
     eta_P2P = 1 - 0.076  # Losses (assume a loss of 7.6% through the local network, Luth)
-    #k = 0 # Energy initially available in flexible asset
+    psi = 0.05  # Marginal loss-rate when feeding into the grid
     smax = 13.5  # Tesla powerwall capacity [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
     smin = smax * 0.2  # minimum state of charge of batteries at all times
     s_init = smax * 0.5  # initial state of charge of the battery
@@ -101,7 +98,6 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
             # Months and Grid RAQUEL
             "M": {None: list_M},
             "T_M": {None: list_T_M},
-            "p_peak": p_peak,
             # Parameters
             "dem": dem,
             "res": res[scn],
@@ -114,6 +110,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
             "eta_discharge": {None: eta_discharge},
             "eta_diff": {None: eta_diff},
             "eta_P2P": {None: eta_P2P},
+            "psi": {None: psi},
             "smax": {None: smax},
             "smin": {None: smin},
             "s_init": {None: s_init},
