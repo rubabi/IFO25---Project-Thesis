@@ -17,6 +17,9 @@ n_houses = 7
 houses_pv = [2,3,4,5,6,7] # indicate houses with pv
 capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 1 and 2,3,4,5,6,7 respectively
 houses_bat = [1,3,5,7] # indicate houses with batteries
+
+FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
+
 #--------------------------------------------------------------------------------------------------------------------------------------
 
 #$ Run the model for a continuous time period
@@ -26,7 +29,7 @@ if continuous_switch:
     end_date = "2021-4-08" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
-    data = generate_data_dict(file_path_data, start_date, end_date, n_houses, houses_pv, houses_bat, capacity_pv)
+    data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
 
     # Run the model
     instance = model_p2p(data)
@@ -74,12 +77,13 @@ if continuous_switch:
     FFR_savings = savings[3]
     
     # Print interesting values
+    print(f'FFR type: {FFR_type}')
     print(f'The FFR price per [NOK/mW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
-    print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings,2)} NOK')
-    print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')
+    print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings,2)} NOK\n')
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
     print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%\n')
+    print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -96,7 +100,7 @@ if discrete_switch:
     for week in week_list:
         start_date = week[0]
         end_date = week[1]
-        data_week = generate_data_dict(file_path_data, start_date, end_date, n_houses, houses_pv, houses_bat, capacity_pv)
+        data_week = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
 
         # Run an instance of the model for a week
         instance = model_p2p(data_week)
@@ -107,9 +111,9 @@ if discrete_switch:
         FFR_savings_discrete += savings[3]
         reserved_FFR_capacity.append(round(instance.Z_FFR.get_values()[None],2))
 
-    print(f'The FFR price per [pence/kW]: {instance.p_FFR.value*2}')
+    print(f'The FFR price per [NOK/mW]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {reserved_FFR_capacity}')
-    print(f'No P2P, batteries or PV production (base case): {round(no_savings_discrete,2)} pence')
+    print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings_discrete,2)} NOK\n')
     print(f'P2P savings: {round(P2P_savings_discrete/no_savings_discrete*100,2)}%')
     print(f'FFR savings: {round(FFR_savings_discrete/no_savings_discrete*100,2)}%')
-    print(f'The total bill reduction is: {round(bill_reduction_discrete*100,2)}%')
+    print(f'The total bill reduction is: {round(bill_reduction_discrete*100,2)}%\n')

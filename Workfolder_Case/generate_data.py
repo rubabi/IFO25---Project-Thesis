@@ -4,9 +4,10 @@ import pytz
 import os
 import numpy as np
 
-def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv):
+def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, houses_bat, capacity_pv, FFR_type):
     #list_houses = [f"H{i}" for i in range(1, n_houses + 1)]
     list_houses = ["H97", "H19", "H50", "H98", "H26", "H49", "H68"] #According to file aprTaug2021
+    list_houses.sort(key=lambda x: int(x[1:]))
     list_houses_pv = [f"H{i}" for i in houses_pv]
     list_houses_bat = [f"H{i}" for i in houses_bat]
 
@@ -54,7 +55,6 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     #index_date = dem_df_.index.get_level_values(0)
     #list_T = index_date.to_list()
     list_T = p_spot_df_.index.to_list()
-    list_T_FFR = [t for t in list_T if t.hour >= 22 or t.hour < 7]
 
     # Set M
     index_date = p_spot_df_.index
@@ -80,9 +80,16 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     s_init = smax * 0.5  # initial state of charge of the battery
     x_limit = 100  # Grid export limit [kW]
 
-    # Prices
-    p_FFR = 0.15 #[NOK/kWh] hour FFR Profil
-
+    # FFR type
+    if FFR_type == "Flex":
+        p_FFR = 0.45 
+        list_T_FFR = list_T
+    elif FFR_type == "Profil":
+        p_FFR = 0.15
+        list_T_FFR = [t for t in list_T if t.hour >= 22 or t.hour < 7]
+    elif FFR_type == "No FFR":
+        p_FFR = 0
+        list_T_FFR = list_T
     # Construct data dictionary
     data = {  # always start with None and then dictionary
         None: {  # names of the keys equal to the name of the parameteres in the model
