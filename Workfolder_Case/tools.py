@@ -78,16 +78,20 @@ def calculating_savings(instance, n_houses, start_date, end_date):
     time_steps_per_day = int(len(list(instance.T.data()))/days)
 
     # Creating the denominator - the case of no savings
-    demand_df = pd.read_csv(directory('data')+'demand_Jan_365days.csv')
-    demand_df = demand_df.iloc[:, :n_houses + 1]
-    demand_df['Community demand'] = demand_df.iloc[:, 1:].sum(axis=1)
+    demand_df = pd.DataFrame(list(instance.dem.items()), columns=['index', 'Demand'])
+    demand_df[['Time', 'Household']] = pd.DataFrame(demand_df['index'].tolist(), index=demand_df.index)
+    demand_df.set_index('Time', inplace=True)
+    demand_df = demand_df[['Household', 'Demand']]
 
-    prices_df = pd.read_csv(directory('data')+'dayahead_Jan_365days.csv')
-    
-    from_grid_df = pd.DataFrame()
-    from_grid_df['time'] = demand_df['time'][:time_steps_per_day*days]
-    from_grid_df['Community grid expenditure'] = (demand_df['Community demand']) * prices_df['day ahead price (p/kWh)'][:time_steps_per_day*days]
-    
+    prices_df = pd.DataFrame(list(instance.p_spot.items()), columns=['Time', 'Day ahead price (NOK/kWh)'])
+    prices_df.set_index('Time', inplace=True)
+
+    from_grid_df = pd.DataFrame(index=demand_df.index)
+    from_grid_df = from_grid_df[~from_grid_df.index.duplicated(keep='first')]
+    from_grid_df['Demand'] = demand_df.groupby(demand_df.index).sum()['Demand']
+    from_grid_df['Day ahead price (NOK/kWh)'] = prices_df['Day ahead price (NOK/kWh)']
+    from_grid_df['Community grid expenditure'] = from_grid_df['Demand'] * from_grid_df['Day ahead price (NOK/kWh)']
+
     no_savings = from_grid_df['Community grid expenditure'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
