@@ -68,6 +68,7 @@ def model_p2p(data):
     model.I_p = Var(model.T, model.P, within=NonNegativeReals)  # Imports of house h from house p
     model.X = Var(model.T, model.H, within=NonNegativeReals)  # Total exports house h
     model.X_p = Var(model.T, model.P, within=NonNegativeReals)  # Exports from house h to house p
+    #---------------------------------------------------------------------------------------------------------------------------------------------------------------
     
     #$ Objective function 
     def objective_function(model):
