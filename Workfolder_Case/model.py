@@ -18,7 +18,7 @@ houses_pv = [19,50,98,26,49,68] # indicate houses with pv
 houses_bat = [97,50,26,68] # indicate houses with batterie
 capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 1 and 2,3,4,5,6,7 respectively
 
-FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
 continuous_switch = True
 if continuous_switch:
     start_date = "2021-4-01"
-    end_date = "2021-5-01" # Last day is not included in the model
+    end_date = "2021-7-01" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
     data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
@@ -90,7 +90,7 @@ if continuous_switch:
 #$ Run the model for multiple, discrete weeks
 discrete_switch = False
 if discrete_switch:
-    week_list = [["2021-4-01","2021-4-08"],["2021-5-01","2021-5-08"],["2021-6-01","2021-6-08"],["2021-7-01","2021-7-08"],["2021-8-01","2021-8-08"]] # Last day is not included in the model
+    week_list = [["2021-4-01","2021-4-08"],["2021-5-01","2021-5-08"],["2021-6-01","2021-6-08"]] # Last day is not included in the model
     no_savings_discrete = 0
     bill_reduction_discrete = 0
     P2P_savings_discrete = 0
