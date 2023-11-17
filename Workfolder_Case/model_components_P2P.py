@@ -90,7 +90,7 @@ def model_p2p(data):
         return sum(model.G_export[t, h] for t in model.T) <= model.x_limit
     model.export_limit = Constraint(model.H, rule=export_limit)
 
-    def net_importer(model,h): # Constraint (5)
+    def net_importer(model,h): # Constraint (5) #! Per month???
         return sum(model.G_import[t, h] for t in model.T) >= sum(model.G_export[t, h] for t in model.T)
     model.net_importer = Constraint(model.H, rule=net_importer)
     
