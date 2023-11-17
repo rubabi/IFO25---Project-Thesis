@@ -18,7 +18,7 @@ houses_bat = [1,3,5,7] # indicate houses with batteries
 continuous_switch = True
 if continuous_switch:
     start_date_str = "2021-4-01"
-    end_date_str = "2021-5-01" # Last day is not included in the model
+    end_date_str = "2021-4-08" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
     data = generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, houses_pv, houses_bat, capacity_pv)
