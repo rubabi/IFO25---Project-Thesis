@@ -110,7 +110,8 @@ def calculating_savings(instance, start_date, end_date):
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ FFR savings
-    T_FFR = instance.T_FFR
+    
+    T_FFR = [t for t in X_p_df.index.unique() if t.hour >= 22 or t.hour < 7]  
 
     Z_FFR = instance.Z_FFR.get_values()[None]
 

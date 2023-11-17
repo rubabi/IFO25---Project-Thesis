@@ -81,7 +81,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, n_houses, h
     x_limit = 0  # Grid export limit [kW]
 
     # Prices
-    p_FFR = 0.075 #[NOK/0.5kWh] (half hour) FFR Profil
+    p_FFR = 0.15 #[NOK/kWh] hour FFR Profil
 
     # Construct data dictionary
     data = {  # always start with None and then dictionary

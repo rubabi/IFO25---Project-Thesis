@@ -32,9 +32,7 @@ if continuous_switch:
     # Run the model
     instance = model_p2p(data)
 
-    # Print interesting values
-    print(f'The FFR price per [NOK/kW]: {instance.p_FFR.value*2}')
-    print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
+ 
 
     # Switches for what to print
     print_Rs = False
@@ -78,6 +76,9 @@ if continuous_switch:
     P2P_savings = savings[2]
     FFR_savings = savings[3]
     
+    # Print interesting values
+    print(f'The FFR price per [NOK/mW/hour]: {instance.p_FFR.value*1000}')
+    print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
     print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings,2)} NOK')
     print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
