@@ -103,9 +103,7 @@ def calculating_savings(instance, start_date, end_date):
     X_p_df.set_index('Time', inplace=True)
     X_p_df = X_p_df[['Household', 'Peer', 'X_p']]
 
-    # make a column that aggregates all the exports from the households per time step
     X_p_df['X_p_aggregated'] = X_p_df.groupby(['Time', 'Peer']).sum()['X_p']
-    #make a variable that sums all the exports from the households per time step times the spot price per time step
     X_p_df['P2P savings'] = X_p_df['X_p_aggregated'] * prices_df['Day ahead price (NOK/kWh)']
 
     P2P_savings = X_p_df['P2P savings'].sum()
