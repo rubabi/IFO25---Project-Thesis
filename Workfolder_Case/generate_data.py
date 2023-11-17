@@ -125,5 +125,3 @@ def generate_data_dict_svartlamoen(file_path_data, start_date_str, end_date_str)
     p_spot_df_ = p_spot_df[(p_spot_df.index >= start_date) & (p_spot_df.index < end_date)]
     # Convert the dataframe P_spot_df_ to dictionary for data input for the function model_p2p()
     p_spot = p_spot_df_.to_dict()
-    
-

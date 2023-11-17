@@ -69,6 +69,9 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     plt.show()
 
 def calculating_savings(instance, start_date, end_date):
+    
+    # Number of houses
+    n_houses = len(instance.H)
 
     # Days in the period
     start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
@@ -96,27 +99,22 @@ def calculating_savings(instance, start_date, end_date):
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     # P2P savings
-    # Step 1: Convert instance.X_p to a DataFrame and split the index
-    X_p_df = pd.DataFrame(list(instance.X_p.items()), columns=['index', 'X_p'])
+    X_p_df = pd.DataFrame.from_dict(instance.X_p.get_values(), orient='index', columns=['X_p'])
+    X_p_df.reset_index(inplace=True)
     X_p_df[['Time', 'Household', 'Peer']] = pd.DataFrame(X_p_df['index'].tolist(), index=X_p_df.index)
     X_p_df.drop(columns='index', inplace=True)
+    X_p_df.set_index('Time', inplace=True)
+    X_p_df = X_p_df[['Household', 'Peer', 'X_p']]
 
-    # Step 2: Create aggregated_df
-    aggregated_df = X_p_df.groupby(['Time', 'Household'])['X_p'].sum().unstack()
+    P2P_savings = 0
 
-    # Step 3: Create P2P_savings_df
-    P2P_savings_df = aggregated_df[:time_steps_per_day*days] * prices_df['Day ahead price (NOK/kWh)'][:time_steps_per_day*days]
-
-    # Step 4: Calculate 'Community savings'
-    P2P_savings_df['Community savings'] = P2P_savings_df.sum(axis=1)
-    P2P_savings = P2P_savings_df['Community savings'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     # FFR savings
-    T_FFR = [t for t in instance.T if t.hour >= 22 or t.hour < 7]   
+    T_FFR = instance.T_FFR
 
     Z_FFR = instance.Z_FFR.get_values()[None]
-    # obtain p_FFR from instance
+
     p_FFR = instance.p_FFR.value
     FFR_savings = Z_FFR*p_FFR*len(T_FFR)
     #------------------------------------------------------------------------------------------------------------------------------------------------
