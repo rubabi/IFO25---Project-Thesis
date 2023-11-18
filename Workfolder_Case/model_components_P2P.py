@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import time
 from pyomo.environ import *
 
-def model_p2p(data, P2P_switch, PV_switch, Battery_switch):
+def model_p2p(data, P2P_switch):
     model = AbstractModel()
 
     #Activate duals / shadow prices
@@ -74,8 +74,8 @@ def model_p2p(data, P2P_switch, PV_switch, Battery_switch):
 
     #$ Grid Constraints
     def balance_equation(model, t, h): # Constraint (2)
-        return (model.G_import[t, h] + (model.res[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0)
-                + model.I[t, h] >= model.dem[t, h] + model.X[t, h] + (model.C[t, h] if h in model.H_bat else 0))
+        return (model.G_import[t, h] + (model.res[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0) + model.I[t, h] 
+                >= model.dem[t, h] + model.X[t, h] + (model.C[t, h] if h in model.H_bat else 0))
     model.balance_equation = Constraint(model.T, model.H, rule=balance_equation)
 
     def peak_power(model, t, m): # Constraint (3)
@@ -150,16 +150,6 @@ def model_p2p(data, P2P_switch, PV_switch, Battery_switch):
         def no_P2P_trading(model, t, h0, h1):
             return model.X_p[t, h0, h1] == 0
         model.no_P2P_trading = Constraint(model.T, model.P, rule=no_P2P_trading)
-
-    if not PV_switch:
-        def no_pv_production(model, t, h):
-            return model.res[t] == 0 if h in model.H_pv else Constraint.Skip
-        model.no_pv_production = Constraint(model.T, model.H, rule=no_pv_production)
-
-    if not Battery_switch:
-        def no_battery(model, t, h):
-            return model.S[t, h] == 0 if h in model.H_bat else Constraint.Skip
-        model.no_battery = Constraint(model.T, model.H, rule=no_battery)
 
 
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------

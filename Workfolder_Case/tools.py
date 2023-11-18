@@ -231,7 +231,6 @@ def overview_plot(instance):
     plot_res.plot(X, Y, label="Production")
     plot_res.set_ylabel("Res [kWh]")
 
-
     #$ Plotting the import
     G_import_df.index = pd.MultiIndex.from_tuples(G_import_df.index)
     X = G_import_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis

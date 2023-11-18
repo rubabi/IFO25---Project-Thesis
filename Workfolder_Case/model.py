@@ -14,23 +14,25 @@ file_path_data = directory("data") # folder containing data
 file_path_results = directory('results') # folder containing the results
 
 n_houses = 7
-houses_pv = [19,50,98,26,49,68] # indicate houses with pv
-houses_bat = [97,50,26,68] # indicate houses with batterie
-capacity_pv = [5,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 19,50,98,26,49,68
+houses_bat = [97,50,26,68] # indicate houses with batteries
 
-FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
+houses_pv = [19,50,98,26,49,68] # indicate houses with pv
+capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 19,50,98,26,49,68
+
+FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
 
 # Switches (booleans)
-P2P_switch = False
+P2P_switch = True
 PV_switch = True
-Battery_switch = True
+Battery_switch = True 
 
-print_Rs = False
-print_P2P_exports_switch = True
+print_Rs_switch = False
+print_P2P_exports_switch = False
 plot_state_of_charge_switch = False
-overview_plot_switch = False
 cost_table_switch = False
 costs_to_latex_switch = False
+
+overview_plot_switch = True
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -38,16 +40,16 @@ costs_to_latex_switch = False
 continuous_switch = True
 if continuous_switch:
     start_date = "2021-4-01"
-    end_date = "2021-5-01" # Last day is not included in the model
+    end_date = "2021-4-04" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
-    data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
+    data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type, PV_switch, Battery_switch)
 
     # Run the model
-    instance = model_p2p(data, P2P_switch, PV_switch, Battery_switch)
+    instance = model_p2p(data, P2P_switch)
 
     # Printing functions
-    if print_Rs:
+    if print_Rs_switch:
         from collections import defaultdict
 
         total_reserved_per_timestamp = defaultdict(float)
@@ -98,36 +100,3 @@ if continuous_switch:
     print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
     print(f'Peak savings (difficult to trace): {round(Peak_savings/no_savings*100,2)}%\n')
     print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')
-
-#--------------------------------------------------------------------------------------------------------------------------------------
-
-#$ Run the model for multiple, discrete weeks
-discrete_switch = False
-if discrete_switch:
-    week_list = [["2021-4-01","2021-4-08"],["2021-5-01","2021-5-08"],["2021-6-01","2021-6-08"]] # Last day is not included in the model
-    no_savings_discrete = 0
-    bill_reduction_discrete = 0
-    P2P_savings_discrete = 0
-    FFR_savings_discrete = 0
-    reserved_FFR_capacity = []
-
-    for week in week_list:
-        start_date = week[0]
-        end_date = week[1]
-        data_week = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
-
-        # Run an instance of the model for a week
-        instance = model_p2p(data_week, P2P_switch, PV_switch, Battery_switch)
-        savings = calculating_savings(instance, start_date, end_date)
-        no_savings_discrete += savings[0]
-        bill_reduction_discrete += savings[1]/len(week_list)
-        P2P_savings_discrete += savings[2]
-        FFR_savings_discrete += savings[3]
-        reserved_FFR_capacity.append(round(instance.Z_FFR.get_values()[None],2))
-
-    print(f'The FFR price per [NOK/mW]: {instance.p_FFR.value*1000}')
-    print(f'Reserved FFR Capacity [kW]: {reserved_FFR_capacity}')
-    print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings_discrete,2)} NOK\n')
-    print(f'P2P savings: {round(P2P_savings_discrete/no_savings_discrete*100,2)}%')
-    print(f'FFR savings: {round(FFR_savings_discrete/no_savings_discrete*100,2)}%')
-    print(f'The total bill reduction is: {round(bill_reduction_discrete*100,2)}%\n')

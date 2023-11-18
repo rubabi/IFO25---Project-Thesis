@@ -4,7 +4,7 @@ import pytz
 import os
 import numpy as np
 
-def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, houses_bat, capacity_pv, FFR_type):
+def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, houses_bat, capacity_pv, FFR_type, PV_switch, Battery_switch):
     #list_houses = [f"H{i}" for i in range(1, n_houses + 1)]
     list_houses = ["H97", "H19", "H50", "H98", "H26", "H49", "H68"] #According to file aprTaug2021
     list_houses.sort(key=lambda x: int(x[1:]))
@@ -48,6 +48,11 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     res_df_ = res_df[(res_df.index >= start_date) & (res_df.index < end_date)]
     scn = "5kw" # Select one scenario, the data is prepared for several scenarios. Needs to be changed to be more general
     res_df_ = res_df_[[scn]]  # Select just one scenario, the data is prepared for several scenarios
+    
+    # If PV_switch is False, set all PV production to 0
+    if not PV_switch:
+        res_df_[scn] = 0
+    
     # Convert the dataframe to dictionary
     res = res_df_.to_dict()
     # Parameter PV_cap
@@ -71,13 +76,16 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     eta_diff = 0.99 # Diffusion efficiency #! Change?
     eta_P2P = 1 - 0.076  # Losses (assume a loss of 7.6% through the local network, Luth)
     psi = 0.05  # Marginal loss-rate when feeding into the grid
-    smax = 13.5  # Tesla powerwall capacity [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
+    if Battery_switch:
+        smax = 13.5  # Tesla powerwall capacity [kWh] # It can also be changes to be similar to parameter PV_cap where you specify the capacity of each battery
+    else:
+        smax = 0
     smin = smax * 0.2  # minimum state of charge of batteries at all times
     s_init = smax * 0.5  # initial state of charge of the battery
     x_limit = 100  # Grid export limit [kW]
 
     p_peak = {m: 60 for m in list_M}
-    p_retail = 0.45 # Retail price of electricity, nettleie [NOK/kWh]
+    p_retail = 0.45 # Retail price of electricity, grid tariff [NOK/kWh]
 
     # FFR type
     if FFR_type == "Flex":
@@ -105,7 +113,11 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
             "dem": dem,
             "res": res[scn],
             "res_cap": res_cap,
+            # Prices
             'p_spot': p_spot["NOK/kWh"],
+            "p_FFR": {None: p_FFR},
+            "p_peak": p_peak,
+            "p_retail": {None: p_retail},
             # Scalars
             "alpha": {None: alpha},
             "beta": {None: beta},
@@ -118,10 +130,6 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
             "smin": {None: smin},
             "s_init": {None: s_init},
             "x_limit": {None: x_limit},
-            # Prices
-            "p_FFR": {None: p_FFR},
-            "p_peak": p_peak,
-            "p_retail": {None: p_retail},
         }}
     
     return data
