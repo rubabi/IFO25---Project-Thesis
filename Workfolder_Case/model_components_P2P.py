@@ -75,7 +75,7 @@ def model_p2p(data, P2P_switch, Export_to_grid_switch):
     #$ Grid Constraints
     def balance_equation(model, t, h): # Constraint (2)
         return (model.G_import[t, h] + (model.res[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0) + model.I[t, h] 
-                >= model.dem[t, h] + model.X[t, h] + (model.C[t, h] if h in model.H_bat else 0))
+                >= model.dem[t, h] + model.X[t, h] + model.G_export[t, h] + (model.C[t, h] if h in model.H_bat else 0))
     model.balance_equation = Constraint(model.T, model.H, rule=balance_equation)
 
     def peak_power(model, t, m): # Constraint (3)
