@@ -20,15 +20,15 @@ houses_pv = [19,50,98,26,49,68] # indicate houses with pv
 capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 19,50,98,26,49,68
 
 # Last day is not included in the model
-start_date = "2021-5-01" # Between 2021-4-01 and 2021-6-30
-end_date = "2021-6-01" # Between 2021-4-02 and 2021-7-01
+start_date = "2021-4-01" # Between 2021-4-01 and 2021-6-30
+end_date = "2021-7-01" # Between 2021-4-02 and 2021-7-01
 
-FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
 
 # Switches (booleans)
-P2P_switch = True
-PV_switch = True
-Battery_switch = True 
+P2P_switch = False
+PV_switch = False
+Battery_switch = False 
 
 print_Rs_switch = False
 print_P2P_exports_switch = False
@@ -100,4 +100,5 @@ if continuous_switch:
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
     print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
     print(f'Peak savings (root cause = black box?): {round(Peak_savings/no_savings*100,2)}%\n')
+    print(f'The solution of the optimization gives a cost of: {round(instance.objective_function(),2)} NOK')
     print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')

@@ -151,7 +151,6 @@ def model_p2p(data, P2P_switch):
             return model.X_p[t, h0, h1] == 0
         model.no_P2P_trading = Constraint(model.T, model.P, rule=no_P2P_trading)
 
-
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Solve the model
     instance = model.create_instance(data)
