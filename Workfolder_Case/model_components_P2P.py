@@ -92,7 +92,8 @@ def model_p2p(data, P2P_switch, Export_to_grid_switch):
 
     #$ Battery constraints
     def time_constraint(model, t, h): # Constraint (6&7)
-        if t.time() == time(0,0): # when the hour is 00:00
+        #if t.time() == time(0,0): # when the hour is 00:00
+        if t == model.T.first(): # when t is the first time step
             return model.S[t, h] == model.s_init + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
         else:
             t_previous = t - pd.Timedelta(minutes=60)  # Calculate your previous t, change depending on your delta time

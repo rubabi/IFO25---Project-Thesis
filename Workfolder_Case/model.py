@@ -17,25 +17,25 @@ n_houses = 7
 houses_bat = [97,50,26,68] # indicate houses with batteries
 
 houses_pv = [19,50,98,26,49,68] # indicate houses with pv
-capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 19,50,98,26,49,68
+capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,49,68
 
 # Last day is not included in the model
 start_date = "2021-4-01" # Between 2021-4-01 and 2021-6-30
-end_date = "2021-5-01" # Between 2021-4-02 and 2021-7-01
+end_date = "2021-7-01" # Between 2021-4-02 and 2021-7-01
 
-FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
 
 # System component switches (booleans)
-P2P_switch = False
+P2P_switch = True
 PV_switch = True
-Battery_switch = False 
+Battery_switch = True
 Export_to_grid_switch = True
 
 # Plot switches (booleans)
 print_Rs_switch = False
 print_P2P_exports_switch = False
 plot_state_of_charge_switch = False
-cost_table_switch = False
+cost_table_switch = True
 costs_to_latex_switch = False
 
 overview_plot_switch = True
