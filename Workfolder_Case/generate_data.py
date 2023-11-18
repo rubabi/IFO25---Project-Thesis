@@ -69,8 +69,8 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     list_T_M = [(t, t.month) for t in index_date] # list creating tuple of the T set and the M set
 
     # Scalars (single value parameters)
-    alpha = 2.5  # Charging capacuty 2.5 kW -> 1.25 kWh/ half hour at constant rate
-    beta = 2.5 # Discharging capacity 2.5 kW -> 1.25 kWh/ half hour at constant rate
+    alpha = 5  # Charging capacity continuous rate Tesla home battery
+    beta = 5 # Discharging capacity continuous rate Tesla home battery
     eta_charge = 0.96  # Charging efficiency
     eta_discharge = 0.96  # Discharging efficiency
     eta_diff = 0.99 # Diffusion efficiency #! Change?
