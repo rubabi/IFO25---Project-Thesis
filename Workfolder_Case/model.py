@@ -29,7 +29,7 @@ FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
 P2P_switch = False
 PV_switch = False
 Battery_switch = False 
-Export_to_grid_switch = False
+Export_to_grid_switch = True
 
 # Plot switches (booleans)
 print_Rs_switch = False
@@ -88,19 +88,21 @@ if continuous_switch:
 
     # Printing savings
     savings = calculating_savings(instance, start_date, end_date)
-    no_savings = savings[0]
+    base_case = savings[0]
     bill_reduction = savings[1]
     P2P_savings = savings[2]
     FFR_savings = savings[3]
     Peak_savings = savings[4]
+    G_export_savings = savings[5]
     
     # Print interesting values
     print(f'FFR type: {FFR_type}')
     print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
-    print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings,2)} NOK\n')
-    print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
-    print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
-    print(f'Peak savings (root cause = black box?): {round(Peak_savings/no_savings*100,2)}%\n')
+    print(f'\nNo P2P, batteries, PV production or export to grid (base case): {round(base_case,2)} NOK\n')
+    print(f'P2P savings: {round(P2P_savings/base_case*100,2)}%')
+    print(f'FFR savings: {round(FFR_savings/base_case*100,2)}%')
+    print(f'Export to grid savings: {round(G_export_savings/base_case*100,2)}%')
+    print(f'Peak savings (root cause = black box?): {round(Peak_savings/base_case*100,2)}%\n')
     print(f'The solution of the optimization gives a cost of: {round(instance.objective_function(),2)} NOK')
     print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')

@@ -90,7 +90,7 @@ def calculating_savings(instance, start_date, end_date):
 
     peak_power = from_grid_df['Demand'].resample('M').max()
 
-    no_savings = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
+    base_case = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ P2P savings
@@ -124,6 +124,20 @@ def calculating_savings(instance, start_date, end_date):
     Peak_savings = (peak_power.sum()-peak_power_case.sum())*instance.p_peak[start_date.month]
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
+    #$ Grid export savings
+    G_export_df = pd.DataFrame.from_dict(instance.G_export.get_values(), orient='index', columns=['G_export'])
+    G_export_df.reset_index(inplace=True)
+    G_export_df[['Time', 'Household']] = pd.DataFrame(G_export_df['index'].tolist(), index=G_export_df.index)
+    G_export_df.drop(columns='index', inplace=True)
+    G_export_df.set_index('Time', inplace=True)
+    G_export_df = G_export_df[['Household', 'G_export']]
+
+    G_export_df_aggregated = pd.DataFrame()
+    G_export_df_aggregated['G_export_aggregated'] = G_export_df.groupby(['Time']).sum()['G_export']
+    G_export_df_aggregated['G_export gain'] = G_export_df_aggregated['G_export_aggregated']*(from_grid_df['Day ahead price (NOK/kWh)'])
+
+    G_export_savings = G_export_df_aggregated['G_export gain'].sum()
+
     #$ FFR savings
     T_FFR = [t for t in X_p_df.index.unique() if t.hour >= 22 or t.hour < 7]  
 
@@ -133,9 +147,9 @@ def calculating_savings(instance, start_date, end_date):
     FFR_savings = Z_FFR*p_FFR*len(T_FFR)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    bill_reduction = (Peak_savings+P2P_savings+FFR_savings)/no_savings
+    bill_reduction = (Peak_savings+P2P_savings+FFR_savings+G_export_savings)/base_case
 
-    return no_savings,bill_reduction,P2P_savings,FFR_savings,Peak_savings
+    return base_case,bill_reduction,P2P_savings,FFR_savings,Peak_savings, G_export_savings
 
 def plot_state_of_charge(instance):
     # If you want to see the results, you can call the result as dictionary
