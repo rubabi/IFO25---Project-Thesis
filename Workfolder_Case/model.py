@@ -25,12 +25,13 @@ end_date = "2021-7-01" # Between 2021-4-02 and 2021-7-01
 
 FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
 
-# Switches (booleans)
+# System component switches (booleans)
 P2P_switch = False
 PV_switch = False
 Battery_switch = False 
 Export_to_grid_switch = False
 
+# Plot switches (booleans)
 print_Rs_switch = False
 print_P2P_exports_switch = False
 plot_state_of_charge_switch = False
