@@ -2,7 +2,6 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import easygui
 
 # Import file functons
 from model_components_P2P import model_p2p
@@ -20,15 +19,11 @@ houses_bat = [97,50,26,68] # indicate houses with batteries
 houses_pv = [19,50,98,26,49,68] # indicate houses with pv
 capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 19,50,98,26,49,68
 
-start_date = "2021-4-01"
-end_date = "2021-5-01" # Last day is not included in the model
+# Last day is not included in the model
+start_date = "2021-4-01" # Between 2021-4-01 and 2021-6-30
+end_date = "2021-5-01" # Between 2021-4-02 and 2021-7-01
 
-# Choosing FFR type or No FFR
-
-FFR_type = easygui.buttonbox("Choose an FFR type", choices=['Flex', 'Profil', 'No FFR'])
-
-print(f"You chose: {FFR_type}")
-#FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
 
 # Switches (booleans)
 P2P_switch = True
