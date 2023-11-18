@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import easygui
 
 # Import file functons
 from model_components_P2P import model_p2p
@@ -19,7 +20,15 @@ houses_bat = [97,50,26,68] # indicate houses with batteries
 houses_pv = [19,50,98,26,49,68] # indicate houses with pv
 capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 19,50,98,26,49,68
 
-FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
+start_date = "2021-4-01"
+end_date = "2021-5-01" # Last day is not included in the model
+
+# Choosing FFR type or No FFR
+
+FFR_type = easygui.buttonbox("Choose an FFR type", choices=['Flex', 'Profil', 'No FFR'])
+
+print(f"You chose: {FFR_type}")
+#FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
 
 # Switches (booleans)
 P2P_switch = True
@@ -39,8 +48,6 @@ overview_plot_switch = True
 #$ Run the model for a continuous time period
 continuous_switch = True
 if continuous_switch:
-    start_date = "2021-4-01"
-    end_date = "2021-4-04" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
     data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type, PV_switch, Battery_switch)
@@ -98,5 +105,5 @@ if continuous_switch:
     print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings,2)} NOK\n')
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
     print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
-    print(f'Peak savings (difficult to trace): {round(Peak_savings/no_savings*100,2)}%\n')
+    print(f'Peak savings (root cause = black box?): {round(Peak_savings/no_savings*100,2)}%\n')
     print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')
