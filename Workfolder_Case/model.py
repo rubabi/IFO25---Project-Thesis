@@ -29,6 +29,7 @@ FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
 P2P_switch = False
 PV_switch = False
 Battery_switch = False 
+Export_to_grid_switch = False
 
 print_Rs_switch = False
 print_P2P_exports_switch = False
@@ -47,7 +48,7 @@ if continuous_switch:
     data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type, PV_switch, Battery_switch)
 
     # Run the model
-    instance = model_p2p(data, P2P_switch)
+    instance = model_p2p(data, P2P_switch, Export_to_grid_switch)
 
     # Printing functions
     if print_Rs_switch:

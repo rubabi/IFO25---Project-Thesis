@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import time
 from pyomo.environ import *
 
-def model_p2p(data, P2P_switch):
+def model_p2p(data, P2P_switch, Export_to_grid_switch):
     model = AbstractModel()
 
     #Activate duals / shadow prices
@@ -150,6 +150,11 @@ def model_p2p(data, P2P_switch):
         def no_P2P_trading(model, t, h0, h1):
             return model.X_p[t, h0, h1] == 0
         model.no_P2P_trading = Constraint(model.T, model.P, rule=no_P2P_trading)
+
+    if not Export_to_grid_switch:
+        def no_export_to_grid(model, t, h):
+            return model.G_export[t, h] == 0
+        model.no_export_to_grid = Constraint(model.T, model.H, rule=no_export_to_grid)
 
     #---------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Solve the model
