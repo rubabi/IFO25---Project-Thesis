@@ -20,8 +20,8 @@ houses_pv = [19,50,98,26,49,68] # indicate houses with pv
 capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 19,50,98,26,49,68
 
 # Last day is not included in the model
-start_date = "2021-4-01" # Between 2021-4-01 and 2021-6-30
-end_date = "2021-5-01" # Between 2021-4-02 and 2021-7-01
+start_date = "2021-5-01" # Between 2021-4-01 and 2021-6-30
+end_date = "2021-6-01" # Between 2021-4-02 and 2021-7-01
 
 FFR_type = 'Profil' # 'Flex', 'Profil' or 'No FFR'
 
@@ -37,8 +37,7 @@ cost_table_switch = False
 costs_to_latex_switch = False
 
 overview_plot_switch = True
-
-#--------------------------------------------------------------------------------------------------------------------------------------
+#!---------------------------------------------------------------------------------------------------------------------------------------
 
 #$ Run the model for a continuous time period
 continuous_switch = True

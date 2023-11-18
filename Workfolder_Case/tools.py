@@ -90,7 +90,7 @@ def calculating_savings(instance, start_date, end_date):
 
     peak_power = from_grid_df['Demand'].resample('M').max()
 
-    no_savings = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*60
+    no_savings = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ P2P savings
@@ -109,15 +109,6 @@ def calculating_savings(instance, start_date, end_date):
     P2P_savings = X_p_df_aggregated['P2P savings'].sum()
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    #$ FFR savings
-    T_FFR = [t for t in X_p_df.index.unique() if t.hour >= 22 or t.hour < 7]  
-
-    Z_FFR = instance.Z_FFR.get_values()[None]
-
-    p_FFR = instance.p_FFR.value
-    FFR_savings = Z_FFR*p_FFR*len(T_FFR)
-    #------------------------------------------------------------------------------------------------------------------------------------------------
-
     #$ Peak cost savings
     G_import_df = pd.DataFrame.from_dict(instance.G_import.get_values(), orient='index', columns=['G_import'])
     G_import_df.reset_index(inplace=True)
@@ -130,7 +121,16 @@ def calculating_savings(instance, start_date, end_date):
     G_import_df_aggregated['G_import_aggregated'] = G_import_df.groupby(['Time']).sum()['G_import']
     peak_power_case = G_import_df_aggregated['G_import_aggregated'].resample('M').max()
 
-    Peak_savings = (peak_power.sum()-peak_power_case.sum())*60
+    Peak_savings = (peak_power.sum()-peak_power_case.sum())*instance.p_peak[start_date.month]
+    #------------------------------------------------------------------------------------------------------------------------------------------------
+
+    #$ FFR savings
+    T_FFR = [t for t in X_p_df.index.unique() if t.hour >= 22 or t.hour < 7]  
+
+    Z_FFR = instance.Z_FFR.get_values()[None]
+
+    p_FFR = instance.p_FFR.value
+    FFR_savings = Z_FFR*p_FFR*len(T_FFR)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     bill_reduction = (Peak_savings+P2P_savings+FFR_savings)/no_savings
