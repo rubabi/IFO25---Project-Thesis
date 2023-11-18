@@ -106,6 +106,19 @@ def calculating_savings(instance, start_date, end_date):
     X_p_df_aggregated = X_p_df_aggregated.join(prices_df)
     X_p_df_aggregated['P2P savings'] = X_p_df_aggregated['X_p_aggregated'] * (from_grid_df['Day ahead price (NOK/kWh)']+instance.p_retail.value)
 
+    P2P_savings = X_p_df_aggregated['P2P savings'].sum()
+    #------------------------------------------------------------------------------------------------------------------------------------------------
+
+    #$ FFR savings
+    T_FFR = [t for t in X_p_df.index.unique() if t.hour >= 22 or t.hour < 7]  
+
+    Z_FFR = instance.Z_FFR.get_values()[None]
+
+    p_FFR = instance.p_FFR.value
+    FFR_savings = Z_FFR*p_FFR*len(T_FFR)
+    #------------------------------------------------------------------------------------------------------------------------------------------------
+
+    #$ Peak cost savings
     G_import_df = pd.DataFrame.from_dict(instance.G_import.get_values(), orient='index', columns=['G_import'])
     G_import_df.reset_index(inplace=True)
     G_import_df[['Time', 'Household']] = pd.DataFrame(G_import_df['index'].tolist(), index=G_import_df.index)
@@ -115,24 +128,14 @@ def calculating_savings(instance, start_date, end_date):
 
     G_import_df_aggregated = pd.DataFrame()
     G_import_df_aggregated['G_import_aggregated'] = G_import_df.groupby(['Time']).sum()['G_import']
-    peak_power_P2P = G_import_df_aggregated['G_import_aggregated'].resample('M').max()
+    peak_power_case = G_import_df_aggregated['G_import_aggregated'].resample('M').max()
 
-    P2P_savings = X_p_df_aggregated['P2P savings'].sum() + (peak_power.sum()-peak_power_P2P.sum())*60
+    Peak_savings = (peak_power.sum()-peak_power_case.sum())*60
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    #$ FFR savings
-    
-    T_FFR = [t for t in X_p_df.index.unique() if t.hour >= 22 or t.hour < 7]  
+    bill_reduction = (Peak_savings+P2P_savings+FFR_savings)/no_savings
 
-    Z_FFR = instance.Z_FFR.get_values()[None]
-
-    p_FFR = instance.p_FFR.value
-    FFR_savings = Z_FFR*p_FFR*len(T_FFR)
-    #------------------------------------------------------------------------------------------------------------------------------------------------
-
-    bill_reduction = (P2P_savings+FFR_savings)/no_savings
-
-    return no_savings,bill_reduction,P2P_savings,FFR_savings
+    return no_savings,bill_reduction,P2P_savings,FFR_savings,Peak_savings
 
 def plot_state_of_charge(instance):
     # If you want to see the results, you can call the result as dictionary

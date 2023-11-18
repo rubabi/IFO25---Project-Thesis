@@ -16,9 +16,21 @@ file_path_results = directory('results') # folder containing the results
 n_houses = 7
 houses_pv = [19,50,98,26,49,68] # indicate houses with pv
 houses_bat = [97,50,26,68] # indicate houses with batterie
-capacity_pv = [3,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 1 and 2,3,4,5,6,7 respectively
+capacity_pv = [5,5,5,5,5,5] # 3 kW and 5 kW of installed capacity for house 19,50,98,26,49,68
 
 FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
+
+# Switches (booleans)
+P2P_switch = False
+PV_switch = True
+Battery_switch = True
+
+print_Rs = False
+print_P2P_exports_switch = True
+plot_state_of_charge_switch = False
+overview_plot_switch = False
+cost_table_switch = False
+costs_to_latex_switch = False
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,21 +38,13 @@ FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
 continuous_switch = True
 if continuous_switch:
     start_date = "2021-4-01"
-    end_date = "2021-7-01" # Last day is not included in the model
+    end_date = "2021-5-01" # Last day is not included in the model
 
     # Create dictionary of data with function generate_data_dict()
     data = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
 
     # Run the model
-    instance = model_p2p(data)
-
-    # Switches for what to print
-    print_Rs = False
-    print_P2P_exports_switch = False
-    plot_state_of_charge_switch = False
-    overview_plot_switch = False
-    cost_table_switch = True
-    costs_to_latex_switch = True
+    instance = model_p2p(data, P2P_switch, PV_switch, Battery_switch)
 
     # Printing functions
     if print_Rs:
@@ -83,6 +87,7 @@ if continuous_switch:
     bill_reduction = savings[1]
     P2P_savings = savings[2]
     FFR_savings = savings[3]
+    Peak_savings = savings[4]
     
     # Print interesting values
     print(f'FFR type: {FFR_type}')
@@ -90,7 +95,8 @@ if continuous_switch:
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
     print(f'\nNo P2P, batteries or PV production (base case): {round(no_savings,2)} NOK\n')
     print(f'P2P savings: {round(P2P_savings/no_savings*100,2)}%')
-    print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%\n')
+    print(f'FFR savings: {round(FFR_savings/no_savings*100,2)}%')
+    print(f'Peak savings (difficult to trace): {round(Peak_savings/no_savings*100,2)}%\n')
     print(f'The total bill reduction is: {round(float(bill_reduction)*100,2)}%')
 
 #--------------------------------------------------------------------------------------------------------------------------------------
@@ -111,7 +117,7 @@ if discrete_switch:
         data_week = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, FFR_type)
 
         # Run an instance of the model for a week
-        instance = model_p2p(data_week)
+        instance = model_p2p(data_week, P2P_switch, PV_switch, Battery_switch)
         savings = calculating_savings(instance, start_date, end_date)
         no_savings_discrete += savings[0]
         bill_reduction_discrete += savings[1]/len(week_list)
