@@ -106,12 +106,13 @@ if continuous_switch:
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
 
     print(f'\nNo P2P, batteries, PV production or export to grid (base case): {round(base_case,2)} NOK\n')
+    print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
+    print(f'The total bill reduction is: {round((1-(solution_cost/base_case))*100,2)}%')
 
+    print(r'Savings breakdown')
     print(f'P2P savings: {round(P2P_savings,2)} NOK ({round(P2P_savings/base_case*100,2)}%)')
     print(f'FFR savings: {round(FFR_savings,2)} NOK ({round(FFR_savings/base_case*100,2)}%)')
     print(f'Export to grid savings: {round(G_export_savings,2)} NOK ({round(G_export_savings/base_case*100,2)}%)')
     print(f'Peak savings: {round(Peak_savings,2)} NOK ({round(Peak_savings/base_case*100,2)}%)')
     print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK ({round(unaccounted_savings/base_case*100,2)}%)\n')
 
-    print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
-    print(f'The total bill reduction is: {round((1-(solution_cost/base_case))*100,2)}%')
