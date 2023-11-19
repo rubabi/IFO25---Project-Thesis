@@ -10,13 +10,13 @@ from generate_data import generate_data_dict
 from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
 
 #! Manual input data---------------------------------------------------------------------------------------------------------------------
-file_path_data = directory('data') # folder containing data
-file_path_results = directory('results') # folder containing the results
+file_path_data = directory('data') # Folder containing data
+file_path_results = directory('results') # Folder containing the results
 
 n_houses = 7
-houses_bat = [97,50,26,68] # indicate houses with batteries
+houses_bat = [97,50,26,68] # Indicate houses with batteries
 
-houses_pv = [19,50,98,26,49,68] # indicate houses with pv
+houses_pv = [19,50,98,26,49,68] # Indicate houses with pv
 capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,49,68
 
 # Last day is not included in the model
