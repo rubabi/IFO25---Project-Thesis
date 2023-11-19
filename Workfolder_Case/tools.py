@@ -147,9 +147,7 @@ def calculating_savings(instance, start_date, end_date):
     FFR_savings = Z_FFR*p_FFR*len(T_FFR)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    bill_reduction = (Peak_savings+P2P_savings+FFR_savings+G_export_savings)/base_case
-
-    return base_case,bill_reduction,P2P_savings,FFR_savings,Peak_savings, G_export_savings
+    return base_case,P2P_savings,FFR_savings,Peak_savings, G_export_savings
 
 def plot_state_of_charge(instance):
     # If you want to see the results, you can call the result as dictionary
