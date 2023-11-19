@@ -10,7 +10,7 @@ from generate_data import generate_data_dict
 from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
 
 #! Manual input data---------------------------------------------------------------------------------------------------------------------
-file_path_data = directory("data") # folder containing data
+file_path_data = directory('data') # folder containing data
 file_path_results = directory('results') # folder containing the results
 
 n_houses = 7
@@ -20,8 +20,8 @@ houses_pv = [19,50,98,26,49,68] # indicate houses with pv
 capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,49,68
 
 # Last day is not included in the model
-start_date = "2021-4-01" # Between 2021-4-01 and 2021-6-30
-end_date = "2021-7-01" # Between 2021-4-02 and 2021-7-01
+start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
+end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01
 
 FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
 
@@ -108,6 +108,6 @@ if continuous_switch:
     print(f'Export to grid savings: {round(G_export_savings/base_case*100,2)}%')
     print(f'Peak savings (root cause = black box?): {round(Peak_savings/base_case*100,2)}%')
     print(f'Unaccounted savings (maybe due to PV?): {round(unaccounted_savings/base_case*100,2)}%\n')
-    
+
     print(f'The solution of the optimization gives a cost of: {round(instance.objective_function(),2)} NOK')
     print(f'The total bill reduction is: {round((1-(instance.objective_function()/base_case))*100,2)}%')
