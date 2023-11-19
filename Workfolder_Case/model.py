@@ -115,4 +115,3 @@ if continuous_switch:
     print(f'Export to grid savings: {round(G_export_savings,2)} NOK ({round(G_export_savings/base_case*100,2)}%)')
     print(f'Peak savings: {round(Peak_savings,2)} NOK ({round(Peak_savings/base_case*100,2)}%)')
     print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK ({round(unaccounted_savings/base_case*100,2)}%)\n')
-
