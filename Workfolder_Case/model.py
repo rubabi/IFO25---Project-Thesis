@@ -23,7 +23,7 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
 end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01
 
-FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
 
 # System component switches (booleans)
 P2P_switch = False
@@ -87,7 +87,9 @@ if continuous_switch:
     if costs_to_latex_switch:
         costs_to_latex(instance)
 
-    # Printing savings
+    # Printing savings and soltuion cost
+    solution_cost = instance.objective_function()
+
     savings = calculating_savings(instance, start_date, end_date)
     base_case = savings[0]
     P2P_savings = savings[1]
@@ -95,7 +97,7 @@ if continuous_switch:
     Peak_savings = savings[3]
     G_export_savings = savings[4]
 
-    unaccounted_savings = base_case - (P2P_savings + FFR_savings + Peak_savings + G_export_savings) #! Due to PV?
+    unaccounted_savings = solution_cost - (P2P_savings + FFR_savings + Peak_savings + G_export_savings) #! Due to PV?
     
     # Print interesting values
     print(f'FFR type: {FFR_type}')
@@ -110,5 +112,5 @@ if continuous_switch:
     print(f'Peak savings (root cause = black box?): {round(Peak_savings/base_case*100,2)}%')
     print(f'Unaccounted savings (maybe due to PV?): {round(unaccounted_savings/base_case*100,2)}%\n')
 
-    print(f'The solution of the optimization gives a cost of: {round(instance.objective_function(),2)} NOK')
-    print(f'The total bill reduction is: {round((1-(instance.objective_function()/base_case))*100,2)}%')
+    print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
+    print(f'The total bill reduction is: {round((1-(solution_cost/base_case))*100,2)}%')
