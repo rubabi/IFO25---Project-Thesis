@@ -68,6 +68,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
     list_M = list(np.unique([t.month for t in index_date])) # Retrieves the month from each element in the index and filters unique values
     list_T_M = [(t, t.month) for t in index_date] # list creating tuple of the T set and the M set
 
+    #! Manual input data---------------------------------------------------------------------------------------------------------------------
     # Scalars (single value parameters)
     alpha = 5  # Charging capacity continuous rate Tesla home battery
     beta = 5 # Discharging capacity continuous rate Tesla home battery
@@ -86,6 +87,7 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
 
     p_peak = {m: 60 for m in list_M}
     p_retail = 0.45 # Retail price of electricity, grid tariff [NOK/kWh]
+    #!---------------------------------------------------------------------------------------------------------------------------------------
 
     # FFR type
     if FFR_type == "Flex":
