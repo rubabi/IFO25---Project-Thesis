@@ -104,4 +104,4 @@ if continuous_switch:
     print(f'Export to grid savings: {round(G_export_savings/base_case*100,2)}%')
     print(f'Peak savings (root cause = black box?): {round(Peak_savings/base_case*100,2)}%\n')
     print(f'The solution of the optimization gives a cost of: {round(instance.objective_function(),2)} NOK')
-    print(f'The total bill reduction is: {round(1-(instance.objective_function()/base_case),2)}%')
+    print(f'The total bill reduction is: {round((1-(instance.objective_function()/base_case))*100,2)}%')
