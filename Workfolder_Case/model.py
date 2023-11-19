@@ -21,7 +21,7 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 
 # Last day is not included in the model
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01
+end_date = '2021-5-01' # Between 2021-4-02 and 2021-7-01
 
 FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
 
@@ -100,6 +100,7 @@ if continuous_switch:
     unaccounted_savings = (base_case - solution_cost) - (P2P_savings + FFR_savings + Peak_savings + G_export_savings) #! Due to PV?
     
     # Print interesting values
+    print(f'From {start_date} to {end_date}\n')
     print(f'FFR type: {FFR_type}')
     print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
