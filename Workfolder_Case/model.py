@@ -23,13 +23,13 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
 end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01
 
-FFR_type = 'No FFR' # 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
 
 # System component switches (booleans)
-P2P_switch = False
+P2P_switch = True
 PV_switch = True
-Battery_switch = False
-Export_to_grid_switch = False
+Battery_switch = True
+Export_to_grid_switch = True
 
 # Plot switches (booleans)
 overview_plot_switch = True

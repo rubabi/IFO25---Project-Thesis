@@ -139,7 +139,7 @@ def calculating_savings(instance, start_date, end_date):
     G_export_savings = G_export_df_aggregated['G_export gain'].sum()
 
     #$ FFR savings
-    T_FFR = [t for t in X_p_df.index.unique() if t.hour >= 22 or t.hour < 7]  
+    T_FFR = instance.T_FFR.get_values()[None]
 
     Z_FFR = instance.Z_FFR.get_values()[None]
 
