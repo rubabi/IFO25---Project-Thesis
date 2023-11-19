@@ -21,9 +21,10 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 
 # Last day is not included in the model
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01
+end_date = '2021-5-01' # Between 2021-4-02 and 2021-7-01
 
-FFR_type = 'Flex' # 'Flex', 'Profil' or 'No FFR'
+#$ 'Flex', 'Profil' or 'No FFR'
+FFR_type = 'Flex' 
 
 # System component switches (booleans)
 P2P_switch = True
@@ -105,11 +106,11 @@ if continuous_switch:
     print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
 
-    print(f'\nNo P2P, batteries, PV production or export to grid (base case): {round(base_case,2)} NOK\n')
+    print(f'\nNo P2P, batteries, PV production or export to grid (base case): {round(base_case,2)} NOK')
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
     print(f'The total bill reduction is: {round((1-(solution_cost/base_case))*100,2)}%')
 
-    print(r'Savings breakdown')
+    print(r'\nSavings breakdown')
     print(f'P2P savings: {round(P2P_savings,2)} NOK ({round(P2P_savings/base_case*100,2)}%)')
     print(f'FFR savings: {round(FFR_savings,2)} NOK ({round(FFR_savings/base_case*100,2)}%)')
     print(f'Export to grid savings: {round(G_export_savings,2)} NOK ({round(G_export_savings/base_case*100,2)}%)')
