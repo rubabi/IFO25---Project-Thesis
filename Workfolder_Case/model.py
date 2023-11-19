@@ -97,7 +97,7 @@ if continuous_switch:
     Peak_savings = savings[3]
     G_export_savings = savings[4]
 
-    unaccounted_savings = solution_cost - (P2P_savings + FFR_savings + Peak_savings + G_export_savings) #! Due to PV?
+    unaccounted_savings = (base_case - solution_cost) - (P2P_savings + FFR_savings + Peak_savings + G_export_savings) #! Due to PV?
     
     # Print interesting values
     print(f'FFR type: {FFR_type}')
@@ -110,7 +110,7 @@ if continuous_switch:
     print(f'FFR savings: {round(FFR_savings/base_case*100,2)}%')
     print(f'Export to grid savings: {round(G_export_savings/base_case*100,2)}%')
     print(f'Peak savings (root cause = black box?): {round(Peak_savings/base_case*100,2)}%')
-    print(f'Unaccounted savings (maybe due to PV?): {round(unaccounted_savings/base_case*100,2)}%\n')
+    print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings/base_case*100,2)}%\n')
 
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
     print(f'The total bill reduction is: {round((1-(solution_cost/base_case))*100,2)}%')
