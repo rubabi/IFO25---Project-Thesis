@@ -31,9 +31,9 @@ if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
 
 #$ System component switches (booleans)
 P2P_switch = False
-PV_switch = True
+PV_switch = False
 Battery_switch = False
-Export_to_grid_switch = True
+Export_to_grid_switch = False
 
 #$ Plot switches (booleans)
 overview_plot_switch = True
@@ -112,7 +112,7 @@ if continuous_switch:
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
     print(f'The total bill reduction is: {round((1-(solution_cost/base_case))*100,2)}%')
 
-    print(r'\nSavings breakdown')
+    print(f'\nSavings breakdown')
     print(f'P2P savings: {round(P2P_savings,2)} NOK ({round(P2P_savings/base_case*100,2)}%)')
     print(f'FFR savings: {round(FFR_savings,2)} NOK ({round(FFR_savings/base_case*100,2)}%)')
     print(f'Export to grid savings: {round(G_export_savings,2)} NOK ({round(G_export_savings/base_case*100,2)}%)')
