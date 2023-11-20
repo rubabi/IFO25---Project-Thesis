@@ -10,29 +10,30 @@ from generate_data import generate_data_dict
 from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
 
 #! Manual input data --------------------------------------------------------------------------------------------------------------------
+#$ File paths
 file_path_data = directory('data') # Folder containing data
 file_path_results = directory('results') # Folder containing the results
 
+#$ Input data
 n_houses = 7
 houses_bat = [97,50,26,68] # Indicate houses with batteries
-
 houses_pv = [19,50,98,26,49,68] # Indicate houses with pv
 capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,49,68
 
-# Last day is not included in the model
+#$ Time period
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-5-01' # Between 2021-4-02 and 2021-7-01
+end_date = '2021-5-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
 FFR_type = 'Flex' 
 
-# System component switches (booleans)
+#$ System component switches (booleans)
 P2P_switch = True
 PV_switch = True
 Battery_switch = True
 Export_to_grid_switch = True
 
-# Plot switches (booleans)
+#$ Plot switches (booleans)
 overview_plot_switch = True
 
 print_Rs_switch = False
@@ -40,7 +41,6 @@ print_P2P_exports_switch = False
 plot_state_of_charge_switch = False
 cost_table_switch = False
 costs_to_latex_switch = False
-
 #!---------------------------------------------------------------------------------------------------------------------------------------
 
 #$ Run the model for a continuous time period
