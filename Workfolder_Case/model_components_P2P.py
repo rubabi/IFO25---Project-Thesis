@@ -68,8 +68,9 @@ def model_p2p(data, P2P_switch, Export_to_grid_switch):
     
     #$ Objective function 
     def objective_function(model): # Objective function (1)
-        return (sum((model.p_spot[t] + model.p_retail) * model.G_import[t, h] - model.p_spot[t] * (1-model.psi) * model.G_export[t,h] for t in model.T for h in model.H) 
-                + sum(model.p_peak[m] * model.G_peak[m] for m in model.M) - model.p_FFR * model.Z_FFR * len(model.T_FFR))
+        return (sum(model.p_peak[m] * model.G_peak[m] for m in model.M) 
+                +sum((model.p_spot[t] + model.p_retail) * model.G_import[t, h] - model.p_spot[t] * (1-model.psi) * model.G_export[t,h] for t in model.T for h in model.H) 
+                - model.p_FFR * model.Z_FFR * len(model.T_FFR))
     model.objective_function = Objective(rule=objective_function, sense=minimize)
 
     #$ Grid Constraints
