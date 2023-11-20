@@ -75,8 +75,8 @@ def model_p2p(data, P2P_switch, Export_to_grid_switch):
 
     #$ Grid Constraints
     def balance_equation(model, t, h): # Constraint (2)
-        return (model.G_import[t, h] + (model.res[t] if h in model.H_pv else 0)  + (model.D[t,h] if h in model.H_bat else 0) + model.I[t, h] 
-                >= model.dem[t, h] + model.X[t, h] + model.G_export[t, h] + (model.C[t, h] if h in model.H_bat else 0))
+        return ((model.res[t] if h in model.H_pv else 0) + (model.D[t,h] if h in model.H_bat else 0) + model.G_import[t, h] + model.I[t, h] 
+                >= model.dem[t, h] + (model.C[t, h] if h in model.H_bat else 0) + model.X[t, h] + model.G_export[t, h])
     model.balance_equation = Constraint(model.T, model.H, rule=balance_equation)
 
     def peak_power(model, t, m): # Constraint (3)
@@ -93,7 +93,6 @@ def model_p2p(data, P2P_switch, Export_to_grid_switch):
 
     #$ Battery constraints
     def time_constraint(model, t, h): # Constraint (7&8)
-        #if t.time() == time(0,0): # when the hour is 00:00
         if t == model.T.first(): # when t is the first time step
             return model.S[t, h] == model.s_init + model.eta_charge * model.C[t, h] - 1/model.eta_discharge * model.D[t, h]
         else:
