@@ -25,15 +25,15 @@ start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
 end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
-FFR_type = 'No FFR'
+FFR_type = 'Flex'
 if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
     raise ValueError('FFR_type must be either "Flex", "Profil" or "No FFR"') 
 
 #$ System component switches (booleans)
-P2P_switch = False
-PV_switch = False
-Battery_switch = False
-Export_to_grid_switch = False
+P2P_switch = True
+PV_switch = True
+Battery_switch = True
+Export_to_grid_switch = True
 
 #$ Plot switches (booleans)
 overview_plot_switch = True
@@ -94,13 +94,13 @@ if continuous_switch:
     solution_cost = instance.objective_function()
 
     savings = calculating_savings(instance, start_date, end_date)
-    base_case = savings[0]
+    naked_case = savings[0]
     P2P_savings = savings[1]
     FFR_savings = savings[2]
     Peak_savings = savings[3]
     G_export_savings = savings[4]
 
-    unaccounted_savings = (base_case - solution_cost) - (P2P_savings + FFR_savings + Peak_savings + G_export_savings) #! Due to PV?
+    unaccounted_savings = (naked_case - solution_cost) - (P2P_savings + FFR_savings + Peak_savings + G_export_savings) #! Due to PV?
     
     # Print interesting values
     print(f'From {start_date} to {end_date}\n')
@@ -108,13 +108,13 @@ if continuous_switch:
     print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
 
-    print(f'\nNo P2P, batteries, PV production or export to grid (base case): {round(base_case,2)} NOK')
+    print(f'\nNo P2P, batteries, PV production or export to grid (naked case): {round(naked_case,2)} NOK')
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
-    print(f'The total bill reduction is: {round((1-(solution_cost/base_case))*100,2)}%')
+    print(f'The total bill reduction is: {round((1-(solution_cost/naked_case))*100,2)}%')
 
     print(f'\nSavings breakdown')
-    print(f'P2P savings: {round(P2P_savings,2)} NOK ({round(P2P_savings/base_case*100,2)}%)')
-    print(f'FFR savings: {round(FFR_savings,2)} NOK ({round(FFR_savings/base_case*100,2)}%)')
-    print(f'Export to grid savings: {round(G_export_savings,2)} NOK ({round(G_export_savings/base_case*100,2)}%)')
-    print(f'Peak savings: {round(Peak_savings,2)} NOK ({round(Peak_savings/base_case*100,2)}%)')
-    print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK ({round(unaccounted_savings/base_case*100,2)}%)\n')
+    print(f'P2P savings: {round(P2P_savings,2)} NOK ({round(P2P_savings/naked_case*100,2)}%)')
+    print(f'FFR savings: {round(FFR_savings,2)} NOK ({round(FFR_savings/naked_case*100,2)}%)')
+    print(f'Export to grid savings: {round(G_export_savings,2)} NOK ({round(G_export_savings/naked_case*100,2)}%)')
+    print(f'Peak savings: {round(Peak_savings,2)} NOK ({round(Peak_savings/naked_case*100,2)}%)')
+    print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK ({round(unaccounted_savings/naked_case*100,2)}%)\n')
