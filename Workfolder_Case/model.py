@@ -22,7 +22,7 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 
 #$ Time period
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-5-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
+end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
 FFR_type = 'Flex' 
