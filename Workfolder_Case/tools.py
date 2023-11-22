@@ -69,7 +69,7 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     fig.tight_layout()
     plt.show()
 
-def calculating_savings(instance, start_date, end_date):
+def calculating_savings(instance, start_date, end_date, reference_case):
     
     start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
     end_date = pd.to_datetime(end_date, format='%Y-%m-%d')
@@ -93,7 +93,7 @@ def calculating_savings(instance, start_date, end_date):
 
     naked_case = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
     #------------------------------------------------------------------------------------------------------------------------------------------------
-    #$ No FFR, reference case
+    #! No FFR, reference case
     file_path_data = directory('data') # Folder containing data
     houses_bat = [97,50,26,68] # Indicate houses with batteries
     houses_pv = [19,50,98,26,49,68] # Indicate houses with pv
