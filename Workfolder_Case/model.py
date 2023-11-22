@@ -25,7 +25,7 @@ start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
 end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
-FFR_type = 'Flex'
+FFR_type = 'No FFR'
 if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
     raise ValueError('FFR_type must be either "Flex", "Profil" or "No FFR"') 
 
@@ -110,13 +110,12 @@ if continuous_switch:
     print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
 
-    print(f'\nNo P2P, batteries, PV production or export to grid (naked case): {round(naked_case,2)} NOK')
+    print(f'\nNaked Case: {round(naked_case,2)} NOK')
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
-    print(f'The total bill reduction is: {round((1-(solution_cost/naked_case))*100,2)}%')
 
     print(f'\nSavings breakdown')
-    print(f'P2P savings: {round(P2P_savings,2)} NOK ({round(P2P_savings/naked_case*100,2)}%)')
-    print(f'FFR savings: {round(FFR_savings,2)} NOK ({round(FFR_savings/naked_case*100,2)}%)')
-    print(f'Export to grid savings: {round(G_export_savings,2)} NOK ({round(G_export_savings/naked_case*100,2)}%)')
-    print(f'Peak savings: {round(Peak_savings,2)} NOK ({round(Peak_savings/naked_case*100,2)}%)')
-    print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK ({round(unaccounted_savings/naked_case*100,2)}%)\n')
+    print(f'P2P savings: {round(P2P_savings,2)} NOK')
+    print(f'FFR savings: {round(FFR_savings,2)} NOK)')
+    print(f'Export to grid savings: {round(G_export_savings,2)} NOK')
+    print(f'Peak savings: {round(Peak_savings,2)} NOK')
+    print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK\n')
