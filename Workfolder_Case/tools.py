@@ -90,7 +90,7 @@ def calculating_savings(instance, start_date, end_date):
 
     peak_power = from_grid_df['Demand'].resample('M').max()
 
-    base_case = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
+    naked_case = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ P2P savings
@@ -147,7 +147,7 @@ def calculating_savings(instance, start_date, end_date):
     FFR_savings = Z_FFR*p_FFR*len(T_FFR)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    return base_case,P2P_savings,FFR_savings,Peak_savings, G_export_savings
+    return naked_case,P2P_savings,FFR_savings,Peak_savings,G_export_savings
 
 def plot_state_of_charge(instance):
     # If you want to see the results, you can call the result as dictionary
