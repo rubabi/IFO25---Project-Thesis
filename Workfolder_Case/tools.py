@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from directories_P2P import directory
 from generate_data import generate_data_dict
+from model_components_P2P import model_p2p
 
 def print_non_zero_shadow_prices(instance, Constraint):
         #Show shadow prices
@@ -91,6 +92,18 @@ def calculating_savings(instance, start_date, end_date):
     peak_power = from_grid_df['Demand'].resample('M').max()
 
     naked_case = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
+    #------------------------------------------------------------------------------------------------------------------------------------------------
+    #$ No FFR, reference case
+    file_path_data = directory('data') # Folder containing data
+    houses_bat = [97,50,26,68] # Indicate houses with batteries
+    houses_pv = [19,50,98,26,49,68] # Indicate houses with pv
+    capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,49,68
+    # Create dictionary of data for No FFR case
+    data_No_FFR = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, 
+                              FFR_type='No FFR', PV_switch=True, Battery_switch=True)
+
+    # Create the No FFR instance
+    instance_No_FFR = model_p2p(data_No_FFR, P2P_switch=True, Export_to_grid_switch=True)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ P2P savings
