@@ -115,7 +115,7 @@ if continuous_switch:
 
     print(f'\nSavings breakdown')
     print(f'P2P savings: {round(P2P_savings,2)} NOK')
-    print(f'FFR savings: {round(FFR_savings,2)} NOK)')
+    print(f'FFR savings: {round(FFR_savings,2)} NOK')
     print(f'Export to grid savings: {round(G_export_savings,2)} NOK')
     print(f'Peak savings: {round(Peak_savings,2)} NOK')
     print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK\n')
