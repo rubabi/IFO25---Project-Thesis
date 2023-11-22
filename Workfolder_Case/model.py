@@ -96,7 +96,7 @@ if continuous_switch:
     # Printing savings and soltuion cost
     solution_cost = instance.objective_function()
 
-    savings = calculating_savings(instance, start_date, end_date,reference_case)
+    savings = calculating_savings(instance, start_date, end_date,reference_case, file_path_data, houses_pv, houses_bat, capacity_pv)
     reference_case = savings[0]
     P2P_savings = savings[1]
     FFR_savings = savings[2]

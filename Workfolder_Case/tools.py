@@ -69,7 +69,7 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     fig.tight_layout()
     plt.show()
 
-def calculating_savings(instance, start_date, end_date, reference_case):
+def calculating_savings(instance, start_date, end_date, reference_case, file_path_data, houses_pv, houses_bat, capacity_pv):
     
     start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
     end_date = pd.to_datetime(end_date, format='%Y-%m-%d')
@@ -93,11 +93,8 @@ def calculating_savings(instance, start_date, end_date, reference_case):
 
     naked_case = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
     #------------------------------------------------------------------------------------------------------------------------------------------------
+    
     #! No FFR, reference case
-    file_path_data = directory('data') # Folder containing data
-    houses_bat = [97,50,26,68] # Indicate houses with batteries
-    houses_pv = [19,50,98,26,49,68] # Indicate houses with pv
-    capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,49,68
     # Create dictionary of data for No FFR case
     data_No_FFR = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, 
                               FFR_type='No FFR', PV_switch=True, Battery_switch=True)
