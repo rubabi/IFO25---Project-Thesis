@@ -69,7 +69,7 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     fig.tight_layout()
     plt.show()
 
-def calculating_savings(instance, start_date, end_date, reference_case, file_path_data, houses_pv, houses_bat, capacity_pv):
+def calculating_savings(instance, start_date, end_date):
     
     start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
     end_date = pd.to_datetime(end_date, format='%Y-%m-%d')
@@ -92,17 +92,6 @@ def calculating_savings(instance, start_date, end_date, reference_case, file_pat
     peak_power = from_grid_df['Demand'].resample('M').max()
 
     naked_case = from_grid_df['Community grid expenditure'].sum()+peak_power.sum()*instance.p_peak[start_date.month]
-    #------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    #! No FFR, reference case
-    # Create dictionary of data for No FFR case
-    data_No_FFR = generate_data_dict(file_path_data, start_date, end_date, houses_pv, houses_bat, capacity_pv, 
-                              FFR_type='No FFR', PV_switch=True, Battery_switch=True)
-
-    # Create the No FFR instance
-    instance_No_FFR = model_p2p(data_No_FFR, P2P_switch=True, Export_to_grid_switch=True)
-
-    No_FFR = 0 # Bill with no FFR
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ P2P savings
@@ -159,12 +148,7 @@ def calculating_savings(instance, start_date, end_date, reference_case, file_pat
     FFR_savings = Z_FFR*p_FFR*len(T_FFR)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    if reference_case == 'No FFR':
-        reference_case = No_FFR
-    elif reference_case == 'Naked case':
-        reference_case = naked_case
-
-    return reference_case,P2P_savings,FFR_savings,Peak_savings,G_export_savings
+    return naked_case,P2P_savings,FFR_savings,Peak_savings,G_export_savings
 
 def plot_state_of_charge(instance):
     # If you want to see the results, you can call the result as dictionary
