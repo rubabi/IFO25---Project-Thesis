@@ -101,6 +101,8 @@ def calculating_savings(instance, start_date, end_date, reference_case, file_pat
 
     # Create the No FFR instance
     instance_No_FFR = model_p2p(data_No_FFR, P2P_switch=True, Export_to_grid_switch=True)
+
+    No_FFR = 0 # Bill with no FFR
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
     #$ P2P savings
@@ -157,7 +159,12 @@ def calculating_savings(instance, start_date, end_date, reference_case, file_pat
     FFR_savings = Z_FFR*p_FFR*len(T_FFR)
     #------------------------------------------------------------------------------------------------------------------------------------------------
 
-    return naked_case,P2P_savings,FFR_savings,Peak_savings,G_export_savings
+    if reference_case == 'No FFR':
+        reference_case = No_FFR
+    elif reference_case == 'Naked case':
+        reference_case = naked_case
+
+    return reference_case,P2P_savings,FFR_savings,Peak_savings,G_export_savings
 
 def plot_state_of_charge(instance):
     # If you want to see the results, you can call the result as dictionary

@@ -31,6 +31,8 @@ if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
 
 #$ Reference case
 reference_case = 'No FFR' # 'No FFR' or 'Naked case'
+if reference_case != 'No FFR' and reference_case != 'Naked case':
+    raise ValueError('reference_case must be either "No FFR" or "Naked case"')
 
 #$ System component switches (booleans)
 P2P_switch = True
