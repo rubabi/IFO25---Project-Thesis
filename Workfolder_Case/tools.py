@@ -349,3 +349,37 @@ def costs_to_latex(instance):
     costs_df = pd.DataFrame(list(costs.items()), columns=['Cost Type', 'Value'])
     costs_df['Value'] = costs_df['Value'].apply(lambda x: f"{x:.2f} NOK")
     print(costs_df.to_latex(index=False, label="tab:costs", caption="[Caption here]"))
+
+#Function to print all variables to excel
+def write_to_excel(instance, file_path_results, FFR_type, P2P_switch, PV_switch, Battery_switch, Export_to_grid_switch, start_date, end_date):
+    # If you want to see the results, you can call the result as dictionary
+    G_import_dict = instance.G_import.get_values()
+    C_dict = instance.C.get_values()
+    D_dict = instance.D.get_values()
+    S_dict = instance.S.get_values()
+    R_charge_dict = instance.R_FFR_charge.get_values()
+    R_discharge_dict = instance.R_FFR_discharge.get_values()
+
+    G_import_df = pd.DataFrame.from_dict(G_import_dict, orient="index")
+    C_df = pd.DataFrame.from_dict(C_dict, orient="index")
+    D_df = pd.DataFrame.from_dict(D_dict, orient="index")
+    S_df = pd.DataFrame.from_dict(S_dict, orient="index")
+    R_charge_df = pd.DataFrame.from_dict(R_charge_dict, orient="index")
+    R_discharge_df = pd.DataFrame.from_dict(R_discharge_dict, orient="index")
+
+    # Make a dataframe that contains P2P, PV, battery and export settings, start date and end date, to use for information sheet
+    settings_dict = {"FFR Type":str(FFR_type), "P2P": str(P2P_switch), "PV": str(PV_switch), "Battery": str(Battery_switch), "Export": str(Export_to_grid_switch), "Start date": str(start_date), "End date": str(end_date)}
+    settings_df = pd.DataFrame.from_dict(settings_dict, orient="index")
+    
+    # Write the DataFrames to Excel
+    from datetime import datetime
+    file_path_name = file_path_results + 'Results_' + str(FFR_type) + '_P2P_' + str(P2P_switch) + '_PV_' + str(PV_switch) + '_Battery_' + str(Battery_switch) + '_Export_' + str(Export_to_grid_switch) + '_' + datetime.now().strftime("%Y-%m-%d %H-%M") + '.xlsx'
+
+    with pd.ExcelWriter(file_path_name) as writer:
+        settings_df.to_excel(writer, sheet_name='Settings', index=True)
+        G_import_df.to_excel(writer, sheet_name='G_import')
+        C_df.to_excel(writer, sheet_name='C')
+        D_df.to_excel(writer, sheet_name='D')
+        S_df.to_excel(writer, sheet_name='S')
+        R_charge_df.to_excel(writer, sheet_name='R_charge')
+        R_discharge_df.to_excel(writer, sheet_name='R_discharge')

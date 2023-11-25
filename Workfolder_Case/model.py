@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
-from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
+from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex, write_to_excel
 
 #! Manual input data --------------------------------------------------------------------------------------------------------------------
 #$ File paths
@@ -45,6 +45,7 @@ print_P2P_exports_switch = False
 plot_state_of_charge_switch = False
 cost_table_switch = False
 costs_to_latex_switch = False
+stats_to_excel_switch = False
 #!---------------------------------------------------------------------------------------------------------------------------------------
 
 #$ Run the model for a continuous time period
@@ -92,6 +93,9 @@ if continuous_switch:
     if costs_to_latex_switch:
         costs_to_latex(instance)
 
+    if stats_to_excel_switch:
+        write_to_excel(instance, file_path_results, FFR_type, P2P_switch, PV_switch, Battery_switch, Export_to_grid_switch, start_date, end_date)
+        
     # Printing savings and soltuion cost
     solution_cost = instance.objective_function()
 
