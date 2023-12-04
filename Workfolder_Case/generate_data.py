@@ -70,7 +70,6 @@ def generate_data_dict(file_path_data, start_date_str, end_date_str, houses_pv, 
 
     #! Manual input data --------------------------------------------------------------------------------------------------------------------
     # Scalars (single value parameters)
-
     eta_charge = 0.96  # Charging efficiency
     eta_discharge = 0.96  # Discharging efficiency
     eta_diff = 0.99 # Diffusion efficiency #! Change?
