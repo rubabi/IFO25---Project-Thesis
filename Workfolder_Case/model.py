@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
-from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex, write_to_excel
+from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
 
 #! Manual input data --------------------------------------------------------------------------------------------------------------------
 #$ File paths
@@ -25,7 +25,7 @@ start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
 end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
-FFR_type = 'No FFR'
+FFR_type = 'Flex'
 if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
     raise ValueError('FFR_type must be either "Flex", "Profil" or "No FFR"') 
 
@@ -34,7 +34,7 @@ if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
 #$ System component switches (booleans)
 P2P_switch = True
 PV_switch = True
-Battery_switch = True
+Battery_switch = False
 Export_to_grid_switch = True
 
 #$ Plot switches (booleans)
@@ -45,8 +45,8 @@ print_P2P_exports_switch = False
 plot_state_of_charge_switch = False
 cost_table_switch = False
 costs_to_latex_switch = False
-stats_to_excel_switch = False
 #!---------------------------------------------------------------------------------------------------------------------------------------
+
 
 #$ Run the model for a continuous time period
 continuous_switch = True
@@ -93,9 +93,6 @@ if continuous_switch:
     if costs_to_latex_switch:
         costs_to_latex(instance)
 
-    if stats_to_excel_switch:
-        write_to_excel(instance, file_path_results, FFR_type, P2P_switch, PV_switch, Battery_switch, Export_to_grid_switch, start_date, end_date)
-        
     # Printing savings and soltuion cost
     solution_cost = instance.objective_function()
 
@@ -116,10 +113,11 @@ if continuous_switch:
 
     print(f'\nNaked Case: {round(naked_case,2)} NOK')
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
+    print(f'Total savings: {round(naked_case-solution_cost,2)} NOK')
 
-    print(f'\nSavings breakdown')
+    '''print(f'\nSavings breakdown')
     print(f'P2P savings: {round(P2P_savings,2)} NOK')
     print(f'FFR savings: {round(FFR_savings,2)} NOK')
     print(f'Export to grid savings: {round(G_export_savings,2)} NOK')
     print(f'Peak savings: {round(Peak_savings,2)} NOK')
-    print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK\n')
+    print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK\n')'''
