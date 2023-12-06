@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import pandas as pd
 import matplotlib.ticker as ticker
+from directories_P2P import directory
 
 dpi_number = 300
 figsize = (8, 4)
@@ -25,9 +26,9 @@ Flex_Bat = np.array(df.Flex_Bat)
 
 #plot the PV_Bat cases
 plt.figure(figsize=figsize)
-plt.plot(r, NoFFR_PV_Bat, label="No FFR", color="#01377D")
+plt.plot(r, NoFFR_PV_Bat, label="No FFR", color="#97E7F5")
 plt.plot(r, Profil_PV_Bat, label="Profil" , color="#009DD1")
-plt.plot(r, Flex_PV_Bat, label="Flex", color="#7ED348")
+plt.plot(r, Flex_PV_Bat, label="Flex", color="#01377D")
 plt.xlabel("r")
 plt.grid()
 formatter = ticker.FuncFormatter(lambda x, p: format(int(x), ' '))
@@ -41,9 +42,9 @@ plt.show()
 
 #plot the Bat cases
 plt.figure(figsize=figsize)
-plt.plot(r, NoFFR_Bat, label="No FFR", color="#01377D")
+plt.plot(r, NoFFR_Bat, label="No FFR", color="#97E7F5")
 plt.plot(r, Profil_Bat, label="Profil" , color="#009DD1")
-plt.plot(r, Flex_Bat, label="Flex", color="#7ED348")
+plt.plot(r, Flex_Bat, label="Flex", color="#01377D")
 plt.xlabel("r")
 plt.grid()
 formatter = ticker.FuncFormatter(lambda x, p: format(int(x), ' '))
