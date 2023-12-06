@@ -5,6 +5,7 @@ import matplotlib.ticker as ticker
 
 dpi_number = 300
 figsize = (8, 4)
+base_case = 15644.05
 
 df_savings = pd.DataFrame(
     data=[[8473.03, 10370.85, 25553.99], 
@@ -15,8 +16,22 @@ df_savings = pd.DataFrame(
 )
 
 # plot the savings as a bar chart
-plt.figure(figsize=figsize)
-plt.bar(df_savings.columns, df_savings.index, width = 0.5)
+df_savings_vs_basecase = df_savings / base_case * 100
+
+colors = ['#97E7F5', '#009DD1', '#01377D']
+
+fig, ax = plt.subplots()
+df_savings_vs_basecase.plot(kind='bar', ax=ax, color=colors)
+ax.set_ylabel('Savings compared to the Base Case [%]')
+plt.xticks(rotation='horizontal')
+
+ax.axhline(100, color='#26B170', linestyle='--') 
+ax.text(2.28, 100, 'Profitability line', color='#000000', va='center', ha='right',
+        bbox=dict(facecolor='white', edgecolor='none', boxstyle='round,pad=0.5'))
+
+plt.show()
+
+
 
 
 # Plot the ratios of PV off, B on against PV on, B on
