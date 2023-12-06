@@ -55,3 +55,5 @@ plt.ylabel("NPV [NOK]")
 plt.legend(loc="upper right")
 plt.savefig("C:/Users/jakob/Documents/Masteroppgave/IFO25---Project-Thesis/Workfolder_Case/results/NPV_Bat.png", dpi = dpi_number)
 plt.show()
+
+
