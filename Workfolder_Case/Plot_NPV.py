@@ -6,6 +6,8 @@ from directories_P2P import directory
 
 dpi_number = 300
 figsize = (8, 4)
+start_plot_at = 0
+stop_plot_at = 8
 
 filepath = "c:/Users/jakob/Downloads/NPV.xlsx"
 
@@ -13,13 +15,13 @@ filepath = "c:/Users/jakob/Downloads/NPV.xlsx"
 df = pd.read_excel(filepath, sheet_name="Plot", header=1, index_col=0)
 
 #make every column to a numpy array
-r = np.array(df.r)
-NoFFR_PV_Bat = np.array(df.NoFFR_PV_Bat)
-Profil_PV_Bat = np.array(df.Profil_PV_Bat)
-Flex_PV_Bat = np.array(df.Flex_PV_Bat)
-NoFFR_Bat = np.array(df.NoFFR_Bat)
-Profil_Bat = np.array(df.Profil_Bat)
-Flex_Bat = np.array(df.Flex_Bat)
+r = np.array(df.r)[start_plot_at:stop_plot_at]
+NoFFR_PV_Bat = np.array(df.NoFFR_PV_Bat)[start_plot_at:stop_plot_at]
+Profil_PV_Bat = np.array(df.Profil_PV_Bat)[start_plot_at:stop_plot_at]
+Flex_PV_Bat = np.array(df.Flex_PV_Bat)[start_plot_at:stop_plot_at]
+NoFFR_Bat = np.array(df.NoFFR_Bat)[start_plot_at:stop_plot_at]
+Profil_Bat = np.array(df.Profil_Bat)[start_plot_at:stop_plot_at]
+Flex_Bat = np.array(df.Flex_Bat)[start_plot_at:stop_plot_at]
 
 
 #Setup the plot. Colors should be 01377D, 009DD1, 97E7F5, 7ED348, 26B170
