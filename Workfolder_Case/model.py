@@ -25,20 +25,18 @@ start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
 end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
-FFR_type = 'Flex'
+FFR_type = 'Profil'
 if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
     raise ValueError('FFR_type must be either "Flex", "Profil" or "No FFR"') 
 
-    raise ValueError('reference_case must be either "No FFR" or "Naked case"')
-
 #$ System component switches (booleans)
 P2P_switch = True
-PV_switch = True
-Battery_switch = False
+PV_switch = False
+Battery_switch = True
 Export_to_grid_switch = True
 
 #$ Plot switches (booleans)
-overview_plot_switch = True
+overview_plot_switch = False
 
 print_Rs_switch = False
 print_P2P_exports_switch = False
