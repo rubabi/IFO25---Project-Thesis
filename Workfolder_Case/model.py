@@ -22,10 +22,10 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 
 #$ Time period
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-5-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
+end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
-FFR_type = 'Flex'
+FFR_type = 'No FFR'
 if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
     raise ValueError('FFR_type must be either "Flex", "Profil" or "No FFR"') 
 
@@ -91,7 +91,7 @@ if continuous_switch:
         costs_to_latex(instance)
 
     P2P_volume = P2P_exports(instance, file_path_results, n_houses, False)
-    Export_volume = export_volume(instance, file_path_results, n_houses)
+    Export_volume = export_volume(instance)
 
     # Printing savings and solution cost
     solution_cost = instance.objective_function()
