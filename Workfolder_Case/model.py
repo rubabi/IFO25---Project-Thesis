@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
-from tools import P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
+from tools import P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex, export_volume
 
 #! Manual input data --------------------------------------------------------------------------------------------------------------------
 #$ File paths
@@ -22,10 +22,10 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 
 #$ Time period
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
+end_date = '2021-5-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
-FFR_type = 'Profil'
+FFR_type = 'Flex'
 if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
     raise ValueError('FFR_type must be either "Flex", "Profil" or "No FFR"') 
 
@@ -91,6 +91,7 @@ if continuous_switch:
         costs_to_latex(instance)
 
     P2P_volume = P2P_exports(instance, file_path_results, n_houses, False)
+    Export_volume = export_volume(instance, file_path_results, n_houses)
 
     # Printing savings and solution cost
     solution_cost = instance.objective_function()
@@ -126,14 +127,8 @@ if continuous_switch:
     print(f'\nThe FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
     print(f'The P2P trading volume over the interval [kWh]: {round(P2P_volume, 2)}')
+    print(f'The export volume over the interval [kWh]: {round(Export_volume, 2)}')
 
     print(f'\nNaked Case: {round(naked_case,2)} NOK')
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
     print(f'Total savings: {round(naked_case-solution_cost,2)} NOK')
-
-    '''print(f'\nSavings breakdown')
-    print(f'P2P savings: {round(P2P_savings,2)} NOK')
-    print(f'FFR savings: {round(FFR_savings,2)} NOK')
-    print(f'Export to grid savings: {round(G_export_savings,2)} NOK')
-    print(f'Peak savings: {round(Peak_savings,2)} NOK')
-    print(f'Unaccounted savings (due to PV?): {round(unaccounted_savings,2)} NOK\n')'''

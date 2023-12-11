@@ -74,6 +74,16 @@ def P2P_exports(instance, file_path_results, n_houses, plot): # Printing functio
 
     return P2P_volume
 
+def export_volume(instance):
+    G_export_df = pd.DataFrame.from_dict(instance.G_export.get_values(), orient='index', columns=['G_export'])
+    G_export_df.reset_index(inplace=True)
+    G_export_df[['Time', 'Household']] = pd.DataFrame(G_export_df['index'].tolist(), index=G_export_df.index)
+    G_export_df.drop(columns='index', inplace=True)
+    G_export_df.set_index('Time', inplace=True)
+    G_export_df = G_export_df[['Household', 'G_export']]
+
+    return G_export_df['G_export'].sum()
+
 def calculating_savings(instance, start_date, end_date):
     
     start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
