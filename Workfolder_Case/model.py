@@ -22,7 +22,7 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 
 #$ Time period
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-4-09' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
+end_date = '2021-4-02' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
 FFR_type = 'Profil'
@@ -109,7 +109,7 @@ if continuous_switch:
     print(f'FFR type: {FFR_type}')
     print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
-    print(f'The P2P volume over the interval [kWh]: {round(P2P_volume, 2)}')
+    print(f'The P2P trading volume over the interval [kWh]: {round(P2P_volume, 2)}')
 
     print(f'\nNaked Case: {round(naked_case,2)} NOK')
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
