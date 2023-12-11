@@ -22,7 +22,7 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 
 #$ Time period
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-4-02' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
+end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
 FFR_type = 'Profil'
@@ -107,7 +107,23 @@ if continuous_switch:
     # Print interesting values
     print(f'From {start_date} to {end_date}\n')
     print(f'FFR type: {FFR_type}')
-    print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
+
+    if P2P_switch:
+        print(f'P2P on')
+    else:
+        print(f'P2P off')
+
+    if PV_switch:
+        print(f'PV on')
+    else:
+        print(f'PV off')
+    
+    if Battery_switch:
+        print(f'Battery on')
+    else:
+        print(f'Battery off')
+
+    print(f'\nThe FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
     print(f'The P2P trading volume over the interval [kWh]: {round(P2P_volume, 2)}')
 
