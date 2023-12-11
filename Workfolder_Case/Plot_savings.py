@@ -14,7 +14,7 @@ df_savings = pd.DataFrame(
           [978.27, 3148.74, 19552.68], 
           [5875.66, 5875.66, 5875.66]],
     columns=["No FFR", "Profil", "Flex"],
-    index=["PV and Batteries", "Only Batteries", "Only PVs"]
+    index=["PVs and Batteries", "Only Batteries", "Only PVs"]
 )
 
 # plot the savings as a bar chart
@@ -42,8 +42,8 @@ plt.show()
 # Plot the ratios of PV off, B on against PV on, B on
 # Barchart
 plt.figure(figsize=figsize)
-plt.bar(df_savings.columns, df_savings.iloc[0], label="PVs and Batteries", color="#01377D", width = 0.5)
-plt.bar(df_savings.columns, df_savings.iloc[1], label="Only Batteries", color="#009DD1", width = 0.5)
+plt.bar(df_savings.columns, df_savings.iloc[0], label="Savings due to PVs", color="#01377D", width = 0.5)
+plt.bar(df_savings.columns, df_savings.iloc[1], label="Savings due to Batteries", color="#009DD1", width = 0.5)
 formatter = ticker.FuncFormatter(lambda x, p: format(int(x), ' '))
 plt.gca().yaxis.set_major_formatter(formatter)
 plt.ylabel("Cost savings [NOK]", fontsize=fontsize)
@@ -51,8 +51,8 @@ plt.legend(loc="upper left")
 
 # Lineplot
 ax2 = plt.gca().twinx()
-ax2.plot(df_savings.columns, (df_savings.iloc[1]/df_savings.iloc[0])*100, label="Ratio", color="#7ED348")
-ax2.set_ylabel("(Only Batteries) / (PVs and Batteries)", fontsize=fontsize)
+ax2.plot(df_savings.columns, (df_savings.iloc[1]/df_savings.iloc[0])*100, label="Savings due to Batteries [%]", color="#7ED348")
+ax2.set_ylabel("Savings due to batteries [%]", fontsize=fontsize)
 ax2.legend(loc="upper right")
 ax2.set_ylim(0, 100)
 
