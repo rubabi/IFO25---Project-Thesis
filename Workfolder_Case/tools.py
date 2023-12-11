@@ -32,7 +32,7 @@ def print_binding_constraints(instance, Constraint):
             print ("   ",c)
     print ("")
 
-def print_P2P_exports(instance, file_path_results, n_houses): # Printing function template sort of
+def P2P_exports(instance, file_path_results, n_houses, plot): # Printing function template sort of
     # If you want to see the results, you can call the result as dictionary
     X_p_dict = instance.X_p.get_values()
     # Then you can convert it to dataframe
@@ -51,23 +51,28 @@ def print_P2P_exports(instance, file_path_results, n_houses): # Printing functio
     # Then you can plot the results or save it as excel
     X_p_df.to_csv(file_path_results + "X_p.csv")
 
-    fig, ax = plt.subplots(figsize=(12,7))
+    P2P_volume = X_p_df['X_p'].sum()
 
-    X = X_p_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
+    if plot:
+        fig, ax = plt.subplots(figsize=(12,7))
 
-    # Aggregate the transactions to align shapes
-    for house in X_p_df.index.get_level_values(1).unique():
-        Y = X_p_df[X_p_df.index.get_level_values(1) == house].values
-        Y_aggregated = np.empty(len(X))
-        for time_step in range(int(len(Y)/n_houses)):
-            Y_aggregated[time_step]=Y[time_step*n_houses:n_houses+time_step*n_houses].sum()
-        ax.plot(X, Y_aggregated, label=f"{house}")
+        X = X_p_df.index.get_level_values(0).unique() # Get unique values for time, this will be the x-axis
 
-    ax.set_ylabel("P2P export (kWh)")
-    ax.legend()
+        # Aggregate the transactions to align shapes
+        for house in X_p_df.index.get_level_values(1).unique():
+            Y = X_p_df[X_p_df.index.get_level_values(1) == house].values
+            Y_aggregated = np.empty(len(X))
+            for time_step in range(int(len(Y)/n_houses)):
+                Y_aggregated[time_step]=Y[time_step*n_houses:n_houses+time_step*n_houses].sum()
+            ax.plot(X, Y_aggregated, label=f"{house}")
 
-    fig.tight_layout()
-    plt.show()
+        ax.set_ylabel("P2P export (kWh)")
+        ax.legend()
+
+        fig.tight_layout()
+        plt.show()
+
+    return P2P_volume
 
 def calculating_savings(instance, start_date, end_date):
     

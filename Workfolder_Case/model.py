@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from model_components_P2P import model_p2p
 from directories_P2P import directory
 from generate_data import generate_data_dict
-from tools import print_P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
+from tools import P2P_exports, calculating_savings, plot_state_of_charge, overview_plot, print_costs, costs_to_latex
 
 #! Manual input data --------------------------------------------------------------------------------------------------------------------
 #$ File paths
@@ -22,7 +22,7 @@ capacity_pv = [5,5,5,5,5,5] # 5 kW of installed capacity for house 19,50,98,26,4
 
 #$ Time period
 start_date = '2021-4-01' # Between 2021-4-01 and 2021-6-30
-end_date = '2021-7-01' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
+end_date = '2021-4-09' # Between 2021-4-02 and 2021-7-01, end date is not included in the time period
 
 #$ 'Flex', 'Profil' or 'No FFR'
 FFR_type = 'Profil'
@@ -31,7 +31,7 @@ if FFR_type != 'No FFR' and FFR_type != 'Flex' and FFR_type != 'Profil':
 
 #$ System component switches (booleans)
 P2P_switch = True
-PV_switch = False
+PV_switch = True
 Battery_switch = True
 Export_to_grid_switch = True
 
@@ -39,12 +39,11 @@ Export_to_grid_switch = True
 overview_plot_switch = False
 
 print_Rs_switch = False
-print_P2P_exports_switch = False
+print_P2P_exports_switch = True
 plot_state_of_charge_switch = False
 cost_table_switch = False
 costs_to_latex_switch = False
 #!---------------------------------------------------------------------------------------------------------------------------------------
-
 
 #$ Run the model for a continuous time period
 continuous_switch = True
@@ -77,7 +76,7 @@ if continuous_switch:
             print(f'Timestamp: {timestamp}, Total Discharged in R: {round(total_discharged,2)}')
 
     if print_P2P_exports_switch:
-        print_P2P_exports(instance, file_path_results, n_houses)
+        P2P_exports(instance, file_path_results, n_houses, True)
 
     if plot_state_of_charge_switch:
         plot_state_of_charge(instance, file_path_results, n_houses)
@@ -91,7 +90,9 @@ if continuous_switch:
     if costs_to_latex_switch:
         costs_to_latex(instance)
 
-    # Printing savings and soltuion cost
+    P2P_volume = P2P_exports(instance, file_path_results, n_houses, False)
+
+    # Printing savings and solution cost
     solution_cost = instance.objective_function()
 
     savings = calculating_savings(instance, start_date, end_date)
@@ -108,6 +109,7 @@ if continuous_switch:
     print(f'FFR type: {FFR_type}')
     print(f'The FFR price per [NOK/MW/hour]: {instance.p_FFR.value*1000}')
     print(f'Reserved FFR Capacity [kW]: {round(instance.Z_FFR.get_values()[None],2)}')
+    print(f'The P2P volume over the interval [kWh]: {round(P2P_volume, 2)}')
 
     print(f'\nNaked Case: {round(naked_case,2)} NOK')
     print(f'The solution of the optimization gives a cost of: {round(solution_cost,2)} NOK')
